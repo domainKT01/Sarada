@@ -1,0 +1,44 @@
+.sidebar {
+    -fx-background-color: #282c34; /* Ejemplo: Color de fondo oscuro */
+    -fx-pref-width: 150; /* Ancho preferido del sidebar */
+}
+
+.name-program, .name-program .label {
+    -fx-alignment: center; /* Alineación de elementos */
+    -fx-font-family: cursive;
+}
+
+.user-name {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding-left: 10;
+}
+
+.menu-button {
+    -fx-background-color: transparent; /* Fondo transparente */
+    -fx-text-fill: white;
+    -fx-cursor: hand; /* Cursor de mano al pasar por encima */
+    -fx-max-width: Infinity;
+    -fx-padding: 20;
+    -fx-font-weight: serif; /* Texto en negrita al pasar el mouse */
+}
+
+.menu-button:hover {
+    -fx-font-weight: bold; /* Texto en negrita al pasar el mouse */
+    -fx-text-fill: #00FFFF; /* Cambiar el color del texto al pasar el mouse */
+}
+
+.menu-button:focused {
+    -fx-font-weight: bold; /* Texto en negrita al pasar el mouse */
+    -fx-text-fill: #00FFFF; /* Cambiar el color del texto al pasar el mouse */
+    -fx-font-size: 1.3em;
+}
+
+.linea-separadora {
+    -fx-background-color: #808080; /* Color de la línea */
+    -fx-pref-height: 0.4; /* Grosor de la línea */
+    -fx-min-height: 1; /* Altura mínima */
+    -fx-alignment: CENTER; /* Centra la línea horizontalmente */
+    -fx-margin: 10;
+}
