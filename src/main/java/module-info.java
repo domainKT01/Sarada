@@ -6,6 +6,12 @@ module com.solproe {
     requires javafx.media;
     requires javafx.web;
     requires javafx.swing;
+    requires com.google.gson;
+    requires okhttp3;
+    requires javax.inject;
+    requires dagger;
+    requires org.apache.poi.poi;
+    requires org.apache.poi.ooxml;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;

@@ -21,18 +21,6 @@
     -fx-cursor: hand; /* Cursor de mano al pasar por encima */
     -fx-max-width: Infinity;
     -fx-padding: 20;
-    -fx-font-weight: serif; /* Texto en negrita al pasar el mouse */
-}
-
-.menu-button:hover {
-    -fx-font-weight: bold; /* Texto en negrita al pasar el mouse */
-    -fx-text-fill: #00FFFF; /* Cambiar el color del texto al pasar el mouse */
-}
-
-.menu-button:focused {
-    -fx-font-weight: bold; /* Texto en negrita al pasar el mouse */
-    -fx-text-fill: #00FFFF; /* Cambiar el color del texto al pasar el mouse */
-    -fx-font-size: 1.3em;
 }
 
 .linea-separadora {

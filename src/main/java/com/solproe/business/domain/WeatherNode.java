@@ -1,0 +1,70 @@
+package com.solproe.business.domain;
+
+public class WeatherNode {
+
+    private Double temp;
+    private Double speedWind;
+    private String typeGrades;
+    private Double humidity;
+    private Double precipitation;
+    private String date;
+
+    private WeatherNode nextNode = null;
+
+
+    public Double getTemp() {
+        return temp;
+    }
+
+    public void setTemp(Double temp) {
+        this.temp = temp;
+    }
+
+    public Double getSpeedWind() {
+        return speedWind;
+    }
+
+    public void setSpeedWind(Double speedWind) {
+        this.speedWind = speedWind;
+    }
+
+    public String getTypeGrades() {
+        return typeGrades;
+    }
+
+    public void setTypeGrades(String typeGrades) {
+        this.typeGrades = typeGrades;
+    }
+
+    public Double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(Double humidity) {
+        this.humidity = humidity;
+    }
+
+    public Double getPrecipitation() {
+        return precipitation;
+    }
+
+    public void setPrecipitation(Double precipitation) {
+        this.precipitation = precipitation;
+    }
+
+    public WeatherNode getNextNode() {
+        return nextNode;
+    }
+
+    public void setNextNode(WeatherNode nextNode) {
+        this.nextNode = nextNode;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+}

@@ -32,6 +32,18 @@ dependencies {
     implementation("org.openjfx:javafx-media:25-ea+2")
     implementation("org.openjfx:javafx-web:25-ea+2")
 
+    //business
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.google.dagger:dagger:2.48")
+    annotationProcessor("com.google.dagger:dagger-compiler:2.48")
+    implementation("javax.inject:javax.inject:1")
+
+    //service
+    implementation("org.apache.poi:poi:5.3.0")
+    implementation("org.apache.poi:poi-ooxml:5.3.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.24.3")
+
 }
 
 application {
