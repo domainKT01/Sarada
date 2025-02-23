@@ -51,6 +51,7 @@ public class MainController implements Initializable {
                this.setCenter("/views/config/create-form-code.fxml");
            }
            catch (IOException e) {
+               System.out.println(e.getMessage());
                throw new RuntimeException();
            }
 

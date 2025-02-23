@@ -1,8 +1,12 @@
 package com.solproe.ui.controllers;
 
+import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 
-public class CodeListControllerView {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CodeListControllerView implements Initializable {
 
     public TextField clearSkyCode;
     public TextField mainlyClear;
@@ -31,6 +35,13 @@ public class CodeListControllerView {
     public TextField moderateStorm;
     public TextField thunderstormWithSlightAndHeavyHail;
 
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        this.clearSkyCode.setOnMouseClicked(v -> {
+            System.out.println("clicked!");
+        });
+    }
 
     public TextField getClearSkyCode() {
         return clearSkyCode;

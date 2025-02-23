@@ -14,26 +14,33 @@ import java.util.ResourceBundle;
 public class CreateFormCode implements Initializable {
 
     public HBox horizontalBottomContainer;
-    private HBox view;
+    @FXML HBox view;
     @FXML HBox horizontalContainerSlider;
-    private int actualView = 0;
-    @FXML private AnchorPane buttonSave;
+    @FXML AnchorPane buttonSave;
     @FXML BorderPane createListCode;
+    private CodeListControllerView codeListControllerView;
+    private ButtonSaveComponent buttonSaveComponent;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            this.view = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/config/listCode/view.fxml")));
-            this.buttonSave = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/components/button-save.fxml")));
+            FXMLLoader viewLoader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/config/listCode/view.fxml")));
+            this.view = viewLoader.load();
+            FXMLLoader viewButton = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/views/components/button-save.fxml")));
+            this.buttonSave = viewButton.load();
             this.horizontalContainerSlider.getChildren().addAll(this.view);
             this.horizontalBottomContainer.getChildren().addAll(this.buttonSave);
+            this.codeListControllerView = viewLoader.getController();
+            this.buttonSaveComponent = viewButton.getController();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void getData() {
-
+        this.buttonSaveComponent.buttonSave.setOnMouseClicked(mouseEvent -> {
+            //get data from form
+        });
     }
 }

@@ -59,8 +59,8 @@
                 <Label text="Auxiliar Jefe SCI Contacto" GridPane.columnIndex="0" GridPane.rowIndex="16" />
                 <TextField fx:id="auxiliarSciBossContact" GridPane.columnIndex="1" GridPane.rowIndex="16" />
             </GridPane>
-            <Button text="Guardar" />
-            <Button text="Actualizar"/>
+            <Button text="Guardar" fx:id="saveButton"/>
+            <Button text="Actualizar" fx:id="updateButton"/>
         </VBox>
     </center>
 </BorderPane>

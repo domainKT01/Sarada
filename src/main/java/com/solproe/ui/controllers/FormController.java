@@ -1,5 +1,6 @@
 package com.solproe.ui.controllers;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 public class FormController {
@@ -21,9 +22,6 @@ public class FormController {
     public TextField sciBossContact;
     public TextField auxiliarSciBoss;
     public TextField auxiliarSciBossContact;
-
-
-    public void createConfigFile() {
-
-    }
+    public Button saveButton;
+    public Button updateButton;
 }

@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx" styleClass="container-save-button">
-    <Button text="Save" styleClass="button-save"/>
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" styleClass="container-save-button"
+            fx:controller="com.solproe.ui.controllers.ButtonSaveComponent">
+    <Button text="Save" styleClass="button-save" fx:id="buttonSave"/>
 </AnchorPane>
