@@ -1,0 +1,61 @@
+.container-view {
+    -fx-alignment: center;
+    -fx-spacing: 20;
+    -fx-padding: 40 0 0 0;
+}
+
+.view-card {
+    -fx-background-color: white; /* Color de fondo de la card */
+    -fx-background-radius: 13; /* Bordes redondeados */
+    -fx-padding: 20 30 20 40; /* Espacio interno */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 0); /* Sombra para la elevación */
+    -fx-max-height: 500;
+}
+
+/* space in each element of main view */
+.view-code {
+    -fx-spacing: 25;
+}
+
+.textCod {
+    -fx-padding: 20 0 0 5;
+    -fx-border-block-width: 10;
+    -fx-font-weight: bold;
+}
+
+.valueCod {
+    -fx-border-color: #000000; /* Color de borde oscuro */
+    -fx-border-radius: 13; /* Bordes redondeados */
+    -fx-border-width: 2.5;
+    -fx-background-radius: 13; /* Bordes redondeados para el fondo */
+    -fx-alignment: center; /* Centrar texto horizontalmente */
+    -fx-border-style: solid; /* Asegura que el borde sea sólido */
+}
+
+.valueCod:focused {
+    -fx-border-color: red;
+}
+
+.button-save {
+    -fx-background-color: white;
+    -fx-border-color: #e6dede; /* Color de borde oscuro */
+    -fx-background-radius: 7; /* Bordes redondeados para el fondo */
+    -fx-border-radius: 7; /* Bordes redondeados */
+    -fx-text-fill: black;
+
+    -fx-min-width: 45px; /* Ancho mínimo */
+    -fx-pref-width: 60px; /* Ancho preferido */
+    -fx-max-width: 100px; /* Ancho máximo */
+    -fx-min-height: 40px; /* Altura mínima */
+    -fx-pref-height: 40px; /* Altura preferida */
+    -fx-max-height: 60px; /* Altura máxima */
+}
+
+.button-save:hover {
+    -fx-background-color: #e1d5d5;
+}
+
+.bottom-container {
+    -fx-alignment: center;
+    -fx-padding: 0 0 50 0;
+}

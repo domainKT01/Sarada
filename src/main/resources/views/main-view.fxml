@@ -8,13 +8,10 @@
     fx:controller="com.solproe.ui.controllers.MainController" fx:id="borderPane">
     <left>
         <VBox styleClass="sidebar" stylesheets="@/sidebar.css">
-            <HBox styleClass="Fernando">
-                <Label fx:id="userName" styleClass="user-name"> Sarada com </Label>
-            </HBox>
             <VBox styleClass="menu-items">
                 <Button fx:id="dashboardButton" text="Dashboard" styleClass="menu-button" />
                 <Button fx:id="createConfig" text="Create conf" styleClass="menu-button" />
-                <Button fx:id="createList" text="Create list" styleClass="menu-button" />
+                <Button fx:id="createCodeList" text="Create code list" styleClass="menu-button" />
                 <Button fx:id="challengesButton" text="Challenges" styleClass="menu-button" />
             </VBox>
         </VBox>
