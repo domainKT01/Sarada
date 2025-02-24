@@ -1,5 +1,6 @@
 package com.solproe.ui.controllers;
 
+import com.solproe.ui.viewModels.ConfigFileViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,7 +19,6 @@ public class CreateFormCode implements Initializable {
     @FXML HBox horizontalContainerSlider;
     @FXML AnchorPane buttonSave;
     @FXML BorderPane createListCode;
-    private CodeListControllerView codeListControllerView;
     private ButtonSaveComponent buttonSaveComponent;
 
 
@@ -31,16 +31,9 @@ public class CreateFormCode implements Initializable {
             this.buttonSave = viewButton.load();
             this.horizontalContainerSlider.getChildren().addAll(this.view);
             this.horizontalBottomContainer.getChildren().addAll(this.buttonSave);
-            this.codeListControllerView = viewLoader.getController();
             this.buttonSaveComponent = viewButton.getController();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
-
-    private void getData() {
-        this.buttonSaveComponent.buttonSave.setOnMouseClicked(mouseEvent -> {
-            //get data from form
-        });
     }
 }

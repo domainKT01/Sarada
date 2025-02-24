@@ -1,5 +1,6 @@
 package com.solproe.ui.controllers;
 
+import com.solproe.ui.viewModels.ConfigFileViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,6 +20,8 @@ public class MainController implements Initializable {
     @FXML BorderPane borderPane;
     private Button lastClicked;
     private BorderPane borderPaneConf = null;
+    private FormController formController;
+    private ConfigFileViewModel configFileViewModel = new ConfigFileViewModel();
 
 
     @Override
@@ -34,7 +37,7 @@ public class MainController implements Initializable {
 
         this.createConfig.setOnMousePressed(_ -> {
             try {
-                this.setCenter("/views/config/create-file-config.fxml");
+                this.formController = this.setCenter("/views/config/create-file-config.fxml").getController();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -64,9 +67,10 @@ public class MainController implements Initializable {
 
         this.dashboardButton.setOnMouseClicked(_ -> {
             try {
-                this.setCenter("/views/dashboard.fxml");
+                this.setCenter("/views/dashboard.fxml").getController();
             }
             catch (IOException e) {
+                System.out.println("error load");
                 throw new RuntimeException();
             }
 
@@ -78,8 +82,10 @@ public class MainController implements Initializable {
         });
     }
 
-    private void setCenter(String viewPath) throws IOException {
-        this.borderPaneConf = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(viewPath)));
+    private FXMLLoader setCenter(String viewPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
+        this.borderPaneConf = loader.load();
         this.borderPane.setCenter(this.borderPaneConf);
+        return loader;
     }
 }

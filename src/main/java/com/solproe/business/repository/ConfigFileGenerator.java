@@ -1,5 +1,8 @@
 package com.solproe.business.repository;
 
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.Nullable;
+
 public interface ConfigFileGenerator {
-    void generate(ConfigFileInterface config, String filePath);
+    void generate(JsonObject jsonObject, @Nullable String filePath);
 }

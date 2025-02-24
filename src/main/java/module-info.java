@@ -12,6 +12,7 @@ module com.solproe {
     requires dagger;
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
+    requires annotations;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;

@@ -1,31 +1,31 @@
 package com.solproe.service.config;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.solproe.business.repository.ConfigFileGenerator;
-import com.solproe.business.repository.ConfigFileInterface;
+import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class JsonConfigFileGenerator implements ConfigFileGenerator {
 
 
     @Override
-    public void generate(ConfigFileInterface config, String filePath) {
-        try (FileWriter os = new FileWriter(filePath)) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("name", config.getLocationName());
-            jsonObject.addProperty("latitude", config.getLatitude());
-            jsonObject.addProperty("longitude", config.getLongitude());
-            jsonObject.addProperty("daysCount", config.getDaysCount());
-
-            System.out.println(jsonObject);
-
-            BufferedWriter bufferedWriter = new BufferedWriter(os);
-            bufferedWriter.write(jsonObject.toString());
+    public void generate(JsonObject jsonObject, @Nullable String filePath) {
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String jsonString = gson.toJson(jsonObject);
+            assert filePath != null;
+            try (FileWriter fileWriter = new FileWriter(filePath)) {
+                fileWriter.write(jsonString);
+                System.out.println("file was written");
+            }
         }
-        catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+        catch (IOException e) {
+            System.out.println("error to write file");
+            e.printStackTrace();
         }
     }
 }
