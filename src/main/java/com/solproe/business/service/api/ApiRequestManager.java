@@ -30,7 +30,7 @@ public class ApiRequestManager implements RequestInterface {
     public void successResponse(JsonObject jsonObject) {
         //generate linked list openMeteoAdapter
         OpenMeteoAdapter openMeteoAdapter = new OpenMeteoAdapter(jsonObject);
-        OpenMeteoForecastList openMeteoForecastList = openMeteoAdapter.setWeatherForecast5Dto();
+        OpenMeteoForecastList openMeteoForecastList = openMeteoAdapter.setWeatherForecastDto();
 
         //generate excel file
         this.excelInterface.generate("/home/prueba/Documentos/graficos.xlsx", openMeteoForecastList);

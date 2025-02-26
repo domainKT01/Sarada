@@ -13,6 +13,7 @@ module com.solproe {
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
     requires annotations;
+    requires java.management;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;

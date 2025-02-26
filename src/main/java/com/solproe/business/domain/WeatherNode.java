@@ -6,8 +6,9 @@ public class WeatherNode {
     private Double speedWind;
     private String typeGrades;
     private Double humidity;
-    private Double precipitation;
+    private Double precipitationProbability;
     private String date;
+    private Double code;
 
     private WeatherNode nextNode = null;
 
@@ -45,11 +46,11 @@ public class WeatherNode {
     }
 
     public Double getPrecipitation() {
-        return precipitation;
+        return precipitationProbability;
     }
 
     public void setPrecipitation(Double precipitation) {
-        this.precipitation = precipitation;
+        this.precipitationProbability = precipitation;
     }
 
     public WeatherNode getNextNode() {
@@ -66,5 +67,13 @@ public class WeatherNode {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Double getCode() {
+        return code;
+    }
+
+    public void setCode(Double code) {
+        this.code = code;
     }
 }

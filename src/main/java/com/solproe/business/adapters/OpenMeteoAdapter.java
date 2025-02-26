@@ -7,22 +7,23 @@ import com.solproe.business.domain.WeatherNode;
 import com.solproe.business.dto.OpenMeteoForecastList;
 
 public class OpenMeteoAdapter {
+    private final JsonObject jsObject;
 
-    private JsonObject jsObject;
 
     public OpenMeteoAdapter(JsonObject jsObject) {
         this.jsObject = jsObject;
     }
 
 
-    public OpenMeteoForecastList setWeatherForecast5Dto() {
+    public OpenMeteoForecastList setWeatherForecastDto() {
         OpenMeteoForecastList openMeteoForecastList = new OpenMeteoForecastList();
         JsonObject forecast = jsObject.getAsJsonObject("daily");
         JsonArray temp = forecast.getAsJsonArray("temperature_2m_max");
-        JsonArray humidity = forecast.getAsJsonArray("relative_humidity_2m_max");
-        JsonArray precipitation = forecast.getAsJsonArray("precipitation_probability_mean");
+        JsonArray humidity = forecast.getAsJsonArray("relative_humidity_2m_mean");
+        JsonArray precipitation = forecast.getAsJsonArray("precipitation_probability_max");
         JsonArray date = forecast.getAsJsonArray("time");
-        //JsonArray windSpeed = forecast.getAsJsonArray("relative_humidity_2m_max");
+        JsonArray wind = forecast.getAsJsonArray("wind_speed_10m_max");
+        JsonArray code = forecast.getAsJsonArray("weather_code");
         int count = 0;
         for (JsonElement jsonElement : forecast.getAsJsonArray("time")) {
             WeatherNode weatherNode = new WeatherNode();
@@ -30,7 +31,8 @@ public class OpenMeteoAdapter {
             weatherNode.setTemp(temp.get(count).getAsDouble());
             weatherNode.setPrecipitation(precipitation.get(count).getAsDouble());
             weatherNode.setDate(date.get(count).getAsString());
-
+            weatherNode.setSpeedWind(wind.get(count).getAsDouble());
+            weatherNode.setCode(code.get(count).getAsDouble());
             openMeteoForecastList.addNodeList(weatherNode);
             count++;
         }

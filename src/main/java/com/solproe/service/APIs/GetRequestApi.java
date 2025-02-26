@@ -30,6 +30,7 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
             this.requestApi.sendRequest(this.request);
         }
         catch (Exception e) {
+            System.out.println(e.getMessage() + " get request exception");
             throw new RuntimeException();
         }
     }
@@ -41,6 +42,7 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
+        System.out.println("success get request");
         this.requestInterface.successResponse(jsonObject);
     }
 

@@ -32,19 +32,19 @@ public class ApiCommandInvoker implements RequestInterface {
     }
 
     public void executeCommand() {
+        System.out.println("execute command");
         this.command.execute();
     }
 
 
     @Override
     public void failedResponse(Response response) {
-
         this.requestInterface.failedResponse(response);
     }
 
     @Override
     public void successResponse(JsonObject jsonObject) {
-
+        System.out.println("success api command");
         this.requestInterface.successResponse(jsonObject);
     }
 }
