@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OpenMeteoForecastList {
-    private List<WeatherNode> nodeList = new ArrayList<>();
+    private final List<WeatherNode> nodeList = new ArrayList<>();
 
 
     public void addNodeList(WeatherNode weatherNode) {

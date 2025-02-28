@@ -1,11 +1,12 @@
 package com.solproe.service.excel;
 
 import com.solproe.business.domain.SheetDataModel;
+import com.solproe.service.excel.graphics.ExcelGenerateGraphics;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 public class GenericSheetTemplate implements ExcelSheetTemplate {
-
+    private ExcelGenerateGraphics excelGenerateGraphics;
 
     @Override
     public void createSheet(Workbook workbook, SheetDataModel data) {

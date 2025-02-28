@@ -19,8 +19,8 @@ public class ExcelService {
         return workbook;
     }
 
-    public void saveWorkbook(Workbook workbook, String path) {
-        try (OutputStream outputStream = new FileOutputStream(this.path)) {
+    public void saveWorkbook(Workbook workbook, String name) {
+        try (OutputStream outputStream = new FileOutputStream(this.path + name)) {
             workbook.write(outputStream);
             workbook.close();
             System.out.println("generated file");

@@ -3,7 +3,6 @@ package com.solproe.business.usecase;
 import com.google.gson.JsonObject;
 import com.solproe.business.domain.ConfigFileThreshold;
 import com.solproe.business.repository.ConfigFileGenerator;
-
 import java.util.Objects;
 
 public class CreateConfigFileUseCase {
@@ -24,12 +23,16 @@ public class CreateConfigFileUseCase {
                 ConfigFileThreshold configFileThreshold = (ConfigFileThreshold) object;
                 System.out.println(configFileThreshold.getAuxiliarSciBoss());
                 JsonObject jsonObject = this.createConfigFileThreshold(configFileThreshold);
-                this.configFileGenerator.generate(jsonObject, Objects.requireNonNull(getClass()
-                        .getResource("/configFiles/" + configFileThreshold.getIdProject())).getPath());
+                String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
+                        this.type + ".json";
+                System.out.println(path);
+                this.configFileGenerator.generate(jsonObject, path);
                 return true;
             }
             catch (Exception e) {
-                System.out.println(e.getMessage());
+                System.out.println("use case exception");
+                e.printStackTrace();
+                return false;
             }
         }
         return false;

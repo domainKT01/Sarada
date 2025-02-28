@@ -34,7 +34,7 @@ public class ConfigFileViewModel {
         configFileThreshold.setPrecipitationThresholdRed(precipitationThresholdRed);
         configFileThreshold.setWindThresholdOrange(windThresholdOrange);
         configFileThreshold.setWindThresholdRed(windThresholdRed);
-        configFileThreshold.setPrecipitationThresholdOrange(precipitationRainPercentOrange);
+        configFileThreshold.setPrecipitationRainPercentOrange(precipitationRainPercentOrange);
         configFileThreshold.setPrecipitationRainPercentRed(precipitationRainPercentRed);
         configFileThreshold.setCeraunicosThresholdRed(ceraunicosThresholdRed);
         configFileThreshold.setProjectName(projectName);
@@ -49,6 +49,7 @@ public class ConfigFileViewModel {
         //business implement
         ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase("threshold", configFileGenerator);
+        System.out.println("view model auxiliar sci boss: " + configFileThreshold.getAuxiliarSciBoss());
         boolean isSuccessful = createConfigFileUseCase.createFileConfig(configFileThreshold);
     }
 
