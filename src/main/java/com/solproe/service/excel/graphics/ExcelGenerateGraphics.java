@@ -11,5 +11,5 @@ import java.io.IOException;
 
 public interface ExcelGenerateGraphics {
 
-    void createChart(Sheet sheet, XSSFClientAnchor anchor, XSSFDrawing drawing, SheetDataModel sheetDataModel) throws IOException;
+    void createChart(Sheet sheet, XSSFClientAnchor anchor, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) throws IOException;
 }

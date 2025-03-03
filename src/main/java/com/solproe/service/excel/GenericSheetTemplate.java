@@ -116,9 +116,9 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 CellStyle styleGraphic = createHeaderStyle(workbook, (short) 12);
                 graphicTitle.getCell(0).setCellStyle(styleGraphic);
                 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
-                XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 1, 11, 10, 22);
+                XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 11, 10, 31);
                 this.excelGenerateGraphics = new LineChartGenerator();
-                this.excelGenerateGraphics.createChart(sheet, anchor, drawing, data);
+                this.excelGenerateGraphics.createChart(sheet, anchor, drawing, workbook, data);
             }
         }
         catch (Exception e) {
