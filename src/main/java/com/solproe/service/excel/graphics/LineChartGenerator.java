@@ -53,9 +53,16 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
 
         if (type.equalsIgnoreCase("date")) {
             cellStyle.setBorderLeft(BorderStyle.MEDIUM);
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
         } else if (type.equalsIgnoreCase("end")) {
             cellStyle.setBorderRight(BorderStyle.MEDIUM);
-        } else if (type.equalsIgnoreCase("top")) {
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        } else if (type.equalsIgnoreCase("header")) {
+            Font font = this.workbook.createFont();
+            font.setBold(true);
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
             cellStyle.setBorderTop(BorderStyle.MEDIUM);
         } else {
             cellStyle.setBorderTop(BorderStyle.MEDIUM);
@@ -116,11 +123,16 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         Row rowHeader = this.sheet.createRow(rowTable - 1);
         Cell cellDateHeader = rowHeader.createCell(columnTable);
         cellDateHeader.setCellValue("Fecha");
+        cellDateHeader.setCellStyle(setStyle("header"));
         Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
         cellValueHeader.setCellValue(parameters[2]);
+        cellValueHeader.setCellStyle(setStyle("header"));
         Cell cellThresholdOrangeHeader = rowHeader.createCell(columnTable +2);
         cellThresholdOrangeHeader.setCellValue("Alerta Naranja");
+        cellThresholdOrangeHeader.setCellStyle(setStyle("header"));
         Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 3);
+        cellThresholdRedHeader.setCellValue("Alerta Roja");
+        cellThresholdRedHeader.setCellStyle(setStyle("header"));
         for (int i = 0; i < sheetDataModel.getArrDate().size(); i++) {
             Row row = sheet.createRow(rowTable);
             Cell cellDate = row.createCell(columnTable);
