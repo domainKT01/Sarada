@@ -1,5 +1,7 @@
 package com.solproe.business.domain;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 
 public class SheetDataModel {
@@ -9,6 +11,10 @@ public class SheetDataModel {
     private final ArrayList<Double> arrTemperature = new ArrayList<>();
     private final ArrayList<Double> arrWindSpeed = new ArrayList<>();
     private final ArrayList<String> arrDate = new ArrayList<>();
+    private final ArrayList<Double> arrPrecipitationPercent = new ArrayList<>();
+    private final ArrayList<Double> arrHumidityPercent = new ArrayList<>();
+    private final ArrayList<Double> arrCode = new ArrayList<>();
+    private JsonObject configFileThreshold;
 
     public SheetDataModel(String sheetName, String title, String parameter) {
         this.sheetName = sheetName;
@@ -44,11 +50,43 @@ public class SheetDataModel {
         this.arrWindSpeed.add(windSpeed);
     }
 
-    public void setArrDate(String date) {
+    public void addDate(String date) {
         this.arrDate.add(date);
     }
 
     public ArrayList<String> getArrDate() {
         return this.arrDate;
+    }
+
+    public void setConfigFileThreshold(JsonObject jsonObject) {
+        this.configFileThreshold = jsonObject;
+    }
+
+    public JsonObject getConfigFileThreshold() {
+        return this.configFileThreshold;
+    }
+
+    public void addPrecipitationPercent(double precipitationPercent) {
+        this.arrPrecipitationPercent.add(precipitationPercent);
+    }
+
+    public ArrayList<Double> getArrPrecipitationPercent() {
+        return this.arrPrecipitationPercent;
+    }
+
+    public void addHumidityPercent(double humidityPercent) {
+        this.arrHumidityPercent.add(humidityPercent);
+    }
+
+    public ArrayList<Double> getArrHumidityPercent() {
+        return this.arrHumidityPercent;
+    }
+
+    public void addCode(double code) {
+        this.arrCode.add(code);
+    }
+
+    public ArrayList<Double> getArrCode() {
+        return this.arrCode;
     }
 }

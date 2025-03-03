@@ -7,10 +7,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class ExcelService {
-    private final String path;
+    private String path;
 
-
-    public ExcelService(String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -20,6 +19,7 @@ public class ExcelService {
     }
 
     public void saveWorkbook(Workbook workbook, String name) {
+        System.out.println("path: " + this.path);
         try (OutputStream outputStream = new FileOutputStream(this.path + name)) {
             workbook.write(outputStream);
             workbook.close();

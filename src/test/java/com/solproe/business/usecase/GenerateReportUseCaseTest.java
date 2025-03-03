@@ -3,9 +3,14 @@ package com.solproe.business.usecase;
 import com.google.gson.JsonObject;
 import com.solproe.business.gateway.ApiCommandInterface;
 import com.solproe.business.gateway.RequestInterface;
+import com.solproe.business.repository.ExcelFileGenerator;
+import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.service.APIs.ApiCommandInvoker;
 import com.solproe.service.APIs.ApiService;
 import com.solproe.service.APIs.GetRequestApi;
+import com.solproe.service.config.ReadJsonConfigFile;
+import com.solproe.service.excel.ExcelService;
+import com.solproe.service.excel.ReportExcelGenerator;
 import okhttp3.Response;
 import org.junit.jupiter.api.Test;
 
@@ -23,6 +28,11 @@ class GenerateReportUseCaseTest implements RequestInterface {
         ApiCommandInterface apiCommandInterface = new GetRequestApi("https://api.open-meteo.com/v1/forecast?latitude=10.4631&longitude=-73.2532&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean&forecast_days=14", apiService);
         apiService.setApiCommandInterface(apiCommandInterface);
         generateReportUseCase.setRequestInterface(apiService);
+        ExcelService excelService = new ExcelService();
+        ExcelFileGenerator excelFileGenerator = new ReportExcelGenerator(excelService);
+        generateReportUseCase.setExcelFileGenerator(excelFileGenerator);
+        ReadConfigFile readConfigFile = new ReadJsonConfigFile();
+        generateReportUseCase.setReadConfigFile(readConfigFile);
         generateReportUseCase.generateRequestApi();
     }
 

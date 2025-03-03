@@ -1,17 +1,26 @@
 package com.solproe.business.usecase;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.solproe.business.adapters.OpenMeteoAdapter;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
+import com.solproe.business.repository.ReadConfigFile;
 import okhttp3.Response;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Objects;
 
 public class GenerateReportUseCase implements RequestInterface {
     private RequestInterface requestInterface;
     private ExcelFileGenerator excelFileGenerator;
+    private JsonObject configFileJson;
+    private ReadConfigFile readConfigFile;
+    private final String configFileName = "threshold.json";
 
 
 
@@ -21,6 +30,10 @@ public class GenerateReportUseCase implements RequestInterface {
 
     public void setExcelFileGenerator(ExcelFileGenerator excelFileGenerator) {
         this.excelFileGenerator = excelFileGenerator;
+    }
+
+    public void setReadConfigFile(ReadConfigFile readConfigFile) {
+        this.readConfigFile = readConfigFile;
     }
 
 
@@ -39,6 +52,12 @@ public class GenerateReportUseCase implements RequestInterface {
             //generate linked list openMeteoAdapter
             OpenMeteoAdapter openMeteoAdapter = new OpenMeteoAdapter(jsonObject);
             OpenMeteoForecastList openMeteoForecastList = openMeteoAdapter.setWeatherForecastDto();
+            ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
+            readConfigFileUseCase.setReadInterface(this.readConfigFile);
+            this.configFileJson = readConfigFileUseCase.readConfigFile("threshold");
+            String path = "/home/prueba/Documentos/";
+            this.excelFileGenerator.setConfigFile(this.configFileJson);
+            this.excelFileGenerator.generate(path, openMeteoForecastList);
             System.out.println("success use case");
         }
         catch (Exception e) {

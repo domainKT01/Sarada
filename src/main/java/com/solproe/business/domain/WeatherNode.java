@@ -53,10 +53,6 @@ public class WeatherNode {
         this.precipitationProbability = precipitation;
     }
 
-    public WeatherNode getNextNode() {
-        return nextNode;
-    }
-
     public void setNextNode(WeatherNode nextNode) {
         this.nextNode = nextNode;
     }
