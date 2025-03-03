@@ -110,15 +110,14 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                         graphicTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN PARA 14 DÍAS DE PRONÓSTICO");
                         break;
                     case "rainShowerDataModel" :
-                        graphicTitle.getCell(0).setCellValue("MONITOREO DE VIENTO PARA 14 DÍAS DE PRONÓSTICO");
+                        graphicTitle.getCell(0).setCellValue("MONITOREO DE VELOCIDAD DE VIENTO PARA 14 DÍAS DE PRONÓSTICO");
                         break;
                 }
                 CellStyle styleGraphic = createHeaderStyle(workbook, (short) 12);
                 graphicTitle.getCell(0).setCellStyle(styleGraphic);
                 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
-                XSSFClientAnchor anchor = drawing.createAnchor(0, 0, 0, 0, 0, 11, 10, 31);
                 this.excelGenerateGraphics = new LineChartGenerator();
-                this.excelGenerateGraphics.createChart(sheet, anchor, drawing, workbook, data);
+                this.excelGenerateGraphics.createChart(sheet, drawing, workbook, data);
             }
         }
         catch (Exception e) {
