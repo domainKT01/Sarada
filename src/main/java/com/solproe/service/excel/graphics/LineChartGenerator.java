@@ -23,7 +23,11 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         this.sheetDataModel = sheetDataModel;
         this.workbook = workbook;
 
-        this.sheet.setColumnWidth(13,4000 );
+        this.sheet.setColumnWidth(13,4500 );
+        this.sheet.setColumnWidth(15,4500 );
+        this.sheet.setColumnWidth(16,4500 );
+
+        System.out.println(sheetDataModel.getArrTemperature());
 
         if (sheetDataModel.getReportType().equals("forestFireDataModel")) {
             String[] parameters = {"forestFireThresholdOrange", "forestFireThresholdRed", "Temp"};
@@ -32,8 +36,8 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             int[][] parameterSource = {{11, 24, 13, 13}, {11, 24, 14, 14}, {11, 24, 15, 15}, {11, 24, 16, 16}, {11, 24, 17, 17}};
             createGraphic(parameterSource, anchorTemp);
         } else if (sheetDataModel.getReportType().equalsIgnoreCase("massMovementDataModel")) {
-            String[] parameters1 = {"precipitationRainPercentOrange", "precipitationRainPercentRed"};
-            String[] parameters2 = {"precipitationThresholdOrange", "precipitationThresholdRed"};
+            String[] parameters1 = {"precipitationRainPercentOrange", "precipitationRainPercentRed", "Prec (%)"};
+            String[] parameters2 = {"precipitationThresholdOrange", "precipitationThresholdRed", "Prec (mm)"};
             createValuesTable(11, 13, parameters1);
             createValuesTable(37, 13, parameters2);
             int[][] parameterSource1 = {{11, 24, 13, 13}, {11, 24, 14, 14}, {11, 24, 15, 15}, {11, 24, 16, 16}, {11, 24, 17, 17}};

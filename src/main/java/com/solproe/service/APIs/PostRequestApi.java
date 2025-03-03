@@ -8,4 +8,9 @@ public class PostRequestApi implements ApiCommandInterface {
     public void execute() {
 
     }
+
+    @Override
+    public void setAnyParameter(Object parameter) {
+
+    }
 }

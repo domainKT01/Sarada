@@ -7,11 +7,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-
 import java.io.IOException;
 
 public class RequestApi {
-
     private final OkHttpClient okHttpClient = new OkHttpClient();
     private final RequestInterface requestInterface;
 
@@ -22,7 +20,6 @@ public class RequestApi {
 
 
     void sendRequest(Request request) throws IOException {
-
         try (Response response = this.okHttpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 ResponseBody responseBody = response.body();
@@ -48,6 +45,7 @@ public class RequestApi {
 
 
     void failedResponse(Response response) {
+        System.out.println("request api exc: " + response.message() + " code: " + response.code());
         this.requestInterface.failedResponse(response);
     }
 }

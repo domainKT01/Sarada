@@ -8,18 +8,14 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GetRequestApi implements ApiCommandInterface, RequestInterface {
-
-    private final Request request;
+    private Request request;
     private final RequestApi requestApi;
     private final RequestInterface requestInterface;
+    private String baseUrl;
 
 
     @Inject
-    public GetRequestApi(String baseUrl, RequestInterface requestInterface) {
-        this.request = new Request.Builder()
-                .url(baseUrl)
-                .build();
-
+    public GetRequestApi(RequestInterface requestInterface) {
         this.requestApi = new RequestApi(this);
         this.requestInterface = requestInterface;
     }
@@ -27,6 +23,9 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
     @Override
     public void execute() {
         try {
+            this.request = new Request.Builder()
+                    .url(baseUrl)
+                    .build();
             this.requestApi.sendRequest(this.request);
         }
         catch (Exception e) {
@@ -35,6 +34,14 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
         }
     }
 
+    @Override
+    public void setAnyParameter(Object parameter) {
+        this.baseUrl = parameter.toString();
+        System.out.println(this.baseUrl);
+        this.request = new Request.Builder()
+                .url(this.baseUrl)
+                .build();
+    }
 
     @Override
     public void doRequest(String baseUrl) {
@@ -42,13 +49,13 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
-        System.out.println("success get request");
         this.requestInterface.successResponse(jsonObject);
     }
 
 
     @Override
     public void failedResponse(Response response) {
+        System.out.println("failed get request");
         this.requestInterface.failedResponse(response);
     }
 }

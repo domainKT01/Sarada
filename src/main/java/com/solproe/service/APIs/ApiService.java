@@ -31,12 +31,12 @@ public class ApiService implements RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
-        System.out.println("success api service");
         this.requestInterface.successResponse(jsonObject);
     }
 
     @Override
     public void doRequest(String baseUrl) {
+        this.invoker.setAnyParameter(baseUrl);
         this.invoker.setRequestInterface(this);
         this.invoker.setCommand(this.apiCommandInterface);
         this.invoker.executeCommand();

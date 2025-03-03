@@ -26,6 +26,10 @@ public class ApiCommandInvoker implements RequestInterface {
         this.command = command;
     }
 
+    public void setAnyParameter(Object parameter){
+        this.command.setAnyParameter(parameter);
+    }
+
     @Override
     public void doRequest(String baseUrl) {
 
@@ -44,7 +48,7 @@ public class ApiCommandInvoker implements RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
-        System.out.println("success api command");
+        System.out.println(jsonObject);
         this.requestInterface.successResponse(jsonObject);
     }
 }

@@ -15,12 +15,9 @@ public class CommandModule {
     @Provides
     @IntoMap
     @StringKey("request")
-    public ApiCommandInterface provideApiCommandInterface(String baseUrl,
-                                                        RequestInterface requestInterface,
-                                                        String commandName) {
-
+    public ApiCommandInterface provideApiCommandInterface(RequestInterface requestInterface, String commandName) {
         if (commandName.equals("get")) {
-            return new GetRequestApi(baseUrl, requestInterface);
+            return new GetRequestApi(requestInterface);
         }
         else {
             return new PostRequestApi();
