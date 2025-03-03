@@ -15,6 +15,7 @@ public class SheetDataModel {
     private final ArrayList<Double> arrHumidityPercent = new ArrayList<>();
     private final ArrayList<Double> arrCode = new ArrayList<>();
     private JsonObject configFileThreshold;
+    private String reportType;
 
     public SheetDataModel(String sheetName, String title, String parameter) {
         this.sheetName = sheetName;
@@ -88,5 +89,13 @@ public class SheetDataModel {
 
     public ArrayList<Double> getArrCode() {
         return this.arrCode;
+    }
+
+    public void setReportType(String reportType) {
+        this.reportType = reportType;
+    }
+
+    public String getReportType() {
+        return this.reportType;
     }
 }

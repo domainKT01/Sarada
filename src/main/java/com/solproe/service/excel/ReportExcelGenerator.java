@@ -37,20 +37,28 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                 "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE INCENDIOS FORESTALES ",
                 "TEMPERATURA PROMEDIO DIARIA EN °C"
         );
+        forestFireDataModel.setReportType("forestFireDataModel");
+
         SheetDataModel massMovementDataModel = new SheetDataModel(
                 "MOVIMIENTOS EN MASA",
                 "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE MOVIMIENTOS EN MASA",
                 "PRECIPITACIÓN PROMEDIO DIARIA EN mm y PROBABILIDAD DE PRECIPITACIÓN EN %"
         );
+        massMovementDataModel.setReportType("massMovementDataModel");
+
         SheetDataModel rainShowerDataModel = new SheetDataModel(
                 "VENDAVALES",
                 "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE VENDAVALES",
                 "VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h"
         );
+        rainShowerDataModel.setReportType("rainShowerDataModel");
+
+        forestFireDataModel.setConfigFileThreshold(this.configFileThreshold);
+        massMovementDataModel.setConfigFileThreshold(this.configFileThreshold);
+        rainShowerDataModel.setConfigFileThreshold(this.configFileThreshold);
 
         for (WeatherNode weatherNode : forecastList.getNodeList()) {
             forestFireDataModel.addTemperature(weatherNode.getTemp());
-            forestFireDataModel.setConfigFileThreshold(this.configFileThreshold);
             forestFireDataModel.addWindSpeed(weatherNode.getSpeedWind());
             forestFireDataModel.addDate(weatherNode.getDate());
             forestFireDataModel.addHumidityPercent(weatherNode.getHumidity());
@@ -59,7 +67,6 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
 
             rainShowerDataModel.addTemperature(weatherNode.getTemp());
             rainShowerDataModel.addWindSpeed(weatherNode.getSpeedWind());
-            rainShowerDataModel.setConfigFileThreshold(this.configFileThreshold);
             rainShowerDataModel.addCode(weatherNode.getCode());
             rainShowerDataModel.addDate(weatherNode.getDate());
             rainShowerDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
@@ -71,7 +78,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
             massMovementDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
             massMovementDataModel.addWindSpeed(weatherNode.getSpeedWind());
             massMovementDataModel.addTemperature(weatherNode.getTemp());
-            massMovementDataModel.setConfigFileThreshold(this.configFileThreshold);
+
         }
 
         this.dataModelList = new ArrayList<>();

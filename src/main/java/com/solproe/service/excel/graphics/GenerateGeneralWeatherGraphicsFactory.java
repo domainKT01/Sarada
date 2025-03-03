@@ -1,6 +1,7 @@
 package com.solproe.service.excel.graphics;
 
 import com.google.gson.JsonObject;
+import com.solproe.business.domain.SheetDataModel;
 import com.solproe.business.dto.CellRangeDTO;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -18,7 +19,7 @@ public class GenerateGeneralWeatherGraphicsFactory implements ExcelGenerateGraph
     }
 
     @Override
-    public void createChart(Sheet sheet, Workbook workbook, XSSFClientAnchor anchor, XSSFDrawing drawing, CellRangeDTO cellRangeDTO) throws IOException {
+    public void createChart(Sheet sheet, XSSFClientAnchor anchor, XSSFDrawing drawing, SheetDataModel sheetDataModel) throws IOException {
 
     }
 }

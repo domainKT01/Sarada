@@ -1,5 +1,6 @@
 package com.solproe.service.excel.graphics;
 
+import com.solproe.business.domain.SheetDataModel;
 import com.solproe.business.dto.CellRangeDTO;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -10,50 +11,46 @@ import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 
-import java.io.IOException;
-
 public class LineChartGenerator implements ExcelGenerateGraphics {
 
 
     @Override
-    public void createChart(Sheet sheet, Workbook workbook, XSSFClientAnchor anchor, XSSFDrawing drawing, CellRangeDTO cellRangeDTO) throws IOException {
-
+    public void createChart(Sheet sheet, XSSFClientAnchor anchor, XSSFDrawing drawing, SheetDataModel sheetDataModel) {
         XSSFChart chart = drawing.createChart(anchor);
-        chart.setTitleText("Gráfico de Líneas");
-        chart.setTitleOverlay(false);
+        String[] properties = sheetDataModel.getArrDate().toArray(new String[14]);
+        Double[] thresholdOrange = new Double[14];
+        Double[] thresholdRed = new Double[14];
+        Double[] values;
+        if (sheetDataModel.getReportType().equals("forestFireDataModel")) {
+            values = sheetDataModel.getArrTemperature().toArray(new Double[14]);
+            double orange = sheetDataModel.getConfigFileThreshold().get("forestFireThresholdOrange").getAsDouble();
+            double red = sheetDataModel.getConfigFileThreshold().get("forestFireThresholdRed").getAsDouble();
+            for (int i = 0; i < 14; i++) {
+                thresholdOrange[i] = orange;
+                thresholdRed[i] = red;
+            }
 
-        XDDFChartLegend legend = chart.getOrAddLegend();
-        legend.setPosition(LegendPosition.TOP_RIGHT);
+            // Configurar datos del gráfico
+            XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
+            bottomAxis.setTitle("Dates");
+            XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
 
-        // Configurar datos del gráfico
-        XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
-        bottomAxis.setTitle("Dates");
-        XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
-        leftAxis.setTitle("Temperature (°C)");
+            XDDFDataSource<String> categories = XDDFDataSourcesFactory.fromArray(properties);
 
-        XDDFChartData lineChartData = chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
+            XDDFNumericalDataSource<Double> value = XDDFDataSourcesFactory.fromArray(values);
 
-        XDDFDataSource<String> categories = XDDFDataSourcesFactory.fromStringCellRange((XSSFSheet) sheet,
-                new CellRangeAddress( cellRangeDTO.getStartRow() + 1, cellRangeDTO.getEndRow() + 1,
-                        cellRangeDTO.getStartCol(), cellRangeDTO.getStartCol()));
+            XDDFNumericalDataSource<Double> sourceThresholdOrange = XDDFDataSourcesFactory.fromArray(thresholdOrange);
 
+            XDDFNumericalDataSource<Double> sourceThresholdRed = XDDFDataSourcesFactory.fromArray(thresholdRed);
 
-        XDDFNumericalDataSource<Double> tempValue = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) sheet,
-                new CellRangeAddress(cellRangeDTO.getStartRow() + 1, cellRangeDTO.getEndRow(),
-                        cellRangeDTO.getStartCol() + 1, cellRangeDTO.getStartCol() + 1));
+            // Crear el gráfico de líneas
+            XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
+            XDDFLineChartData.Series series = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
+            series.setTitle("Ventas", null);
+            series.setSmooth(false);
+            series.setMarkerStyle(MarkerStyle.CIRCLE);
 
-        // Crear el gráfico de líneas
-        XDDFChartData.Series series = lineChartData.addSeries(categories, tempValue);
-
-        series.setTitle("Temp", null);
-
-        XDDFNumericalDataSource<Double> valuesUmbral = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) sheet,
-                new CellRangeAddress(cellRangeDTO.getStartRow() + 1, cellRangeDTO.getEndRow(), 4, 4));
-
-        XDDFChartData.Series serieUmbral = lineChartData.addSeries(categories, valuesUmbral);
-
-        serieUmbral.setTitle("Threshold");
-
-        chart.plot(lineChartData);
+            chart.plot(chartData);
+        }
     }
 }
