@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
+    public Button challengesButton;
     @FXML Button createCodeList;
     @FXML Button createConfig;
     @FXML Button dashboardButton;
@@ -79,6 +80,21 @@ public class MainController implements Initializable {
             }
             this.lastClicked = this.dashboardButton;
             this.lastClicked.setFont(new Font("Cursive", 18F));
+        });
+
+        this.challengesButton.setOnMousePressed(_ -> {
+            try {
+                this.setCenter("/views/report/report-generate.fxml");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (this.lastClicked != null) {
+                this.lastClicked.setFont(new Font("System", 13.0F));
+            }
+            this.lastClicked = this.challengesButton;
+            this.lastClicked.setFont(new Font("Cursive", 18F));
+            System.out.println("report");
         });
     }
 

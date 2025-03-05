@@ -15,6 +15,7 @@ module com.solproe {
     requires annotations;
     requires java.management;
     requires org.apache.commons.io;
+    requires kotlin.stdlib;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;

@@ -19,6 +19,10 @@ repositories {
 }
 
 dependencies {
+
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.20-RC")
+
     //tests
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

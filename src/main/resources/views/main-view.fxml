@@ -12,7 +12,7 @@
                 <Button fx:id="dashboardButton" text="Dashboard" styleClass="menu-button" />
                 <Button fx:id="createConfig" text="Create conf" styleClass="menu-button" />
                 <Button fx:id="createCodeList" text="Create code list" styleClass="menu-button" />
-                <Button fx:id="challengesButton" text="Challenges" styleClass="menu-button" />
+                <Button fx:id="challengesButton" text="Report" styleClass="menu-button" />
             </VBox>
         </VBox>
     </left>
