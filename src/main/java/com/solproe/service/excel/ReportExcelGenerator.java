@@ -26,7 +26,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
         ExcelSheetGenerator sheetGenerator = new ExcelSheetGenerator(new GenericSheetTemplate());
         sheetGenerator.generateSheets(workbook, this.dataModelList);
         this.excelService.setPath(this.path);
-        this.excelService.saveWorkbook(workbook, "Reporte.xlsx");
+        this.excelService.saveWorkbook(workbook, "reporte).xlsx");
     }
 
     @Override

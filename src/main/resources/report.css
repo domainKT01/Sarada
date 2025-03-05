@@ -1,8 +1,25 @@
 .box-report {
-    -fx-background-color: red;
-    -fx-alignment: center;
     -fx-spacing: 20;
-    -fx-padding: 40 0 0 0;
-    -fx-max-height: 500;
+    -fx-max-width: 200;
+    -fx-margin: auto;
+    -fx-alignment: center;
+}
 
+#buttonGenerate {
+    -fx-background-color: #d7d7d7;
+    -fx-border-color: #e6dede; /* Color de borde oscuro */
+    -fx-background-radius: 9; /* Bordes redondeados para el fondo */
+    -fx-border-radius: 9; /* Bordes redondeados */
+    -fx-text-fill: black;
+
+    -fx-min-width: 45px; /* Ancho mínimo */
+    -fx-pref-width: 100px; /* Ancho preferido */
+    -fx-max-width: 100px; /* Ancho máximo */
+    -fx-min-height: 40px; /* Altura mínima */
+    -fx-pref-height: 30px; /* Altura preferida */
+    -fx-max-height: 60px; /* Altura máxima */
+}
+
+#buttonGenerate:hover {
+    -fx-background-color: white;
 }

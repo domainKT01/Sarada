@@ -49,6 +49,9 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         } else if (sheetDataModel.getReportType().equalsIgnoreCase("rainShowerDataModel")) {
             String[] parameters = {"windThresholdOrange", "windThresholdRed"};
             createValuesTable(11, 13, parameters);
+            XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
+            int[][] parameterSource = {{11, 24, 13, 13}, {11, 24, 14, 14}, {11, 24, 15, 15}, {11, 24, 16, 16}, {11, 24, 17, 17}};
+            createGraphic(parameterSource, anchorWind);
         }
     }
 
