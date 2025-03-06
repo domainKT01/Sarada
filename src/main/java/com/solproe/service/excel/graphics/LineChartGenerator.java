@@ -47,7 +47,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             createGraphic(parameterSource1, xssfClientAnchor1);
             createGraphic(parameterSource2, xssfClientAnchor2);
         } else if (sheetDataModel.getReportType().equalsIgnoreCase("rainShowerDataModel")) {
-            String[] parameters = {"windThresholdOrange", "windThresholdRed"};
+            String[] parameters = {"windThresholdOrange", "windThresholdRed", "Viento"};
             createValuesTable(11, 13, parameters);
             XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
             int[][] parameterSource = {{11, 24, 13, 13}, {11, 24, 14, 14}, {11, 24, 15, 15}, {11, 24, 16, 16}, {11, 24, 17, 17}};
@@ -140,6 +140,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 3);
         cellThresholdRedHeader.setCellValue("Alerta Roja");
         cellThresholdRedHeader.setCellStyle(setStyle("header"));
+        System.out.println(parameters);
         for (int i = 0; i < sheetDataModel.getArrDate().size(); i++) {
             Row row = sheet.createRow(rowTable);
             Cell cellDate = row.createCell(columnTable);
