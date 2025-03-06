@@ -71,6 +71,16 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             font.setBold(true);
             cellStyle.setAlignment(HorizontalAlignment.CENTER);
             cellStyle.setBorderTop(BorderStyle.MEDIUM);
+        } else if (type.equalsIgnoreCase("red")) {
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+            cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex()); // Color de fondo
+            cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // Patrón de relleno SOLID_FOREGROUND
+        } else if (type.equalsIgnoreCase("orange")) {
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+            cellStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex()); // Color de fondo
+            cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // Patrón de relleno SOLID_FOREGROUND
         } else {
             cellStyle.setBorderTop(BorderStyle.MEDIUM);
             cellStyle.setBorderBottom(BorderStyle.MEDIUM);
@@ -140,7 +150,6 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 3);
         cellThresholdRedHeader.setCellValue("Alerta Roja");
         cellThresholdRedHeader.setCellStyle(setStyle("header"));
-        System.out.println(parameters);
         for (int i = 0; i < sheetDataModel.getArrDate().size(); i++) {
             Row row = sheet.createRow(rowTable);
             Cell cellDate = row.createCell(columnTable);
@@ -149,8 +158,55 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             Cell cellThresholdRed = row.createCell(columnTable + 3);
             cellDate.setCellValue(sheetDataModel.getArrDate().get(i));
             cellDate.setCellStyle(setStyle("date"));
-            cellValue.setCellValue(sheetDataModel.getArrTemperature().get(i));
-            cellValue.setCellStyle(setStyle(""));
+            if (parameters[2].equalsIgnoreCase("temp")) {
+                cellValue.setCellValue(sheetDataModel.getArrTemperature().get(i));
+                if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[1]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("red"));
+                }else if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[0]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("orange"));
+                }
+                else {
+                    cellValue.setCellStyle(setStyle(""));
+                }
+            } else if (parameters[2].equalsIgnoreCase("Prec (%)")) {
+                cellValue.setCellValue(sheetDataModel.getArrPrecipitationPercent().get(i));
+                if (sheetDataModel.getArrPrecipitationPercent().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[1]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("red"));
+                }else if (sheetDataModel.getArrPrecipitationPercent().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[0]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("orange"));
+                }
+                else {
+                    cellValue.setCellStyle(setStyle(""));
+                }
+            } else if (parameters[2].equalsIgnoreCase("Prec (mm)")) {
+                cellValue.setCellValue(sheetDataModel.getArrPrecipitationMm().get(i));
+                if (sheetDataModel.getArrPrecipitationMm().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[1]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("red"));
+                }else if (sheetDataModel.getArrPrecipitationMm().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[0]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("orange"));
+                }
+                else {
+                    cellValue.setCellStyle(setStyle(""));
+                }
+            } else if (parameters[2].equalsIgnoreCase("Viento")) {
+                cellValue.setCellValue(sheetDataModel.getArrPrecipitationMm().get(i));
+                if (sheetDataModel.getArrWindSpeed().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[1]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("red"));
+                }else if (sheetDataModel.getArrWindSpeed().get(i) >= sheetDataModel.getConfigFileThreshold()
+                        .get(parameters[0]).getAsDouble()) {
+                    cellValue.setCellStyle(setStyle("orange"));
+                }
+                else {
+                    cellValue.setCellStyle(setStyle(""));
+                }
+            }
             cellThresholdOrange.setCellValue(sheetDataModel.getConfigFileThreshold().get(parameters[0]).getAsDouble());
             cellThresholdOrange.setCellStyle(setStyle(""));
             cellThresholdRed.setCellValue(sheetDataModel.getConfigFileThreshold().get(parameters[1]).getAsDouble());

@@ -30,7 +30,7 @@ public class GenerateReportUseCase implements RequestInterface {
 
 
     public void generateRequestApi() {
-        this.requestInterface.doRequest("https://api.open-meteo.com/v1/forecast?latitude=6.7187&longitude=-75.9073&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean&forecast_days=14");
+        this.requestInterface.doRequest("https://api.open-meteo.com/v1/forecast?latitude=6.7187&longitude=-75.9073&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean,precipitation_sum&forecast_days=14");
     }
 
     @Override

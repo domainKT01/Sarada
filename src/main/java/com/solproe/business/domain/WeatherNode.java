@@ -9,6 +9,7 @@ public class WeatherNode {
     private Double precipitationProbability;
     private String date;
     private Double code;
+    private Double precipitationMm;
 
     private WeatherNode nextNode = null;
 
@@ -71,5 +72,13 @@ public class WeatherNode {
 
     public void setCode(Double code) {
         this.code = code;
+    }
+
+    public Double getPrecipitationMm() {
+        return precipitationMm;
+    }
+
+    public void setPrecipitationMm(Double precipitationMm) {
+        this.precipitationMm = precipitationMm;
     }
 }

@@ -10,7 +10,6 @@ import com.solproe.service.APIs.GetRequestApi;
 import com.solproe.service.config.ReadJsonConfigFile;
 import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
-import com.solproe.util.TaskRunner;
 import javafx.concurrent.Task;
 
 public class GenerateReportViewModel {

@@ -64,6 +64,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
             forestFireDataModel.addHumidityPercent(weatherNode.getHumidity());
             forestFireDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
             forestFireDataModel.addCode(weatherNode.getCode());
+            forestFireDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
 
             rainShowerDataModel.addTemperature(weatherNode.getTemp());
             rainShowerDataModel.addWindSpeed(weatherNode.getSpeedWind());
@@ -71,6 +72,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
             rainShowerDataModel.addDate(weatherNode.getDate());
             rainShowerDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
             rainShowerDataModel.addHumidityPercent(weatherNode.getHumidity());
+            rainShowerDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
 
             massMovementDataModel.addHumidityPercent(weatherNode.getHumidity());
             massMovementDataModel.addCode(weatherNode.getCode());
@@ -78,7 +80,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
             massMovementDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
             massMovementDataModel.addWindSpeed(weatherNode.getSpeedWind());
             massMovementDataModel.addTemperature(weatherNode.getTemp());
-
+            massMovementDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
         }
 
         this.dataModelList = new ArrayList<>();

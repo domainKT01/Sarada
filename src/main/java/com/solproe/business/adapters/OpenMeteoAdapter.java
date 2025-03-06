@@ -21,6 +21,7 @@ public class OpenMeteoAdapter {
         JsonArray temp = forecast.getAsJsonArray("temperature_2m_max");
         JsonArray humidity = forecast.getAsJsonArray("relative_humidity_2m_mean");
         JsonArray precipitation = forecast.getAsJsonArray("precipitation_probability_max");
+        JsonArray precipitationMm = forecast.getAsJsonArray("precipitation_sum");
         JsonArray date = forecast.getAsJsonArray("time");
         JsonArray wind = forecast.getAsJsonArray("wind_speed_10m_max");
         JsonArray code = forecast.getAsJsonArray("weather_code");
@@ -33,6 +34,7 @@ public class OpenMeteoAdapter {
             weatherNode.setDate(date.get(count).getAsString());
             weatherNode.setSpeedWind(wind.get(count).getAsDouble());
             weatherNode.setCode(code.get(count).getAsDouble());
+            weatherNode.setPrecipitationMm(precipitationMm.get(count).getAsDouble());
             openMeteoForecastList.addNodeList(weatherNode);
             count++;
         }

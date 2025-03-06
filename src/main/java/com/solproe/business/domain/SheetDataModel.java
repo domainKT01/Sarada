@@ -12,6 +12,7 @@ public class SheetDataModel {
     private final ArrayList<Double> arrWindSpeed = new ArrayList<>();
     private final ArrayList<String> arrDate = new ArrayList<>();
     private final ArrayList<Double> arrPrecipitationPercent = new ArrayList<>();
+    private final ArrayList<Double> arrPrecipitationMm = new ArrayList<>();
     private final ArrayList<Double> arrHumidityPercent = new ArrayList<>();
     private final ArrayList<Double> arrCode = new ArrayList<>();
     private JsonObject configFileThreshold;
@@ -97,5 +98,13 @@ public class SheetDataModel {
 
     public String getReportType() {
         return this.reportType;
+    }
+
+    public void addPrecipitationMm(double precipitationMm) {
+        this.arrPrecipitationMm.add(precipitationMm);
+    }
+
+    public ArrayList<Double> getArrPrecipitationMm() {
+        return this.arrPrecipitationMm;
     }
 }

@@ -27,6 +27,7 @@ public class ConfigFileViewModel {
             String auxiliarSciBoss,
             long auxiliarSciBossContact
     ) {
+        System.out.println("ceraunicos: " + ceraunicosThresholdRed);
         ConfigFileThreshold configFileThreshold = new ConfigFileThreshold();
         configFileThreshold.setForestFireThresholdOrange(forestFireThresholdOrange);
         configFileThreshold.setForestFireThresholdRed(forestFireThresholdRed);
