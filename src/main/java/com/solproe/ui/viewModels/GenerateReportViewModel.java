@@ -40,7 +40,7 @@ public class GenerateReportViewModel {
             }
         };
 
-        task.setOnFailed(event -> {
+        task.setOnFailed(_ -> {
             Throwable error = task.getException();
             if (error != null) {
                 error.printStackTrace();
@@ -49,7 +49,7 @@ public class GenerateReportViewModel {
         });
 
         Thread thread = new Thread(task);
-        thread.setUncaughtExceptionHandler((t, e) -> {
+        thread.setUncaughtExceptionHandler((_, e) -> {
             System.err.println("Excepción no capturada en el hilo: " + e.getMessage());
             e.printStackTrace();
         });

@@ -1,0 +1,43 @@
+
+.grid-pane {
+    -fx-pref-width: 100%; /* Hace que el GridPane ocupe todo el ancho */
+    -fx-padding: 10px; /* Agrega un pequeño padding alrededor del GridPane */
+}
+
+.section-title {
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+}
+
+.head {
+    -fx-padding: 10px 0 20px 0px;
+}
+
+.data-label {
+    -fx-font-size: 1em;
+    -fx-padding: 5px;
+}
+
+.data-field {
+    -fx-pref-width: 100px; /* Ajusta el ancho de los campos de entrada */
+    -fx-padding: 5px;
+    -fx-border-color: black; /* Color del borde */
+    -fx-border-width: 1px; /* Ancho del borde */
+    -fx-border-style: solid; /* Estilo del borde */
+    -fx-border-radius: 5px; /* Radio del borde para esquinas redondeadas */
+}
+
+.data-field:focused {
+    -fx-background-color: lightblue;
+    -fx-border-color: blue;
+    -fx-border-width: 2px;
+}
+
+.headBox {
+    -fx-spacing: 5px; /* Espacio entre las etiquetas de encabezado */
+    -fx-padding: 10px 0;
+}
+
+.headLabel {
+    -fx-font-weight: bold;
+}

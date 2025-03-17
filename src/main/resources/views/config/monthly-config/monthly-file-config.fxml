@@ -1,0 +1,81 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.solproe.ui.controllers.MonthlyConfigFileController"
+            stylesheets="@/configFileMonthly.css">
+    <center>
+        <GridPane hgap="300" vgap="5"
+                  styleClass="grid-pane">
+            <VBox styleClass="head">
+                <Label text="Temperatura máxima mensual promedio °C" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                       GridPane.columnSpan="2" styleClass="section-title" fx:id="gradeHead"/>
+                <Label text="Precipitación máxima mensual promedio %" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                       GridPane.columnSpan="2" styleClass="section-title" fx:id="percentHead"/>
+            </VBox>
+
+            <Label styleClass="headLabel" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                Temperatura
+            </Label>
+            <Label styleClass="headLabel" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                Precipitación
+            </Label>
+
+            <Label text="Enero" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="januaryDataGrade" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="januaryDataPercent" GridPane.rowIndex="3" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Febrero" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="februaryDataGrade" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="februaryDataPercent" GridPane.rowIndex="4" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Marzo" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="marchDataGrade" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="marchDataPercent" GridPane.rowIndex="5" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Abril" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="aprilDataGrade" GridPane.rowIndex="6" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="aprilDataPercent" GridPane.rowIndex="6" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Mayo" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="mayDataGrade" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="mayDataPercent" GridPane.rowIndex="7" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Junio" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="juneDataGrade" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="juneDataPercent" GridPane.rowIndex="8" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Julio" GridPane.rowIndex="9" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="julyDataGrade" GridPane.rowIndex="9" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="julyDataPercent" GridPane.rowIndex="9" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Agosto" GridPane.rowIndex="10" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="augustDataGrade" GridPane.rowIndex="10" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="augustDataPercent" GridPane.rowIndex="10" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Septiembre" GridPane.rowIndex="11" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="septemberDataGrade" GridPane.rowIndex="11" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="septemberDataPercent" GridPane.rowIndex="11" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Octubre" GridPane.rowIndex="12" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="octoberDataGrade" GridPane.rowIndex="12" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="octoberDataPercent" GridPane.rowIndex="12" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Noviembre" GridPane.rowIndex="13" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="novemberDataGrade" GridPane.rowIndex="13" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="novemberDataPercent" GridPane.rowIndex="13" GridPane.columnIndex="2" styleClass="data-field"/>
+            <Label text="Diciembre" GridPane.rowIndex="14" GridPane.columnIndex="0" styleClass="data-label"/>
+            <TextField fx:id="decemberDataGrade" GridPane.rowIndex="14" GridPane.columnIndex="1" styleClass="data-field"/>
+            <TextField fx:id="decemberDataPercent" GridPane.rowIndex="14" GridPane.columnIndex="2" styleClass="data-field"/>
+
+            <Label text="Umbrales de alerta" GridPane.rowIndex="15" GridPane.columnIndex="0" GridPane.columnSpan="2"
+                   styleClass="section-title"/>
+            <Label text="Umbral de alerta naranja" GridPane.rowIndex="16" GridPane.columnIndex="0"
+                   styleClass="data-label"/>
+            <TextField fx:id="orangeThresholdTemperature" GridPane.rowIndex="16" GridPane.columnIndex="1"
+                       styleClass="data-field"/>
+            <TextField fx:id="orangeThresholdPrecipitation" GridPane.rowIndex="16" GridPane.columnIndex="2"
+                       styleClass="data-field"/>
+            <Label text="Umbral de alerta roja" GridPane.rowIndex="17" GridPane.columnIndex="0"
+                   styleClass="data-label"/>
+            <TextField fx:id="redThresholdTemperature" GridPane.rowIndex="17" GridPane.columnIndex="1"
+                       styleClass="data-field"/>
+            <TextField fx:id="redThresholdPrecipitation" GridPane.rowIndex="17" GridPane.columnIndex="2"
+                       styleClass="data-field"/>
+        </GridPane>
+    </center>
+</BorderPane>

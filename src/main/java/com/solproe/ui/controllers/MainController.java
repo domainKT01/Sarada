@@ -84,7 +84,7 @@ public class MainController implements Initializable {
 
         this.challengesButton.setOnMousePressed(_ -> {
             try {
-                this.setCenter("/views/report/report-generate.fxml");
+                this.setCenter("/views/config/monthly-config/monthly-file-config.fxml");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
