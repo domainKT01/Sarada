@@ -18,21 +18,17 @@ public class CreateConfigFileUseCase {
 
     public boolean createFileConfig(Object object) {
         if (this.type.equals("threshold")) {
-            System.out.println("threshold::");
             try {
                 ConfigFileThreshold configFileThreshold = (ConfigFileThreshold) object;
-                System.out.println(configFileThreshold.getAuxiliarSciBoss());
                 JsonObject jsonObject = this.createConfigFileThreshold(configFileThreshold);
                 String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
                         this.type + ".json";
-                System.out.println(path);
                 this.configFileGenerator.generate(jsonObject, path);
                 return true;
             }
             catch (Exception e) {
                 System.out.println("use case exception");
                 e.printStackTrace();
-                return false;
             }
         }
         return false;
@@ -62,7 +58,52 @@ public class CreateConfigFileUseCase {
     }
 
 
-    public JsonObject createConfigFileCodeList(Object data) {
-        return null;
+    public boolean createConfigFileMonthly(double[] data) {
+        try {
+            JsonObject jsonObject = this.createMonthlyConfigFileThreshold(data);
+            String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
+                    this.type + ".json";
+            this.configFileGenerator.generate(jsonObject, path);
+            System.out.println("createConfigFileMonthly ###########");
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println("use case exception");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public JsonObject createMonthlyConfigFileThreshold(double[] data) {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("orangeThresholdTemperature", data[0]);
+        jsonObject.addProperty("redThresholdTemperature", data[1]);
+        jsonObject.addProperty("orangeThresholdPrecipitation", data[2]);
+        jsonObject.addProperty("redThresholdPrecipitation", data[3]);
+        jsonObject.addProperty("januaryDataGrade", data[4]);
+        jsonObject.addProperty("januaryDataPercent", data[5]);
+        jsonObject.addProperty("februaryDataGrade", data[6]);
+        jsonObject.addProperty("februaryDataPercent", data[7]);
+        jsonObject.addProperty("marchDataGrade", data[8]);
+        jsonObject.addProperty("marchDataPercent", data[9]);
+        jsonObject.addProperty("aprilDataGrade", data[10]);
+        jsonObject.addProperty("aprilDataPercent", data[11]);
+        jsonObject.addProperty("mayDataGrade", data[12]);
+        jsonObject.addProperty("mayDataPercent", data[13]);
+        jsonObject.addProperty("juneDataGrade", data[14]);
+        jsonObject.addProperty("juneDataPercent", data[15]);
+        jsonObject.addProperty("julyDataGrade", data[16]);
+        jsonObject.addProperty("julyDataPercent", data[17]);
+        jsonObject.addProperty("augustDataGrade", data[18]);
+        jsonObject.addProperty("augustDataPercent", data[19]);
+        jsonObject.addProperty("septemberDataGrade", data[20]);
+        jsonObject.addProperty("septemberDataPercent", data[21]);
+        jsonObject.addProperty("octoberDataGrade", data[22]);
+        jsonObject.addProperty("octoberDataPercent", data[23]);
+        jsonObject.addProperty("novemberDataGrade", data[24]);
+        jsonObject.addProperty("novemberDataPercent", data[25]);
+        jsonObject.addProperty("decemberDataGrade", data[26]);
+        jsonObject.addProperty("decemberDataPercent", data[27]);
+        return jsonObject;
     }
 }

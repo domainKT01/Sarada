@@ -21,7 +21,7 @@ public class ReadConfigFileUseCase  {
     public JsonObject readConfigFile(String type) {
         try {
             this.type = type;
-            if (type.equalsIgnoreCase("threshold")) {
+            if (type.equalsIgnoreCase("threshold") || type.equalsIgnoreCase("monthlyThreshold")) {
                 String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
                         this.type + ".json";
                 try (FileInputStream fs = new FileInputStream(this.readConfigFile.readFile(path))) {

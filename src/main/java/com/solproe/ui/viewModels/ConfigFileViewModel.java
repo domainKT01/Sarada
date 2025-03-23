@@ -27,7 +27,6 @@ public class ConfigFileViewModel {
             String auxiliarSciBoss,
             long auxiliarSciBossContact
     ) {
-        System.out.println("ceraunicos: " + ceraunicosThresholdRed);
         ConfigFileThreshold configFileThreshold = new ConfigFileThreshold();
         configFileThreshold.setForestFireThresholdOrange(forestFireThresholdOrange);
         configFileThreshold.setForestFireThresholdRed(forestFireThresholdRed);
@@ -50,13 +49,14 @@ public class ConfigFileViewModel {
         //business implement
         ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase("threshold", configFileGenerator);
-        System.out.println("view model auxiliar sci boss: " + configFileThreshold.getAuxiliarSciBoss());
         boolean isSuccessful = createConfigFileUseCase.createFileConfig(configFileThreshold);
     }
 
 
-    public void createFileConfigCode() {
-        //code
+    public void createConfigFileMonthly(double[] data) {
+        ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
+        CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase("monthlyThreshold", configFileGenerator);
+        boolean isSuccessful = createConfigFileUseCase.createConfigFileMonthly(data);
     }
 
 

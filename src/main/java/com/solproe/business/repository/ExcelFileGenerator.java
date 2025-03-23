@@ -7,5 +7,5 @@ public interface ExcelFileGenerator {
 
     void generate(String filePath, OpenMeteoForecastList forecastList);
 
-    void setConfigFile(JsonObject jsonObject);
+    void setConfigFile(JsonObject... jsonObject);
 }

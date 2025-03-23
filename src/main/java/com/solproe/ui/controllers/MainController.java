@@ -1,6 +1,7 @@
 package com.solproe.ui.controllers;
 
 import com.solproe.ui.viewModels.ConfigFileViewModel;
+import com.solproe.ui.viewModels.GenerateReportViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +16,7 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     public Button challengesButton;
+    public Button reportButton;
     @FXML Button createCodeList;
     @FXML Button createConfig;
     @FXML Button dashboardButton;
@@ -95,6 +97,11 @@ public class MainController implements Initializable {
             this.lastClicked = this.challengesButton;
             this.lastClicked.setFont(new Font("Cursive", 18F));
             System.out.println("report");
+        });
+
+        this.reportButton.setOnMouseClicked(_ -> {
+            GenerateReportViewModel viewModel = new GenerateReportViewModel();
+            viewModel.generateReport();
         });
     }
 

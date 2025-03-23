@@ -3,19 +3,29 @@ package com.solproe.service.excel;
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.graphics.ExcelGenerateGraphics;
 import com.solproe.service.excel.graphics.LineChartGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
 
+import java.util.Objects;
+
 public class GenericSheetTemplate implements ExcelSheetTemplate {
+    private static final Logger log = LogManager.getLogger(GenericSheetTemplate.class);
     private ExcelGenerateGraphics excelGenerateGraphics;
+    private SheetDataModel dataModel;
+    private Sheet sheet;
+    private Workbook workbook;
 
     @Override
     public void createSheet(Workbook workbook, SheetDataModel data) {
         try {
+            this.dataModel = data;
+            this.workbook = workbook;
+            int rowStart = 33;
             CellStyle headerStyle = createHeaderStyle(workbook, (short) 12);
-            Sheet sheet = workbook.createSheet(data.getSheetName());
+            this.sheet = workbook.createSheet(data.getSheetName());
 
             //combinar celdas
             sheet.setColumnWidth(0, 3500);
@@ -58,7 +68,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 createCells(0, 8, locationFields, workbook, "");
                 sheet.addMergedRegion(new CellRangeAddress(4,4,0,8));
                 locationFields.getCell(0).setCellValue("LOCALIZACIÓN ÁREA DE INFLUENCIA");
-                CellStyle styleLocation = createHeaderStyle(workbook, (short) 10    );
+                CellStyle styleLocation = createHeaderStyle(workbook, (short) 10);
                 locationFields.getCell(0).setCellStyle(styleLocation);
 
                 Row projectName = sheet.createRow(5);
@@ -66,14 +76,14 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 projectName.getCell(0).setCellValue("Nombre del Proyecto:");
                 sheet.addMergedRegion(new CellRangeAddress(5, 5, 0, 1));
                 sheet.addMergedRegion(new CellRangeAddress(5, 5, 2, 8));
-                projectName.getCell(2).setCellValue(data.getConfigFileThreshold().get("projectName").toString());
+                projectName.getCell(2).setCellValue(data.getConfigFileThreshold()[0].get("projectName").toString());
 
                 Row locationRow = sheet.createRow(6);
                 createCells(0, 8, locationRow, workbook, "border");
                 locationRow.getCell(0).setCellValue("MUNICIPIO:");
-                locationRow.getCell(2).setCellValue(data.getConfigFileThreshold().get("cityName").getAsString().toUpperCase());
+                locationRow.getCell(2).setCellValue(data.getConfigFileThreshold()[0].get("cityName").getAsString().toUpperCase());
                 locationRow.getCell(4).setCellValue("DEPARTAMENTO:");
-                locationRow.getCell(5).setCellValue(data.getConfigFileThreshold().get("stateName").getAsString().toUpperCase());
+                locationRow.getCell(5).setCellValue(data.getConfigFileThreshold()[0].get("stateName").getAsString().toUpperCase());
                 sheet.addMergedRegion(new CellRangeAddress(6, 6, 0, 1));
                 sheet.addMergedRegion(new CellRangeAddress(6, 6, 5, 8));
                 sheet.addMergedRegion(new CellRangeAddress(6, 6, 2, 3));
@@ -96,7 +106,20 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             }
 
             // ==========================
-            // 🔹 SECTION: CREATE GRAPHIC
+            // 🔹 SECTION: CREATE FOOTER
+            // ==========================
+            {
+                if (data.getReportType().equalsIgnoreCase("forestFireDataModel")) {
+                    rowStart = graphicFooter(rowStart, "forestFireThresholdOrange");
+                } else if (data.getReportType().equalsIgnoreCase("massMovementDataModel")) {
+                    rowStart = graphicFooter(rowStart, "precipitationRainPercentOrange");
+                } else {
+                    graphicFooter(rowStart, "windThresholdOrange");
+                }
+            }
+
+            // ==========================
+            // 🔹 SECTION: CREATE FIRST GRAPHIC
             // ==========================
             {
                 Row graphicTitle = sheet.createRow(9);
@@ -105,23 +128,36 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 switch (data.getReportType()) {
                     case "forestFireDataModel" :
                         graphicTitle.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 14 DÍAS DE PRONÓSTICO");
+                        Row row = sheet.createRow(rowStart + 3);
+                        createCells(0, 8, row, workbook, "");
+                        sheet.addMergedRegion(new CellRangeAddress(rowStart + 3, rowStart + 3, 0, 8));
                         break;
                     case "massMovementDataModel" :
-                        graphicTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN PARA 14 DÍAS DE PRONÓSTICO");
+                        graphicTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN % PARA 14 DÍAS DE PRONÓSTICO");
+                        graphicFooter(rowStart + 27, "precipitationThresholdOrange");
                         break;
                     case "rainShowerDataModel" :
                         graphicTitle.getCell(0).setCellValue("MONITOREO DE VELOCIDAD DE VIENTO PARA 14 DÍAS DE PRONÓSTICO");
                         break;
                 }
+                this.dataModel.setStartRow(rowStart);
                 CellStyle styleGraphic = createHeaderStyle(workbook, (short) 12);
                 graphicTitle.getCell(0).setCellStyle(styleGraphic);
                 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
                 this.excelGenerateGraphics = new LineChartGenerator();
                 this.excelGenerateGraphics.createChart(sheet, drawing, workbook, data);
             }
+
+            // =================================
+            // 🔹 SECTION: CREATE SECOND GRAPHIC
+            // =================================
+            {
+
+            }
         }
         catch (Exception e) {
             System.out.println("exception: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -147,7 +183,6 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
 
     private CellStyle createBorderedStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
-
         // Establecer bordes
         style.setBorderTop(BorderStyle.MEDIUM);
         style.setBorderBottom(BorderStyle.MEDIUM);
@@ -159,5 +194,75 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         style.setVerticalAlignment(VerticalAlignment.CENTER);
 
         return style;
+    }
+
+    private int graphicFooter(int rowStart, String param) {
+        int count = 0;
+        if (param.equalsIgnoreCase("forestFireThresholdOrange")) {
+            for (int i = 0; i < this.dataModel.getArrTemperature().size(); i++) {
+                if (this.dataModel.getArrTemperature().get(i) >= this.dataModel.getConfigFileThreshold()[0].get(param).getAsDouble()) {
+                    Row row = sheet.createRow(rowStart + count);
+                    createCells(0, 8, row, workbook, "border");
+                    row.getCell(2).setCellValue(this.dataModel.getArrDate().get(i));
+                    this.sheet.addMergedRegion(new CellRangeAddress(rowStart + count, rowStart + count, 2, 8));
+                    count++;
+                }
+            }
+        } else if (param.equalsIgnoreCase("precipitationRainPercentOrange")) {
+            for (int i = 0; i < this.dataModel.getArrPrecipitationPercent().size(); i++) {
+                if (this.dataModel.getArrPrecipitationPercent().get(i) >= this.dataModel.getConfigFileThreshold()[0].get(param).getAsDouble()) {
+                    Row row = sheet.createRow(rowStart + count);
+                    createCells(0, 8, row, workbook, "border");
+                    row.getCell(2).setCellValue(this.dataModel.getArrDate().get(i));
+                    this.sheet.addMergedRegion(new CellRangeAddress(rowStart + count, rowStart + count, 2, 8));
+                    count++;
+                }
+            }
+        }
+        else if (param.equalsIgnoreCase("precipitationThresholdOrange")) {
+            for (int i = 0; i < this.dataModel.getArrPrecipitationMm().size(); i++) {
+                if (this.dataModel.getArrPrecipitationMm().get(i) >= this.dataModel.getConfigFileThreshold()[0].get(param).getAsDouble()) {
+                    Row row = sheet.createRow(rowStart + count);
+                    createCells(0, 8, row, workbook, "border");
+                    row.getCell(2).setCellValue(this.dataModel.getArrDate().get(i));
+                    this.sheet.addMergedRegion(new CellRangeAddress(rowStart + count, rowStart + count, 2, 8));
+                    count++;
+                }
+            }
+        }
+        else if (param.equalsIgnoreCase("windThresholdOrange")) {
+            for (int i = 0; i < this.dataModel.getArrWindSpeed().size(); i++) {
+                if (this.dataModel.getArrTemperature().get(i) >= this.dataModel.getConfigFileThreshold()[0].get(param).getAsDouble()) {
+                    Row row = sheet.createRow(rowStart + count);
+                    createCells(0, 8, row, workbook, "border");
+                    row.getCell(2).setCellValue(this.dataModel.getArrDate().get(i));
+                    this.sheet.addMergedRegion(new CellRangeAddress(rowStart + count, rowStart + count, 2, 8));
+                    count++;
+                }
+            }
+        }
+        Cell header;
+        try {
+            header = sheet.getRow(rowStart).getCell(0);
+            sheet.addMergedRegion(new CellRangeAddress(rowStart, rowStart + count - 1, 0, 1));
+        }
+        catch (Exception e) {
+            Row row = sheet.createRow(rowStart);
+            createCells(0, 8, row, workbook, "border");
+            header = row.getCell(0);
+            sheet.addMergedRegion(new CellRangeAddress(rowStart, rowStart, 0, 1));
+            sheet.addMergedRegion(new CellRangeAddress(rowStart, rowStart, 2, 8));
+        }
+        header.setCellValue("FECHA DE LECTURA ANÓMALA:");
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setBold(true);
+        cellStyle.setFont(font);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        header.setCellStyle(cellStyle);
+
+        return rowStart + count;
     }
 }

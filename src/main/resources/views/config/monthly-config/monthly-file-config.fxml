@@ -4,6 +4,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.web.WebView?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.solproe.ui.controllers.MonthlyConfigFileController"
@@ -76,6 +78,9 @@
                        styleClass="data-field"/>
             <TextField fx:id="redThresholdPrecipitation" GridPane.rowIndex="17" GridPane.columnIndex="2"
                        styleClass="data-field"/>
+
+            <Button text="Guarder" fx:id="buttonSave" styleClass="button-save" GridPane.rowIndex="18"
+                        GridPane.columnIndex="2"/>
         </GridPane>
     </center>
 </BorderPane>

@@ -3,6 +3,7 @@ package com.solproe.business.domain;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SheetDataModel {
     private final String sheetName;
@@ -15,8 +16,9 @@ public class SheetDataModel {
     private final ArrayList<Double> arrPrecipitationMm = new ArrayList<>();
     private final ArrayList<Double> arrHumidityPercent = new ArrayList<>();
     private final ArrayList<Double> arrCode = new ArrayList<>();
-    private JsonObject configFileThreshold;
+    private JsonObject[] configFileThreshold;
     private String reportType;
+    private int startRow;
 
     public SheetDataModel(String sheetName, String title, String parameter) {
         this.sheetName = sheetName;
@@ -60,11 +62,11 @@ public class SheetDataModel {
         return this.arrDate;
     }
 
-    public void setConfigFileThreshold(JsonObject jsonObject) {
-        this.configFileThreshold = jsonObject;
+    public void setConfigFileThreshold(JsonObject... data) {
+        this.configFileThreshold = data;
     }
 
-    public JsonObject getConfigFileThreshold() {
+    public JsonObject[] getConfigFileThreshold() {
         return this.configFileThreshold;
     }
 
@@ -106,5 +108,13 @@ public class SheetDataModel {
 
     public ArrayList<Double> getArrPrecipitationMm() {
         return this.arrPrecipitationMm;
+    }
+
+    public int getStartRow() {
+        return startRow;
+    }
+
+    public void setStartRow(int startRow) {
+        this.startRow = startRow;
     }
 }

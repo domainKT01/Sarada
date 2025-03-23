@@ -1,0 +1,211 @@
+package com.solproe.service.excel;
+
+import com.solproe.business.domain.SheetDataModel;
+import org.apache.poi.ss.usermodel.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class SupportDatasheetTemplate implements ExcelSheetTemplate {
+    private List<SheetDataModel> dataModel;
+    private Sheet sheet;
+    private Workbook workbook;
+
+    public SupportDatasheetTemplate(List<SheetDataModel> datasets) {
+        this.dataModel = datasets;
+    }
+
+
+    @Override
+    public void createSheet(Workbook workbook, SheetDataModel sheetDataModel) {
+        try {
+            this.sheet = workbook.createSheet("support data");
+            this.workbook = workbook;
+
+            //create tables
+            String[] parameters = {"forestFireThresholdOrange", "forestFireThresholdRed", "Temp"};
+            createValuesTable(2, 1, parameters, this.dataModel.getFirst());
+
+            String[] parameters1 = {"precipitationRainPercentOrange", "precipitationRainPercentRed", "Prec (%)"};
+            String[] parameters2 = {"precipitationThresholdOrange", "precipitationThresholdRed", "Prec (mm)"};
+            createValuesTable(19, 1, parameters1, this.dataModel.get(1));
+            createValuesTable(36, 1, parameters2, this.dataModel.get(1));
+
+            String[] parametersWind = {"windThresholdOrange", "windThresholdRed", "Viento"};
+            createValuesTable(53, 1, parametersWind, this.dataModel.get(2));
+
+            String[] parametersMonths = {"orangeThresholdTemperature", "redThresholdTemperature", "Temperatura", "Precipitación"};
+            createMonthValues(69, 1, parametersMonths, this.dataModel.get(2));
+
+//            String[] parametersMonthsPrec = {"orangeThresholdTemperature", "redThresholdTemperature", "Temperatura"};
+//            createMonthValues(69, 1, parametersMonthsPrec, this.dataModel.get(2));
+
+        }
+        catch (Exception e) {
+            System.out.println("support data exc: " + e.getMessage());
+        }
+    }
+
+    private void createValuesTable(int rowTable, int columnTable, String[] parameters, SheetDataModel sheetDataModel) {
+        try {
+            Row rowHeader = this.sheet.createRow(rowTable - 1);
+            Cell cellDateHeader = rowHeader.createCell(columnTable);
+            cellDateHeader.setCellValue("Fecha");
+            cellDateHeader.setCellStyle(setStyle("header"));
+            Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
+            cellValueHeader.setCellValue(parameters[2]);
+            cellValueHeader.setCellStyle(setStyle("header"));
+            Cell cellThresholdOrangeHeader = rowHeader.createCell(columnTable +2);
+            cellThresholdOrangeHeader.setCellValue("Alerta Naranja");
+            cellThresholdOrangeHeader.setCellStyle(setStyle("header"));
+            Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 3);
+            cellThresholdRedHeader.setCellValue("Alerta Roja");
+            cellThresholdRedHeader.setCellStyle(setStyle("header"));
+            for (int i = 0; i < sheetDataModel.getArrDate().size(); i++) {
+                Row row = sheet.createRow(rowTable);
+                Cell cellDate = row.createCell(columnTable);
+                Cell cellValue = row.createCell(columnTable + 1);
+                Cell cellThresholdOrange = row.createCell(columnTable + 2);
+                Cell cellThresholdRed = row.createCell(columnTable + 3);
+                cellDate.setCellValue(sheetDataModel.getArrDate().get(i));
+                cellDate.setCellStyle(setStyle("date"));
+                if (parameters[2].equalsIgnoreCase("temp")) {
+                    cellValue.setCellValue(sheetDataModel.getArrTemperature().get(i));
+                    if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[1]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("red"));
+                    }else if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[0]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("orange"));
+                    }
+                    else {
+                        cellValue.setCellStyle(setStyle(""));
+                    }
+                } else if (parameters[2].equalsIgnoreCase("Prec (%)")) {
+                    cellValue.setCellValue(sheetDataModel.getArrPrecipitationPercent().get(i));
+                    if (sheetDataModel.getArrPrecipitationPercent().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[1]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("red"));
+                    }else if (sheetDataModel.getArrPrecipitationPercent().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[0]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("orange"));
+                    }
+                    else {
+                        cellValue.setCellStyle(setStyle(""));
+                    }
+                } else if (parameters[2].equalsIgnoreCase("Prec (mm)")) {
+                    cellValue.setCellValue(sheetDataModel.getArrPrecipitationMm().get(i));
+                    if (sheetDataModel.getArrPrecipitationMm().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[1]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("red"));
+                    }else if (sheetDataModel.getArrPrecipitationMm().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[0]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("orange"));
+                    }
+                    else {
+                        cellValue.setCellStyle(setStyle(""));
+                    }
+                } else if (parameters[2].equalsIgnoreCase("Viento")) {
+                    cellValue.setCellValue(sheetDataModel.getArrWindSpeed().get(i));
+                    if (sheetDataModel.getArrWindSpeed().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[1]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("red"));
+                    }else if (sheetDataModel.getArrWindSpeed().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[0]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("orange"));
+                    }
+                    else {
+                        cellValue.setCellStyle(setStyle(""));
+                    }
+                }
+                else if (parameters[2].equalsIgnoreCase("month")) {
+                    cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[0].get("redThresholdTemperature").getAsDouble());
+                    if (sheetDataModel.getArrWindSpeed().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[1]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("red"));
+                    }else if (sheetDataModel.getArrWindSpeed().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[0]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("orange"));
+                    }
+                    else {
+                        cellValue.setCellStyle(setStyle(""));
+                    }
+                }
+                cellThresholdOrange.setCellValue(sheetDataModel.getConfigFileThreshold()[0].get(parameters[0]).getAsDouble());
+                cellThresholdOrange.setCellStyle(setStyle(""));
+                cellThresholdRed.setCellValue(sheetDataModel.getConfigFileThreshold()[0].get(parameters[1]).getAsDouble());
+                cellThresholdRed.setCellStyle(setStyle("end"));
+                rowTable++;
+            }
+        }
+        catch (Exception e) {
+            System.out.println("chart exc: " + e.getMessage());
+        }
+    }
+
+    private CellStyle setStyle(String type) {
+        CellStyle cellStyle = this.workbook.createCellStyle();
+
+        if (type.equalsIgnoreCase("date")) {
+            cellStyle.setBorderLeft(BorderStyle.MEDIUM);
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        } else if (type.equalsIgnoreCase("end")) {
+            cellStyle.setBorderRight(BorderStyle.MEDIUM);
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        } else if (type.equalsIgnoreCase("header")) {
+            Font font = this.workbook.createFont();
+            font.setBold(true);
+            cellStyle.setAlignment(HorizontalAlignment.CENTER);
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+        } else if (type.equalsIgnoreCase("red")) {
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+            cellStyle.setFillForegroundColor(IndexedColors.RED.getIndex()); // Color de fondo
+            cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // Patrón de relleno SOLID_FOREGROUND
+        } else if (type.equalsIgnoreCase("orange")) {
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+            cellStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex()); // Color de fondo
+            cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND); // Patrón de relleno SOLID_FOREGROUND
+        } else {
+            cellStyle.setBorderTop(BorderStyle.MEDIUM);
+            cellStyle.setBorderBottom(BorderStyle.MEDIUM);
+        }
+        return cellStyle;
+    }
+
+    public void createMonthValues(int rowTable, int columnTable, String[] parameters, SheetDataModel sheetDataModel) {
+        Row rowHeader = this.sheet.createRow(rowTable);
+        Cell cellDateHeader = rowHeader.createCell(columnTable);
+        cellDateHeader.setCellValue("Fecha");
+        cellDateHeader.setCellStyle(setStyle("header"));
+        Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
+        cellValueHeader.setCellValue(parameters[2]);
+        cellValueHeader.setCellStyle(setStyle("header"));
+        Cell cellPrecValue = rowHeader.createCell(columnTable + 2);
+        cellPrecValue.setCellValue(parameters[3]);
+        Cell cellThresholdOrangeHeader = rowHeader.createCell(columnTable + 3);
+        cellThresholdOrangeHeader.setCellValue("Alerta Naranja");
+        cellThresholdOrangeHeader.setCellStyle(setStyle("header"));
+        Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 4);
+        cellThresholdRedHeader.setCellValue("Alerta Roja");
+        cellThresholdRedHeader.setCellStyle(setStyle("header"));
+        {
+            Row rowJanuary = sheet.createRow(rowTable + 1);
+            Cell cellJanuary = rowJanuary.createCell(1);
+            cellJanuary.setCellValue("Enero");
+            cellJanuary.setCellStyle(setStyle("date"));
+            Cell cellTempJanuary = rowJanuary.createCell(2);
+            cellTempJanuary.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("januaryDataGrade").getAsDouble());
+            Cell cellPrecJanuary = rowJanuary.createCell(3);
+            cellPrecJanuary.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("januaryDataPercent").getAsString());
+        }
+        rowTable++;
+        for (int i = 0; i < sheetDataModel.getConfigFileThreshold()[1].size() - 4; i++) {
+            Cell cellOrange = sheet.getRow(rowTable + i).createCell(4);
+            cellOrange.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("").getAsDouble());
+        }
+    }
+}
