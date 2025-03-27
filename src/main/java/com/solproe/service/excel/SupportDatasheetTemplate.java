@@ -1,9 +1,8 @@
 package com.solproe.service.excel;
 
+import com.google.gson.JsonElement;
 import com.solproe.business.domain.SheetDataModel;
 import org.apache.poi.ss.usermodel.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class SupportDatasheetTemplate implements ExcelSheetTemplate {
@@ -42,6 +41,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
 
         }
         catch (Exception e) {
+            e.printStackTrace();
             System.out.println("support data exc: " + e.getMessage());
         }
     }
@@ -186,26 +186,42 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
         cellValueHeader.setCellStyle(setStyle("header"));
         Cell cellPrecValue = rowHeader.createCell(columnTable + 2);
         cellPrecValue.setCellValue(parameters[3]);
-        Cell cellThresholdOrangeHeader = rowHeader.createCell(columnTable + 3);
-        cellThresholdOrangeHeader.setCellValue("Alerta Naranja");
-        cellThresholdOrangeHeader.setCellStyle(setStyle("header"));
-        Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 4);
-        cellThresholdRedHeader.setCellValue("Alerta Roja");
-        cellThresholdRedHeader.setCellStyle(setStyle("header"));
+        Cell cellThresholdOrangeHeaderTemperature = rowHeader.createCell(columnTable + 3);
+        cellThresholdOrangeHeaderTemperature.setCellValue("Temperatura Naranja");
+        cellThresholdOrangeHeaderTemperature.setCellStyle(setStyle("header"));
+        Cell cellThresholdRedHeaderTemperature = rowHeader.createCell(columnTable + 4);
+        cellThresholdRedHeaderTemperature.setCellValue("Temperatura Roja");
+        cellThresholdRedHeaderTemperature.setCellStyle(setStyle("header"));
+        Cell cellThresholdOrangeHeaderPrecipitation = rowHeader.createCell(columnTable + 5);
+        cellThresholdOrangeHeaderPrecipitation.setCellValue("Precipitación Naranja");
+        cellThresholdOrangeHeaderPrecipitation.setCellStyle(setStyle("header"));
+        Cell cellThresholdRedHeaderPrecipitation = rowHeader.createCell(columnTable + 6);
+        cellThresholdRedHeaderPrecipitation.setCellValue("Precipitación Roja");
+        cellThresholdRedHeaderPrecipitation.setCellStyle(setStyle("header"));
         {
-            Row rowJanuary = sheet.createRow(rowTable + 1);
-            Cell cellJanuary = rowJanuary.createCell(1);
-            cellJanuary.setCellValue("Enero");
-            cellJanuary.setCellStyle(setStyle("date"));
-            Cell cellTempJanuary = rowJanuary.createCell(2);
-            cellTempJanuary.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("januaryDataGrade").getAsDouble());
-            Cell cellPrecJanuary = rowJanuary.createCell(3);
-            cellPrecJanuary.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("januaryDataPercent").getAsString());
-        }
-        rowTable++;
-        for (int i = 0; i < sheetDataModel.getConfigFileThreshold()[1].size() - 4; i++) {
-            Cell cellOrange = sheet.getRow(rowTable + i).createCell(4);
-            cellOrange.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("").getAsDouble());
+            int count = 0;
+            for (String key : sheetDataModel.getConfigFileThreshold()[1].asMap().keySet()) {
+                ++count;
+                if (count > 4) {
+                    if (count % 2 == 1) {
+                        Row rowMonth = sheet.createRow(rowTable + count - 3);
+                        Cell cellMonth = rowMonth.createCell(1);
+                        Cell cellValue = rowMonth.createCell(2);
+                        cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(key).getAsDouble());
+                        Cell cellOrangeTemperature = rowMonth.createCell(3);
+                        cellOrangeTemperature.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble());
+                        Cell cellRedTemperature = rowMonth.createCell(4);
+                        cellRedTemperature.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble());
+                        Cell cellOrangePrecipitation = rowMonth.createCell(5);
+                        cellOrangePrecipitation.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdPrecipitation").getAsDouble());
+                        Cell cellRedPrecipitation = rowMonth.createCell(6);
+                        cellRedPrecipitation.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdPrecipitation").getAsDouble());
+                    }
+                    else {
+
+                    }
+                }
+            }
         }
     }
 }
