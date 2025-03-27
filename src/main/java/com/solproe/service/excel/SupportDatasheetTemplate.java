@@ -3,6 +3,8 @@ package com.solproe.service.excel;
 import com.google.gson.JsonElement;
 import com.solproe.business.domain.SheetDataModel;
 import org.apache.poi.ss.usermodel.*;
+
+import java.util.Arrays;
 import java.util.List;
 
 public class SupportDatasheetTemplate implements ExcelSheetTemplate {
@@ -186,6 +188,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
         cellValueHeader.setCellStyle(setStyle("header"));
         Cell cellPrecValue = rowHeader.createCell(columnTable + 2);
         cellPrecValue.setCellValue(parameters[3]);
+        cellPrecValue.setCellStyle(setStyle("header"));
         Cell cellThresholdOrangeHeaderTemperature = rowHeader.createCell(columnTable + 3);
         cellThresholdOrangeHeaderTemperature.setCellValue("Temperatura Naranja");
         cellThresholdOrangeHeaderTemperature.setCellStyle(setStyle("header"));
@@ -204,23 +207,51 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
                 ++count;
                 if (count > 4) {
                     if (count % 2 == 1) {
-                        Row rowMonth = sheet.createRow(rowTable + count - 3);
+                        Row rowMonth = sheet.createRow(++rowTable);
                         Cell cellMonth = rowMonth.createCell(1);
+                        cellMonth.setCellStyle(setStyle("date"));
                         Cell cellValue = rowMonth.createCell(2);
+                        cellValue.setCellStyle(setStyle(""));
                         cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(key).getAsDouble());
-                        Cell cellOrangeTemperature = rowMonth.createCell(3);
+                        Cell cellOrangeTemperature = rowMonth.createCell(4);
                         cellOrangeTemperature.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble());
-                        Cell cellRedTemperature = rowMonth.createCell(4);
+                        cellOrangeTemperature.setCellStyle(setStyle(""));
+                        Cell cellRedTemperature = rowMonth.createCell(5);
                         cellRedTemperature.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble());
-                        Cell cellOrangePrecipitation = rowMonth.createCell(5);
+                        cellRedTemperature.setCellStyle(setStyle(""));
+                        Cell cellOrangePrecipitation = rowMonth.createCell(6);
                         cellOrangePrecipitation.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdPrecipitation").getAsDouble());
-                        Cell cellRedPrecipitation = rowMonth.createCell(6);
+                        cellOrangePrecipitation.setCellStyle(setStyle(""));
+                        Cell cellRedPrecipitation = rowMonth.createCell(7);
                         cellRedPrecipitation.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdPrecipitation").getAsDouble());
+                        cellRedPrecipitation.setCellStyle(setStyle("end"));
                     }
                     else {
-
+                        Cell cell = sheet.getRow(rowTable).createCell(3);
+                        cell.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(key).getAsDouble());
+                        cell.setCellStyle(setStyle(""));
                     }
                 }
+            }
+            String[] arrDate = {
+                    "Diciembre",
+                    "Noviembre",
+                    "Octubre",
+                    "Septiembre",
+                    "Agosto",
+                    "Julio",
+                    "Junio",
+                    "Mayo",
+                    "Abril",
+                    "Marzo",
+                    "Febrero",
+                    "Enero",
+            };
+
+            for (int i = 11; i >= 0; i--) {
+                Cell cell = sheet.getRow(rowTable - i).getCell(1);
+                cell.setCellValue(arrDate[i]);
+                System.out.println(arrDate[i]);
             }
         }
     }
