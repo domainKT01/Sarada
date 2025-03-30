@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 
 import java.util.Objects;
 
@@ -26,6 +27,8 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             int rowStart = 33;
             CellStyle headerStyle = createHeaderStyle(workbook, (short) 12);
             this.sheet = workbook.createSheet(data.getSheetName());
+
+            int secondRowFooter = 1;
 
             //combinar celdas
             sheet.setColumnWidth(0, 3500);
@@ -113,6 +116,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                     rowStart = graphicFooter(rowStart, "forestFireThresholdOrange");
                 } else if (data.getReportType().equalsIgnoreCase("massMovementDataModel")) {
                     rowStart = graphicFooter(rowStart, "precipitationRainPercentOrange");
+                    secondRowFooter = graphicFooter(rowStart + 25, "precipitationThresholdOrange");
                 } else {
                     graphicFooter(rowStart, "windThresholdOrange");
                 }
@@ -133,8 +137,13 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                         sheet.addMergedRegion(new CellRangeAddress(rowStart + 3, rowStart + 3, 0, 8));
                         break;
                     case "massMovementDataModel" :
+                        Row rowSecond = sheet.createRow(rowStart + 3);
+                        createCells(0, 8, rowSecond, workbook, "");
+                        sheet.addMergedRegion(new CellRangeAddress(rowStart + 3, rowStart + 3, 0, 8));
                         graphicTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN % PARA 14 DÍAS DE PRONÓSTICO");
-                        graphicFooter(rowStart + 27, "precipitationThresholdOrange");
+                        rowSecond.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN mm PARA 14 DÍAS DE PRONÓSTICO");
+                        CellStyle style = createHeaderStyle(workbook, (short) 13);
+                        rowSecond.getCell(0).setCellStyle(style);
                         break;
                     case "rainShowerDataModel" :
                         graphicTitle.getCell(0).setCellValue("MONITOREO DE VELOCIDAD DE VIENTO PARA 14 DÍAS DE PRONÓSTICO");
@@ -152,7 +161,19 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             // 🔹 SECTION: CREATE SECOND GRAPHIC
             // =================================
             {
-
+                switch (data.getReportType()) {
+                    case "forestFireDataModel" :
+                        Row rowHeader = sheet.createRow(rowStart + 3);
+                        createCells(0, 8, rowHeader, workbook, "");
+                        System.out.println("second graphic row: " + rowStart);
+                        rowHeader.getCell(0).setCellValue("MONITOREO DE TEMPERATURA °C PARA UN AÑO");
+                        CellStyle style = createHeaderStyle(workbook, (short) 13);
+                        rowHeader.getCell(0).setCellStyle(style);
+                        this.dataModel.setStartRow(rowStart + 5);
+                        XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
+                        this.excelGenerateGraphics = new LineChartGenerator();
+                        this.excelGenerateGraphics.createSecondChart(sheet, drawing, workbook, dataModel);
+                }
             }
         }
         catch (Exception e) {
@@ -254,7 +275,6 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             sheet.addMergedRegion(new CellRangeAddress(rowStart, rowStart, 2, 8));
         }
         header.setCellValue("FECHA DE LECTURA ANÓMALA:");
-
         CellStyle cellStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setBold(true);
@@ -262,7 +282,6 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         header.setCellStyle(cellStyle);
-
         return rowStart + count;
     }
 }

@@ -32,6 +32,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         } else if (sheetDataModel.getReportType().equalsIgnoreCase("massMovementDataModel")) {
             int[][] parameterSource1 = {{19, 33, 1, 1}, {19, 33, 2, 2}, {19, 33, 3, 3}, {19, 33, 4, 4}};
             int[][] parameterSource2 = {{36, 49, 1, 1}, {36, 49, 2, 2}, {36, 49, 3, 3}, {36, 49, 4, 4}};
+            System.out.println("second graphic: " + sheetDataModel.getStartRow() + " number of last row");
             XSSFClientAnchor xssfClientAnchor1 = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
             XSSFClientAnchor xssfClientAnchor2 = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow() + 5,
                     9, sheetDataModel.getStartRow() + 23);
@@ -96,9 +97,9 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         this.sheet.setColumnWidth(13,4500 );
         this.sheet.setColumnWidth(15,4500 );
         this.sheet.setColumnWidth(16,4500 );
-        XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
-        int[][] parameterSource = {{2, 15, 1, 1}, {2, 15, 2, 2}, {2, 15, 3, 3}, {2, 15, 4, 4}};
+        XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow(), 9, sheetDataModel.getStartRow() +20);
+        int[][] parameterSource = {{70, 81, 1, 1}, {70, 81, 2, 2}, {70, 81, 4, 4}, {70, 81, 5, 5}};
         createGraphic(parameterSource, anchorTemp);
-
+        System.out.println("second Graphic-----");
     }
 }

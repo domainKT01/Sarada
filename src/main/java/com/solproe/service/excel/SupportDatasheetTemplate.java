@@ -1,10 +1,7 @@
 package com.solproe.service.excel;
 
-import com.google.gson.JsonElement;
 import com.solproe.business.domain.SheetDataModel;
 import org.apache.poi.ss.usermodel.*;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class SupportDatasheetTemplate implements ExcelSheetTemplate {
@@ -26,21 +23,14 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             //create tables
             String[] parameters = {"forestFireThresholdOrange", "forestFireThresholdRed", "Temp"};
             createValuesTable(2, 1, parameters, this.dataModel.getFirst());
-
             String[] parameters1 = {"precipitationRainPercentOrange", "precipitationRainPercentRed", "Prec (%)"};
             String[] parameters2 = {"precipitationThresholdOrange", "precipitationThresholdRed", "Prec (mm)"};
             createValuesTable(19, 1, parameters1, this.dataModel.get(1));
             createValuesTable(36, 1, parameters2, this.dataModel.get(1));
-
             String[] parametersWind = {"windThresholdOrange", "windThresholdRed", "Viento"};
             createValuesTable(53, 1, parametersWind, this.dataModel.get(2));
-
             String[] parametersMonths = {"orangeThresholdTemperature", "redThresholdTemperature", "Temperatura", "Precipitación"};
             createMonthValues(69, 1, parametersMonths, this.dataModel.get(2));
-
-//            String[] parametersMonthsPrec = {"orangeThresholdTemperature", "redThresholdTemperature", "Temperatura"};
-//            createMonthValues(69, 1, parametersMonthsPrec, this.dataModel.get(2));
-
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -251,7 +241,6 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             for (int i = 11; i >= 0; i--) {
                 Cell cell = sheet.getRow(rowTable - i).getCell(1);
                 cell.setCellValue(arrDate[i]);
-                System.out.println(arrDate[i]);
             }
         }
     }
