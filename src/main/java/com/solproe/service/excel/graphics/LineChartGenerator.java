@@ -98,8 +98,11 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         this.sheet.setColumnWidth(15,4500 );
         this.sheet.setColumnWidth(16,4500 );
         XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow(), 9, sheetDataModel.getStartRow() +20);
-        int[][] parameterSource = {{70, 81, 1, 1}, {70, 81, 2, 2}, {70, 81, 4, 4}, {70, 81, 5, 5}};
+        int[][] parameterSource = {{70, 81, sheetDataModel.getParameterCol()[0], sheetDataModel.getParameterCol()[0]},
+                {70, 81, sheetDataModel.getParameterCol()[1], sheetDataModel.getParameterCol()[1]},
+                {70, 81, sheetDataModel.getParameterCol()[2], sheetDataModel.getParameterCol()[2]},
+                {70, 81, sheetDataModel.getParameterCol()[3], sheetDataModel.getParameterCol()[3]}
+        };
         createGraphic(parameterSource, anchorTemp);
-        System.out.println("second Graphic-----");
     }
 }

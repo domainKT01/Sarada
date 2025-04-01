@@ -117,6 +117,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 } else if (data.getReportType().equalsIgnoreCase("massMovementDataModel")) {
                     rowStart = graphicFooter(rowStart, "precipitationRainPercentOrange");
                     secondRowFooter = graphicFooter(rowStart + 25, "precipitationThresholdOrange");
+                    System.out.println("second: " + secondRowFooter);
                 } else {
                     graphicFooter(rowStart, "windThresholdOrange");
                 }
@@ -170,9 +171,26 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                         CellStyle style = createHeaderStyle(workbook, (short) 13);
                         rowHeader.getCell(0).setCellStyle(style);
                         this.dataModel.setStartRow(rowStart + 5);
+                        int[] parameters = {1,2,4,5};
+                        this.dataModel.setParameterCol(parameters);
                         XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
                         this.excelGenerateGraphics = new LineChartGenerator();
                         this.excelGenerateGraphics.createSecondChart(sheet, drawing, workbook, dataModel);
+                        break;
+                    case "massMovementDataModel" :
+                        Row row = sheet.createRow(rowStart + 3);
+                        createCells(0, 8, row, workbook, "");
+                        System.out.println("second graphic row: " + rowStart);
+                        row.getCell(0).setCellValue("MONITOREO DE PPRECIPIYTACION PARA UN AÑO");
+                        CellStyle headerStyle1 = createHeaderStyle(workbook, (short) 13);
+                        row.getCell(0).setCellStyle(headerStyle1);
+                        this.dataModel.setStartRow(secondRowFooter + 5);
+                        int[] params = {1,3,6,7};
+                        this.dataModel.setParameterCol(params);
+                        XSSFDrawing drawing1 = (XSSFDrawing) sheet.createDrawingPatriarch();
+                        this.excelGenerateGraphics = new LineChartGenerator();
+                        this.excelGenerateGraphics.createSecondChart(sheet, drawing1, workbook, dataModel);
+                        break;
                 }
             }
         }

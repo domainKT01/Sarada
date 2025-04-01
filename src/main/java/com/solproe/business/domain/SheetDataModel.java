@@ -19,6 +19,7 @@ public class SheetDataModel {
     private JsonObject[] configFileThreshold;
     private String reportType;
     private int startRow;
+    private int[] parameterCol;
 
     public SheetDataModel(String sheetName, String title, String parameter) {
         this.sheetName = sheetName;
@@ -116,5 +117,13 @@ public class SheetDataModel {
 
     public void setStartRow(int startRow) {
         this.startRow = startRow;
+    }
+
+    public int[] getParameterCol() {
+        return parameterCol;
+    }
+
+    public void setParameterCol(int[] parameterCol) {
+        this.parameterCol = parameterCol;
     }
 }
