@@ -1,19 +1,15 @@
-package com.solproe.service.excel;
+package com.solproe.service.excel.sheets;
 
 import com.solproe.business.domain.SheetDataModel;
+import com.solproe.service.excel.ExcelSheetTemplate;
 import com.solproe.service.excel.graphics.ExcelGenerateGraphics;
 import com.solproe.service.excel.graphics.LineChartGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-
-import java.util.Objects;
 
 public class GenericSheetTemplate implements ExcelSheetTemplate {
-    private static final Logger log = LogManager.getLogger(GenericSheetTemplate.class);
     private ExcelGenerateGraphics excelGenerateGraphics;
     private SheetDataModel dataModel;
     private Sheet sheet;
@@ -176,11 +172,20 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                         XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
                         this.excelGenerateGraphics = new LineChartGenerator();
                         this.excelGenerateGraphics.createSecondChart(sheet, drawing, workbook, dataModel);
+                        GenerateSectionSheet generateSectionSheet = new GenerateSectionSheet(this,sheet, workbook, this.dataModel.getConfigFileThreshold()[1]);
+                        int out = generateSectionSheet.createAlertSystemChartsTemperature(rowStart + 27, "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
+                                "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
+                                dataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble(),
+                                dataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble(),
+                                "UMBRAL DE TEMPERATURA (°C)");
+                        System.out.println(out + rowStart + " out size");
+                        generateSectionSheet.generateThresholdMonths(rowStart + 41,
+                                dataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble(),
+                                dataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble(), "t");
                         break;
                     case "massMovementDataModel" :
                         Row row = sheet.createRow(rowStart + 3);
                         createCells(0, 8, row, workbook, "");
-                        System.out.println("second graphic row: " + rowStart);
                         row.getCell(0).setCellValue("MONITOREO DE PPRECIPIYTACION PARA UN AÑO");
                         CellStyle headerStyle1 = createHeaderStyle(workbook, (short) 13);
                         row.getCell(0).setCellStyle(headerStyle1);
@@ -192,6 +197,13 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                         this.excelGenerateGraphics.createSecondChart(sheet, drawing1, workbook, dataModel);
                         break;
                 }
+
+                //======================
+                // SECTION: ALERT TABLES
+                //======================
+                {
+
+                }
             }
         }
         catch (Exception e) {
@@ -200,7 +212,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         }
     }
 
-    private CellStyle createHeaderStyle(Workbook workbook, short fontSize) {
+    public CellStyle createHeaderStyle(Workbook workbook, short fontSize) {
         CellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setFontHeightInPoints(fontSize);
@@ -210,7 +222,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         return style;
     }
 
-    private void createCells(int startCell, int endCell, Row row, Workbook workbook, String type) {
+    public void createCells(int startCell, int endCell, Row row, Workbook workbook, String type) {
         for (int i = startCell; i <= endCell; i++) {
             Cell cell = row.createCell(i);
             CellStyle borderStyle = createBorderedStyle(workbook);
@@ -220,7 +232,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         }
     }
 
-    private CellStyle createBorderedStyle(Workbook workbook) {
+    public CellStyle createBorderedStyle(Workbook workbook) {
         CellStyle style = workbook.createCellStyle();
         // Establecer bordes
         style.setBorderTop(BorderStyle.MEDIUM);
@@ -301,5 +313,21 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         header.setCellStyle(cellStyle);
         return rowStart + count;
+    }
+
+    public CellStyle createHeadersTables() {
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short) 13);
+        font.setBold(true);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setFont(font);
+        // Establecer bordes
+        style.setBorderTop(BorderStyle.MEDIUM);
+        style.setBorderBottom(BorderStyle.MEDIUM);
+        style.setBorderLeft(BorderStyle.MEDIUM);
+        style.setBorderRight(BorderStyle.MEDIUM);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        return style;
     }
 }

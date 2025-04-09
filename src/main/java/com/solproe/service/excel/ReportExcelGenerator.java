@@ -5,6 +5,7 @@ import com.solproe.business.domain.SheetDataModel;
 import com.solproe.business.domain.WeatherNode;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.repository.ExcelFileGenerator;
+import com.solproe.service.excel.sheets.GenericSheetTemplate;
 import org.apache.poi.ss.usermodel.Workbook;
 import java.util.ArrayList;
 import java.util.List;
