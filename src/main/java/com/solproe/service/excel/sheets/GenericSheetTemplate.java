@@ -178,10 +178,10 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                                 dataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble(),
                                 dataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble(),
                                 "UMBRAL DE TEMPERATURA (°C)");
-                        System.out.println(out + rowStart + " out size");
-                        generateSectionSheet.generateThresholdMonths(rowStart + 41,
+                        int res = generateSectionSheet.generateThresholdMonths(rowStart + 41,
                                 dataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble(),
                                 dataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble(), "t");
+//                        createFooterThreshold(out + 3);
                         break;
                     case "massMovementDataModel" :
                         Row row = sheet.createRow(rowStart + 3);
@@ -196,13 +196,6 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                         this.excelGenerateGraphics = new LineChartGenerator();
                         this.excelGenerateGraphics.createSecondChart(sheet, drawing1, workbook, dataModel);
                         break;
-                }
-
-                //======================
-                // SECTION: ALERT TABLES
-                //======================
-                {
-
                 }
             }
         }
@@ -329,5 +322,13 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         style.setBorderRight(BorderStyle.MEDIUM);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
         return style;
+    }
+
+    public int createFooterThreshold(int startRow) {
+
+        Row row = this.sheet.createRow(startRow);
+        createCells(3, 5, row, this.workbook,"border");
+
+        return 0;
     }
 }

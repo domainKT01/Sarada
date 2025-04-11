@@ -208,16 +208,15 @@ public class GenerateSectionSheet {
         this.sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 8));
         Cell titleCell = row.createCell(0);
         titleCell.setCellValue("NIVEL DE ALERTA PARA LOS PROXIMOS 6 MESES");
+        CellStyle cellStyle = this.genericSheetTemplate.createHeaderStyle(workbook, (short) 13);
+        titleCell.setCellStyle(cellStyle);
         row.setHeight((short) 500);
         int count = 3;
         for (int i = 4; i < (keys.length - 4) / 2; i++) {
             if (i % 2 == 0 && type.equalsIgnoreCase("t")) {
                 if (this.jsonObjectMonthly.get(keys[i]).getAsDouble() >= redThreshold) {
-                    System.out.println(this.jsonObjectMonthly.get(keys[i]).getAsDouble());
                     Row row1 = this.sheet.createRow(startRow + count);
-                    this.genericSheetTemplate.createCells(0, 8, row1, this.workbook, "border");
-                    setStyleColorFill(row1.getCell(4), "red");
-                    System.out.println(row1.getCell(2).getStringCellValue());
+                    this.genericSheetTemplate.createCells(3, 6, row1, this.workbook, "border");
                     ++count;
                 } else if (this.jsonObjectMonthly.get(keys[i]).getAsDouble() >= orangeThreshold) {
                     System.out.println(this.jsonObjectMonthly.get(keys[i]).getAsDouble());
@@ -241,7 +240,7 @@ public class GenerateSectionSheet {
 //                }
             }
         }
-        return 0;
+        return startRow + count;
     }
 
 
