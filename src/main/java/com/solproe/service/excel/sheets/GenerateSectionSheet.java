@@ -1,6 +1,7 @@
 package com.solproe.service.excel.sheets;
 
 import com.google.gson.JsonObject;
+import org.apache.commons.io.file.NoopPathVisitor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -203,25 +204,59 @@ public class GenerateSectionSheet {
                 "decemberDataGrade",
                 "decemberDataPercent"
         };
+
+        String[] months = {
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+        };
+
+        System.out.println("--- date: " + this.genericSheetTemplate.dataModel.getArrDate().get(4));
+
         Row row = this.sheet.createRow(startRow);
         this.genericSheetTemplate.createCells(0, 8, row, this.workbook, "");
         this.sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 8));
         Cell titleCell = row.createCell(0);
-        titleCell.setCellValue("NIVEL DE ALERTA PARA LOS PROXIMOS 6 MESES");
+        titleCell.setCellValue("NIVEL DE ALERTA PARA LOS PRÓXIMOS 6 MESES");
         CellStyle cellStyle = this.genericSheetTemplate.createHeaderStyle(workbook, (short) 13);
         titleCell.setCellStyle(cellStyle);
         row.setHeight((short) 500);
+        Row rowHeader = this.sheet.createRow(startRow + 2);
+        this.genericSheetTemplate.createCells(3, 6, rowHeader, this.workbook, "border");
+        this.sheet.addMergedRegion(new CellRangeAddress(rowHeader.getRowNum(), rowHeader.getRowNum(), 4, 6));
+        rowHeader.getCell(3).setCellValue("MES");
+        rowHeader.getCell(3).setCellStyle(this.genericSheetTemplate.createHeadersTables());
+        rowHeader.getCell(4).setCellValue("NIVEL DE ALERTA");
+        rowHeader.getCell(4).setCellStyle(this.genericSheetTemplate.createHeadersTables());
+        CellStyle centerStyle = workbook.createCellStyle();
+        // Habilitar el ajuste de texto
+        centerStyle.setWrapText(true);
+        // Establecer la alineación vertical para ocupar todo el alto
+        centerStyle.setVerticalAlignment(VerticalAlignment.TOP);
+        centerStyle.setAlignment(HorizontalAlignment.CENTER);
         int count = 3;
         for (int i = 4; i < (keys.length - 4) / 2; i++) {
             if (i % 2 == 0 && type.equalsIgnoreCase("t")) {
                 if (this.jsonObjectMonthly.get(keys[i]).getAsDouble() >= redThreshold) {
                     Row row1 = this.sheet.createRow(startRow + count);
                     this.genericSheetTemplate.createCells(3, 6, row1, this.workbook, "border");
+                    row1.getCell(3).setCellValue("");
+                    this.sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                    setStyleColorFill(row1.getCell(4), "red");
                     ++count;
                 } else if (this.jsonObjectMonthly.get(keys[i]).getAsDouble() >= orangeThreshold) {
-                    System.out.println(this.jsonObjectMonthly.get(keys[i]).getAsDouble());
                     Row row1 = this.sheet.createRow(startRow + count);
                     this.genericSheetTemplate.createCells(0, 8, row1, this.workbook, "border");
+                    this.sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                     setStyleColorFill(row1.getCell(4), "orange");
                     ++count;
                 }

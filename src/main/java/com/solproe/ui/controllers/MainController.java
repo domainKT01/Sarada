@@ -1,7 +1,9 @@
 package com.solproe.ui.controllers;
 
+import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.ui.viewModels.ConfigFileViewModel;
 import com.solproe.ui.viewModels.GenerateReportViewModel;
+import com.solproe.util.ThreadUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -100,7 +102,9 @@ public class MainController implements Initializable {
         });
 
         this.reportButton.setOnMouseClicked(_ -> {
-            GenerateReportViewModel viewModel = new GenerateReportViewModel();
+            GenerateReportUseCase useCase = new GenerateReportUseCase();
+            ThreadUtil threadUtil = new ThreadUtil();
+            GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
             viewModel.generateReport();
         });
     }

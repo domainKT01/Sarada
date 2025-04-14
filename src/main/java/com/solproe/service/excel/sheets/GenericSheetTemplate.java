@@ -11,7 +11,7 @@ import org.apache.poi.xssf.usermodel.XSSFDrawing;
 
 public class GenericSheetTemplate implements ExcelSheetTemplate {
     private ExcelGenerateGraphics excelGenerateGraphics;
-    private SheetDataModel dataModel;
+    public SheetDataModel dataModel;
     private Sheet sheet;
     private Workbook workbook;
 

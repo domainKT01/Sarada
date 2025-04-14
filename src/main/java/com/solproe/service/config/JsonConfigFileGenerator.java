@@ -1,31 +1,42 @@
 package com.solproe.service.config;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.solproe.business.repository.ConfigFileGenerator;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class JsonConfigFileGenerator implements ConfigFileGenerator {
 
 
     @Override
-    public void generate(JsonObject jsonObject, @Nullable String filePath) {
-        try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String jsonString = gson.toJson(jsonObject);
-            assert filePath != null;
-            try (FileWriter fileWriter = new FileWriter(filePath)) {
-                fileWriter.write(jsonString);
-                System.out.println("file was written");
+    public void generate(JsonObject data, String path) {
+        Gson gson = new Gson();
+        JsonObject finalJson;
+
+        File file = new File(path);
+        if (file.exists()) {
+            try (Reader reader = new FileReader(file)) {
+                JsonObject existing = gson.fromJson(reader, JsonObject.class);
+                finalJson = mergeJson(existing, data); // Combina data con lo existente
+            } catch (IOException e) {
+                throw new RuntimeException("Error leyendo archivo existente: " + e.getMessage(), e);
             }
+        } else {
+            finalJson = data;
         }
-        catch (IOException e) {
-            System.out.println("error to write file");
-            e.printStackTrace();
+
+        try (Writer writer = new FileWriter(file)) {
+            gson.toJson(finalJson, writer);
+        } catch (IOException e) {
+            throw new RuntimeException("Error escribiendo archivo JSON: " + e.getMessage(), e);
         }
+    }
+
+    private JsonObject mergeJson(JsonObject original, JsonObject updates) {
+        for (String key : updates.keySet()) {
+            original.add(key, updates.get(key)); // Reemplaza si existe o agrega si no
+        }
+        return original;
     }
 }

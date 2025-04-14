@@ -1,107 +1,162 @@
 package com.solproe.ui.controllers;
 
+import com.solproe.business.dto.MonthlyData;
+import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.ui.viewModels.ConfigFileViewModel;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import java.net.URL;
-import java.util.Objects;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MonthlyConfigFileController implements Initializable {
 
-    public TextField orangeThresholdTemperature;
-    public TextField redThresholdTemperature;
-    public TextField orangeThresholdPrecipitation;
-    public TextField redThresholdPrecipitation;
-    public Label percentHead;
-    public Label gradeHead;
-    public TextField januaryDataGrade;
-    public TextField januaryDataPercent;
-    public TextField februaryDataGrade;
-    public TextField februaryDataPercent;
-    public TextField marchDataGrade;
-    public TextField marchDataPercent;
-    public TextField aprilDataGrade;
-    public TextField aprilDataPercent;
-    public TextField mayDataGrade;
-    public TextField mayDataPercent;
-    public TextField juneDataGrade;
-    public TextField juneDataPercent;
-    public TextField julyDataGrade;
-    public TextField julyDataPercent;
-    public TextField augustDataGrade;
-    public TextField augustDataPercent;
-    public TextField septemberDataGrade;
-    public TextField septemberDataPercent;
-    public TextField octoberDataGrade;
-    public TextField octoberDataPercent;
-    public TextField novemberDataGrade;
-    public TextField novemberDataPercent;
-    public TextField decemberDataGrade;
-    public TextField decemberDataPercent;
-    public Button buttonSave;
+    @FXML private TextField orangeThresholdTemperature;
+    @FXML private TextField redThresholdTemperature;
+    @FXML private TextField orangeThresholdPrecipitation;
+    @FXML private TextField redThresholdPrecipitation;
+
+    @FXML private TextField januaryDataGrade, januaryDataPercent;
+    @FXML private TextField februaryDataGrade, februaryDataPercent;
+    @FXML private TextField marchDataGrade, marchDataPercent;
+    @FXML private TextField aprilDataGrade, aprilDataPercent;
+    @FXML private TextField mayDataGrade, mayDataPercent;
+    @FXML private TextField juneDataGrade, juneDataPercent;
+    @FXML private TextField julyDataGrade, julyDataPercent;
+    @FXML private TextField augustDataGrade, augustDataPercent;
+    @FXML private TextField septemberDataGrade, septemberDataPercent;
+    @FXML private TextField octoberDataGrade, octoberDataPercent;
+    @FXML private TextField novemberDataGrade, novemberDataPercent;
+    @FXML private TextField decemberDataGrade, decemberDataPercent;
+
+    @FXML private Button buttonSave;
+
+    private ConfigFileViewModel viewModel;
 
 
+    private record MonthlyDataPair(String month, TextField grade, TextField percent) {
+        boolean isFirstSemester() {
+            return switch (month.toLowerCase()) {
+                case "january", "february", "march", "april", "may", "june" -> true;
+                default -> false;
+            };
+        }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        ConfigFileViewModel viewModel = new ConfigFileViewModel();
-        this.buttonSave.setOnMouseClicked(_ -> {
-            try {
-                double[] list = {
-                        Double.parseDouble(orangeThresholdTemperature.getText()),
-                        Double.parseDouble(redThresholdTemperature.getText()),
-                        Double.parseDouble(orangeThresholdPrecipitation.getText()),
-                        Double.parseDouble(redThresholdPrecipitation.getText()),
-                        Double.parseDouble(januaryDataGrade.getText()),
-                        Double.parseDouble(januaryDataPercent.getText()),
-                        Double.parseDouble(februaryDataGrade.getText()),
-                        Double.parseDouble(februaryDataPercent.getText()),
-                        Double.parseDouble(marchDataGrade.getText()),
-                        Double.parseDouble(marchDataPercent.getText()),
-                        Double.parseDouble(aprilDataGrade.getText()),
-                        Double.parseDouble(aprilDataPercent.getText()),
-                        Double.parseDouble(mayDataGrade.getText()),
-                        Double.parseDouble(mayDataPercent.getText()),
-                        Double.parseDouble(juneDataGrade.getText()),
-                        Double.parseDouble(juneDataPercent.getText()),
-                        Double.parseDouble(julyDataGrade.getText()),
-                        Double.parseDouble(julyDataPercent.getText()),
-                        Double.parseDouble(augustDataGrade.getText()),
-                        Double.parseDouble(augustDataPercent.getText()),
-                        Double.parseDouble(septemberDataGrade.getText()),
-                        Double.parseDouble(septemberDataPercent.getText()),
-                        Double.parseDouble(octoberDataGrade.getText()),
-                        Double.parseDouble(octoberDataPercent.getText()),
-                        Double.parseDouble(novemberDataGrade.getText()),
-                        Double.parseDouble(novemberDataPercent.getText()),
-                        Double.parseDouble(decemberDataGrade.getText()),
-                        Double.parseDouble(decemberDataPercent.getText())
-                };
+        boolean isFilled() {
+            return !grade.getText().isBlank() && !percent.getText().isBlank();
+        }
 
-                if (validateTexFields(list)) {
-                    ConfigFileViewModel configFileViewModel = new ConfigFileViewModel();
-                    configFileViewModel.createConfigFileMonthly(list);
-                }
-            }
-            catch (Exception e) {
-                System.out.println("exc: " + e.getMessage());
-            }
-        });
+        boolean isComplete() {
+            return !grade.getText().isBlank() && !percent.getText().isBlank();
+        }
+
+        double[] toArray() {
+            return new double[] {
+                    Double.parseDouble(grade.getText()),
+                    Double.parseDouble(percent.getText())
+            };
+        }
     }
 
-    private boolean validateTexFields(double[] list) {
-        for (double textField : list) {
-            try {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.viewModel = new ConfigFileViewModel();
+        buttonSave.setOnMouseClicked(e -> saveConfig());
+    }
 
+    private void saveConfig() {
+        try {
+            MonthlyThresholdInputModel inputModel = new MonthlyThresholdInputModel();
+
+            // Validar y agregar los umbrales
+            inputModel.setOrangeTemperatureThreshold(Double.parseDouble(orangeThresholdTemperature.getText()));
+            inputModel.setRedTemperatureThreshold(Double.parseDouble(redThresholdTemperature.getText()));
+            inputModel.setOrangePrecipitationThreshold(Double.parseDouble(orangeThresholdPrecipitation.getText()));
+            inputModel.setRedPrecipitationThreshold(Double.parseDouble(redThresholdPrecipitation.getText()));
+
+            // Obtener pares de datos mensuales
+            List<MonthlyDataPair> allMonths = getMonthlyDataPairs();
+            List<MonthlyDataPair> filled = allMonths.stream().filter(MonthlyDataPair::isFilled).toList();
+
+            if (filled.isEmpty()) {
+                showAlert(AlertType.WARNING, "Advertencia", "No se ingresaron datos de ningún mes.");
+                return;
             }
-            catch (NullPointerException n) {
-                return false;
+
+            boolean firstSemester = filled.get(0).isFirstSemester();
+
+            for (MonthlyDataPair pair : filled) {
+                if (!pair.isComplete()) {
+                    showAlert(AlertType.WARNING, "Advertencia", "Faltan datos para el mes: " + pair.month);
+                    return;
+                }
+                if (pair.isFirstSemester() != firstSemester) {
+                    showAlert(AlertType.WARNING, "Advertencia", "No se pueden ingresar datos de ambos semestres.");
+                    return;
+                }
+
+                MonthlyData monthlyData =
+                        new MonthlyData(pair.month,
+                                pair.grade,
+                                pair.percent);
+
+                inputModel.getMonthlyData().add(monthlyData);
             }
+
+            boolean success = viewModel.createConfigFileMonthly(inputModel);
+            if (success) {
+                showAlert(AlertType.INFORMATION, "Éxito", "Archivo mensual creado exitosamente.");
+            } else {
+                showAlert(AlertType.ERROR, "Error", "Hubo un problema al crear el archivo.");
+            }
+
+        } catch (Exception e) {
+            showAlert(AlertType.ERROR, "Error", "Error al guardar configuración mensual: " + e.getMessage());
         }
-        return true;
+    }
+
+
+    // Método para validar los umbrales antes de agregar los valores
+    private void validateAndAddThresholdData(List<Double> data) throws NumberFormatException {
+        try {
+            data.add(Double.parseDouble(orangeThresholdTemperature.getText()));
+            data.add(Double.parseDouble(redThresholdTemperature.getText()));
+            data.add(Double.parseDouble(orangeThresholdPrecipitation.getText()));
+            data.add(Double.parseDouble(redThresholdPrecipitation.getText()));
+        } catch (NumberFormatException e) {
+            showAlert(AlertType.ERROR, "Error", "Los umbrales deben ser valores numéricos válidos.");
+            throw e;  // Re-lanzar para que no continúe con datos incorrectos
+        }
+    }
+
+    // Método para obtener los pares de datos mensuales
+    private List<MonthlyDataPair> getMonthlyDataPairs() {
+        return List.of(
+                new MonthlyDataPair("Enero", januaryDataGrade, januaryDataPercent),
+                new MonthlyDataPair("Febrero", februaryDataGrade, februaryDataPercent),
+                new MonthlyDataPair("Marzo", marchDataGrade, marchDataPercent),
+                new MonthlyDataPair("Abril", aprilDataGrade, aprilDataPercent),
+                new MonthlyDataPair("Mayo", mayDataGrade, mayDataPercent),
+                new MonthlyDataPair("Junio", juneDataGrade, juneDataPercent),
+                new MonthlyDataPair("Julio", julyDataGrade, julyDataPercent),
+                new MonthlyDataPair("Agosto", augustDataGrade, augustDataPercent),
+                new MonthlyDataPair("Septiembre", septemberDataGrade, septemberDataPercent),
+                new MonthlyDataPair("Octubre", octoberDataGrade, octoberDataPercent),
+                new MonthlyDataPair("Noviembre", novemberDataGrade, novemberDataPercent),
+                new MonthlyDataPair("Diciembre", decemberDataGrade, decemberDataPercent)
+        );
+    }
+
+    // Método para mostrar alertas
+    private void showAlert(AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

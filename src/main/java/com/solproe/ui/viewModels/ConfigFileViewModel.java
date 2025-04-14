@@ -1,66 +1,49 @@
 package com.solproe.ui.viewModels;
 
 import com.solproe.business.domain.ConfigFileThreshold;
+import com.solproe.business.dto.MonthlyData;
+import com.solproe.business.dto.MonthlyThresholdInputModel;
+import com.solproe.business.dto.ThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConfigFileViewModel {
 
 
-    public void createConfigFileThreshold(
-            double forestFireThresholdOrange,
-            double forestFireThresholdRed,
-            double precipitationThresholdOrange,
-            double precipitationThresholdRed,
-            double windThresholdOrange,
-            double windThresholdRed,
-            double precipitationRainPercentOrange,
-            double precipitationRainPercentRed,
-            double ceraunicosThresholdRed,
-            String projectName,
-            String stateName,
-            String cityName,
-            String idProject,
-            String sciBoss,
-            long sciBossContact,
-            String auxiliarSciBoss,
-            long auxiliarSciBossContact
-    ) {
-        ConfigFileThreshold configFileThreshold = new ConfigFileThreshold();
-        configFileThreshold.setForestFireThresholdOrange(forestFireThresholdOrange);
-        configFileThreshold.setForestFireThresholdRed(forestFireThresholdRed);
-        configFileThreshold.setPrecipitationThresholdOrange(precipitationThresholdOrange);
-        configFileThreshold.setPrecipitationThresholdRed(precipitationThresholdRed);
-        configFileThreshold.setWindThresholdOrange(windThresholdOrange);
-        configFileThreshold.setWindThresholdRed(windThresholdRed);
-        configFileThreshold.setPrecipitationRainPercentOrange(precipitationRainPercentOrange);
-        configFileThreshold.setPrecipitationRainPercentRed(precipitationRainPercentRed);
-        configFileThreshold.setCeraunicosThresholdRed(ceraunicosThresholdRed);
-        configFileThreshold.setProjectName(projectName);
-        configFileThreshold.setStateName(stateName);
-        configFileThreshold.setCityName(cityName);
-        configFileThreshold.setIdProject(idProject);
-        configFileThreshold.setSciBoss(sciBoss);
-        configFileThreshold.setSciBossContact(sciBossContact);
-        configFileThreshold.setAuxiliarSciBoss(auxiliarSciBoss);
-        configFileThreshold.setAuxiliarSciBossContact(auxiliarSciBossContact);
+    public boolean createConfigFileThreshold(ThresholdInputModel input) {
+        ConfigFileThreshold config = new ConfigFileThreshold();
+        config.setForestFireThresholdOrange(input.getForestFireThresholdOrange());
+        config.setForestFireThresholdRed(input.getForestFireThresholdRed());
+        config.setPrecipitationThresholdOrange(input.getPrecipitationThresholdOrange());
+        config.setPrecipitationThresholdRed(input.getPrecipitationThresholdRed());
+        config.setWindThresholdOrange(input.getWindThresholdOrange());
+        config.setWindThresholdRed(input.getWindThresholdRed());
+        config.setPrecipitationRainPercentOrange(input.getPrecipitationRainPercentOrange());
+        config.setPrecipitationRainPercentRed(input.getPrecipitationRainPercentRed());
+        config.setCeraunicosThresholdRed(input.getCeraunicosThresholdRed());
+        config.setProjectName(input.getProjectName());
+        config.setStateName(input.getStateName());
+        config.setCityName(input.getCityName());
+        config.setIdProject(input.getIdProject());
+        config.setSciBoss(input.getSciBoss());
+        config.setSciBossContact(input.getSciBossContact());
+        config.setAuxiliarSciBoss(input.getAuxiliarSciBoss());
+        config.setAuxiliarSciBossContact(input.getAuxiliarSciBossContact());
 
-        //business implement
-        ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
-        CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase("threshold", configFileGenerator);
-        boolean isSuccessful = createConfigFileUseCase.createFileConfig(configFileThreshold);
+        ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
+        CreateConfigFileUseCase useCase = new CreateConfigFileUseCase("threshold", generator);
+        return useCase.createFileConfig(config);
     }
 
 
-    public void createConfigFileMonthly(double[] data) {
+    public boolean createConfigFileMonthly(MonthlyThresholdInputModel model) {
         ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase("monthlyThreshold", configFileGenerator);
-        boolean isSuccessful = createConfigFileUseCase.createConfigFileMonthly(data);
+        return createConfigFileUseCase.createConfigFileMonthly(model);
     }
 
-
-    public void createReportExcel () {
-
-    }
 }
