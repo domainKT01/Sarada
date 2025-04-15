@@ -1,24 +1,17 @@
 package com.solproe.util;
 
-import javafx.concurrent.Task;
-
-import java.util.function.Consumer;
-
 public class ThreadUtil {
-    public void runAsync(Runnable task, Consumer<Throwable> onError) {
-        Task<Void> backgroundTask = new Task<>() {
-            @Override
-            protected Void call() {
-                task.run();
-                return null;
-            }
-        };
 
-        backgroundTask.setOnFailed(e -> {
-            Throwable error = backgroundTask.getException();
-            if (error != null) onError.accept(error);
+    public static void runAsync(Runnable runnable) {
+        Thread thread = new Thread(() -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                System.err.println("Error en ThreadUtil: " + e.getMessage());
+                e.printStackTrace();
+            }
         });
-        new Thread(backgroundTask).start();
+        thread.setDaemon(true);
+        thread.start();
     }
 }
-

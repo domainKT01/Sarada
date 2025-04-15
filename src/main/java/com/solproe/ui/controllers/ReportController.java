@@ -48,20 +48,6 @@ public class ReportController implements Initializable {
             // Inyectar al ViewModel
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
             viewModel.generateReport();
-
-            viewModel.stateProperty().addListener((observable, _oldState, _newState) -> {
-                if (_newState instanceof ReportState.Loading) {
-                    //showSpinner();
-                } else if (_newState instanceof ReportState.Success(String message)) {
-                    //hideSpinner();
-                    //showMessage(message);
-                } else if (_newState instanceof ReportState.Error(String errorMessage)) {
-                    //hideSpinner();
-                    //showError(errorMessage);
-                } else {
-                    //resetUI();
-                }
-            });
         });
     }
 }

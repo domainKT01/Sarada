@@ -1,15 +1,12 @@
 package com.solproe.ui.viewModels;
 
 import com.solproe.business.domain.ConfigFileThreshold;
-import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.dto.ThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class ConfigFileViewModel {
 
@@ -33,7 +30,6 @@ public class ConfigFileViewModel {
         config.setSciBossContact(input.getSciBossContact());
         config.setAuxiliarSciBoss(input.getAuxiliarSciBoss());
         config.setAuxiliarSciBossContact(input.getAuxiliarSciBossContact());
-
         ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase useCase = new CreateConfigFileUseCase("threshold", generator);
         return useCase.createFileConfig(config);

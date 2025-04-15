@@ -6,5 +6,5 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 public interface ExcelSheetTemplate {
 
-    void createSheet(Workbook workbook, SheetDataModel sheetDataModel);
+    void generate(Workbook workbook, SheetDataModel sheetDataModel);
 }

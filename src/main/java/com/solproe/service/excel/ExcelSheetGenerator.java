@@ -15,7 +15,7 @@ public class ExcelSheetGenerator {
 
     public void generateSheets(Workbook workbook, List<SheetDataModel> datasets) {
         ExcelSheetTemplate excelSheetTemplate = new SupportDatasheetTemplate(datasets);
-        excelSheetTemplate.createSheet(workbook, null);
+        excelSheetTemplate.generate(workbook, null);
         try {
             Thread.sleep(3000);
         }
@@ -23,7 +23,7 @@ public class ExcelSheetGenerator {
             System.out.println("sleep exception...");
         }
         for (SheetDataModel data : datasets) {
-            this.sheetTemplate.createSheet(workbook, data);
+            this.sheetTemplate.generate(workbook, data);
         }
     }
 }

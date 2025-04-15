@@ -16,7 +16,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
 
 
     @Override
-    public void createSheet(Workbook workbook, SheetDataModel sheetDataModel) {
+    public void generate(Workbook workbook, SheetDataModel sheetDataModel) {
         try {
             this.sheet = workbook.createSheet("support data");
             this.workbook = workbook;

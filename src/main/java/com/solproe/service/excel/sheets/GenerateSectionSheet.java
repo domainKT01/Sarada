@@ -1,294 +1,72 @@
 package com.solproe.service.excel.sheets;
 
-import com.google.gson.JsonObject;
-import org.apache.commons.io.file.NoopPathVisitor;
+import com.solproe.business.domain.SheetDataModel;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFColor;
 
 public class GenerateSectionSheet {
-    private GenericSheetTemplate genericSheetTemplate;
-    private Sheet sheet;
-    private Workbook workbook;
-    private JsonObject jsonObjectMonthly;
-    private JsonObject jsonObjectThreshold;
+    private final GenericSheetTemplate template;
 
-
-    public GenerateSectionSheet(GenericSheetTemplate genericSheetTemplate, Sheet sheet, Workbook workbook, JsonObject jsonObject) {
-        this.genericSheetTemplate = genericSheetTemplate;
-        this.sheet = sheet;
-        this.workbook = workbook;
-        this.jsonObjectMonthly = jsonObject;
+    public GenerateSectionSheet(GenericSheetTemplate template) {
+        this.template = template;
     }
 
-    public int createAlertSystemChartsTemperature(int startRow, String orangeAlert, String redAlert,
-                                        double orangeThreshold, double redThreshold, String typeOfSheetAlert) {
-        int numCol = 11;
-        for (int i = 0; i < numCol; i++) {
-            Row row = sheet.createRow(startRow + i);
-            for (int j = 0; j < 9; j++) {
-                row.createCell(j);
-            }
-        }
-        sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 8));
-        sheet.getRow(startRow).getCell(0).setCellValue("SISTEMA DE ALERTA");
-        CellStyle headerStyle1 = this.genericSheetTemplate.createHeadersTables();
-        CellStyle headerStyleOrange = this.genericSheetTemplate.createHeadersTables();
-        CellStyle headerStyleRed = this.genericSheetTemplate.createHeadersTables();
-        XSSFColor redColor = new XSSFColor(new java.awt.Color(255, 0, 0), null);
-        XSSFColor orangeColor = new XSSFColor(new java.awt.Color(255, 165, 0), null);
-        headerStyleOrange.setFillForegroundColor(orangeColor);
-        headerStyleRed.setFillForegroundColor(redColor);
-        XSSFColor whiteColor = new XSSFColor(new java.awt.Color(255, 255, 255), null);
-        CellStyle cellStyle = this.genericSheetTemplate.createHeaderStyle(workbook, (short) 13);
-        sheet.getRow(startRow).getCell(0).setCellStyle(cellStyle);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 1, startRow + 1, 2, 3));
-        sheet.getRow(startRow + 1).getCell(2).setCellValue("NIVEL DE ALERTA");
-        CellStyle borderStyle = this.genericSheetTemplate.createBorderedStyle(workbook);
-        sheet.getRow(startRow + 1).getCell(2).setCellStyle(borderStyle);
+    public int createHeader(Sheet sheet, int rowIndex, String title) {
+        Workbook workbook = template.getWorkbook();
 
-        sheet.getRow(startRow + 1).getCell(2).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 1).getCell(4).setCellStyle(borderStyle);
-        sheet.getRow(startRow + 1).getCell(4).setCellStyle(headerStyle1);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 1, startRow + 1, 4, 6));
-        sheet.getRow(startRow + 1).getCell(4).setCellValue("ACCIONES POR NIVEL DE ALERTA ");
-        CellStyle centerStyle = workbook.createCellStyle();
-        // Habilitar el ajuste de texto
-        centerStyle.setWrapText(true);
-        // Establecer la alineación vertical para ocupar todo el alto
-        centerStyle.setVerticalAlignment(VerticalAlignment.TOP);
-        centerStyle.setAlignment(HorizontalAlignment.CENTER);
-        headerStyleRed.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerStyleOrange.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        sheet.getRow(startRow + 2).setHeight((short) 550);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 2, startRow + 2, 2, 3));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 2, startRow + 2, 4, 6));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 3, startRow + 3, 2, 3));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 3, startRow + 3, 4, 6));
-        sheet.getRow(startRow + 2).getCell(2).setCellValue("ROJA");
-        sheet.getRow(startRow + 2).getCell(2).setCellStyle(headerStyleRed);
-        sheet.getRow(startRow + 2).getCell(4).setCellValue(redAlert);
-        sheet.getRow(startRow + 2).getCell(4).setCellStyle(centerStyle);
-        sheet.getRow(startRow + 2).getCell(4).setCellStyle(borderStyle);
-        sheet.getRow(startRow + 3).setHeight((short) 550);
-        sheet.getRow(startRow + 3).getCell(2).setCellValue("NARANJA");
-        sheet.getRow(startRow + 3).getCell(2).setCellStyle(headerStyleOrange);
-        sheet.getRow(startRow + 3).getCell(4).setCellValue(orangeAlert);
-        sheet.getRow(startRow + 3).getCell(4).setCellStyle(centerStyle);
-        sheet.getRow(startRow + 3).getCell(4).setCellStyle(borderStyle);
+        // Crear fila y celda
+        Row row = sheet.createRow(rowIndex);
+        Cell cell = row.createCell(0);
+        cell.setCellValue(title);
 
-        sheet.getRow(startRow + 5).getCell(0).setCellValue("UMBRAL DE TEMPERATURA Y NIVEL DE ALERTA MONITOREO DIARIO");
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 5, startRow + 5, 0, 8));
-        sheet.getRow(startRow + 5).getCell(0).setCellStyle(cellStyle);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 7, startRow + 7, 2, 3));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 7, startRow + 7, 4, 6));
-        sheet.getRow(startRow + 7).getCell(2).setCellValue("NIVEL DE ALERTA");
-        sheet.getRow(startRow + 7).getCell(2).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 7).getCell(4).setCellValue(typeOfSheetAlert);
-        sheet.getRow(startRow + 7).getCell(4).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 8).getCell(2).setCellValue("Roja");
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 8, startRow + 8, 2, 3));
-        sheet.getRow(startRow + 8).getCell(2).setCellStyle(headerStyleRed);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 8, startRow + 8, 4, 6));
-        sheet.getRow(startRow + 8).getCell(4).setCellValue(redThreshold + " °C");
-        sheet.getRow(startRow + 8).getCell(4).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 9).getCell(2).setCellValue("Naranja");
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 9, startRow + 9, 2, 3));
-        sheet.getRow(startRow + 9).getCell(2).setCellStyle(headerStyleOrange);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 9, startRow + 9, 4, 6));
-        sheet.getRow(startRow + 9).getCell(4).setCellValue(orangeThreshold + " °C");
-        sheet.getRow(startRow + 9).getCell(4).setCellStyle(headerStyle1);
+        // Crear estilo para el título
+        CellStyle style = workbook.createCellStyle();
+        Font font = workbook.createFont();
+        font.setFontHeightInPoints((short) 16);
+        font.setBold(true);
+        style.setFont(font);
+        style.setAlignment(HorizontalAlignment.CENTER);
+        style.setVerticalAlignment(VerticalAlignment.CENTER);
+        cell.setCellStyle(style);
 
-        return numCol;
+        // Combinar celdas (asumiendo columnas 0 a 7 por ejemplo)
+        sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 7));
+
+        return rowIndex + 2; // deja una fila vacía después del título
     }
 
+    public int createParameterSection(Sheet sheet, int startRow, SheetDataModel data) {
+        Workbook workbook = template.getWorkbook();
 
-    public void createAlertSystemChartsPrecipitation(int startRow, String orangeAlert, String redAlert,
-                                                   double orangeThreshold, double redThreshold, String typeOfSheetAlert) {
-        int numCol = 11;
-        for (int i = 0; i < numCol; i++) {
-            Row row = sheet.createRow(startRow + i);
-            for (int j = 0; j < 9; j++) {
-                row.createCell(j);
-            }
-        }
-        sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 8));
-        sheet.getRow(startRow).getCell(0).setCellValue("SISTEMA DE ALERTA");
-        CellStyle headerStyle1 = this.genericSheetTemplate.createHeadersTables();
-        CellStyle headerStyleOrange = this.genericSheetTemplate.createHeadersTables();
-        CellStyle headerStyleRed = this.genericSheetTemplate.createHeadersTables();
-        XSSFColor redColor = new XSSFColor(new java.awt.Color(255, 0, 0), null);
-        XSSFColor orangeColor = new XSSFColor(new java.awt.Color(255, 165, 0), null);
-        headerStyleOrange.setFillForegroundColor(orangeColor);
-        headerStyleRed.setFillForegroundColor(redColor);
-        XSSFColor whiteColor = new XSSFColor(new java.awt.Color(255, 255, 255), null);
-        CellStyle cellStyle = this.genericSheetTemplate.createHeaderStyle(workbook, (short) 13);
-        sheet.getRow(startRow).getCell(0).setCellStyle(cellStyle);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 1, startRow + 1, 2, 3));
-        sheet.getRow(startRow + 1).getCell(2).setCellValue("NIVEL DE ALERTA");
-        CellStyle borderStyle = this.genericSheetTemplate.createBorderedStyle(workbook);
-        sheet.getRow(startRow + 1).getCell(2).setCellStyle(borderStyle);
+        // Crear estilo para etiquetas
+        CellStyle labelStyle = workbook.createCellStyle();
+        Font boldFont = workbook.createFont();
+        boldFont.setBold(true);
+        labelStyle.setFont(boldFont);
 
-        sheet.getRow(startRow + 1).getCell(2).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 1).getCell(4).setCellStyle(borderStyle);
-        sheet.getRow(startRow + 1).getCell(4).setCellStyle(headerStyle1);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 1, startRow + 1, 4, 6));
-        sheet.getRow(startRow + 1).getCell(4).setCellValue("ACCIONES POR NIVEL DE ALERTA ");
-        CellStyle centerStyle = workbook.createCellStyle();
-        // Habilitar el ajuste de texto
-        centerStyle.setWrapText(true);
-        // Establecer la alineación vertical para ocupar todo el alto
-        centerStyle.setVerticalAlignment(VerticalAlignment.TOP);
-        centerStyle.setAlignment(HorizontalAlignment.CENTER);
-        headerStyleRed.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        headerStyleOrange.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        sheet.getRow(startRow + 2).setHeight((short) 550);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 2, startRow + 2, 2, 3));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 2, startRow + 2, 4, 6));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 3, startRow + 3, 2, 3));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 3, startRow + 3, 4, 6));
-        sheet.getRow(startRow + 2).getCell(2).setCellValue("ROJA");
-        sheet.getRow(startRow + 2).getCell(2).setCellStyle(headerStyleRed);
-        sheet.getRow(startRow + 2).getCell(4).setCellValue(redAlert);
-        sheet.getRow(startRow + 2).getCell(4).setCellStyle(centerStyle);
-        sheet.getRow(startRow + 2).getCell(4).setCellStyle(borderStyle);
-        sheet.getRow(startRow + 3).setHeight((short) 550);
-        sheet.getRow(startRow + 3).getCell(2).setCellValue("NARANJA");
-        sheet.getRow(startRow + 3).getCell(2).setCellStyle(headerStyleOrange);
-        sheet.getRow(startRow + 3).getCell(4).setCellValue(orangeAlert);
-        sheet.getRow(startRow + 3).getCell(4).setCellStyle(centerStyle);
-        sheet.getRow(startRow + 3).getCell(4).setCellStyle(borderStyle);
-
-        sheet.getRow(startRow + 5).getCell(0).setCellValue("UMBRAL DE TEMPERATURA Y NIVEL DE ALERTA MONITOREO DIARIO");
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 5, startRow + 5, 0, 8));
-        sheet.getRow(startRow + 5).getCell(0).setCellStyle(cellStyle);
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 7, startRow + 7, 2, 3));
-        sheet.addMergedRegion(new CellRangeAddress(startRow + 7, startRow + 7, 4, 6));
-        sheet.getRow(startRow + 7).getCell(2).setCellValue("NIVEL DE ALERTA");
-        sheet.getRow(startRow + 7).getCell(2).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 7).getCell(4).setCellValue(typeOfSheetAlert);
-        System.out.println(typeOfSheetAlert);
-        sheet.getRow(startRow + 7).getCell(4).setCellStyle(headerStyle1);
-        sheet.getRow(startRow + 8).getCell(2).setCellValue("");
-    }
-
-
-    public int generateThresholdMonths(int startRow, double orangeThreshold, double redThreshold, String type) {
-        String[] keys = {
-                "orangeThresholdTemperature",
-                "redThresholdTemperature",
-                "orangeThresholdPrecipitation",
-                "redThresholdPrecipitation",
-                "januaryDataGrade",
-                "januaryDataPercent",
-                "februaryDataGrade",
-                "februaryDataPercent",
-                "marchDataGrade",
-                "marchDataPercent",
-                "aprilDataGrade",
-                "aprilDataPercent",
-                "mayDataGrade",
-                "mayDataPercent",
-                "juneDataGrade",
-                "juneDataPercent",
-                "julyDataGrade",
-                "julyDataPercent",
-                "augustDataGrade",
-                "augustDataPercent",
-                "septemberDataGrade",
-                "septemberDataPercent",
-                "octoberDataGrade",
-                "octoberDataPercent",
-                "novemberDataGrade",
-                "novemberDataPercent",
-                "decemberDataGrade",
-                "decemberDataPercent"
+        // Datos como pares etiqueta → valor
+        String[][] rows = {
+                {"Nombre del proyecto", data.getThresholdDailyJson().get("projectName").getAsString()},
+                {"ID del proyecto", data.getThresholdDailyJson().get("idProject").getAsString()},
+                {"Ciudad", data.getThresholdDailyJson().get("cityName").getAsString()},
+                {"Estado", data.getThresholdDailyJson().get("stateName").getAsString()},
+                {"Responsable SCI", data.getThresholdDailyJson().get("sciBoss").getAsString()},
+                {"Teléfono responsable", String.valueOf(data.getThresholdDailyJson().get("sciBossContact"))},
+                {"Responsable auxiliar", data.getThresholdDailyJson().get("auxiliarSciBoss").getAsString()},
+                {"Teléfono auxiliar", String.valueOf(data.getThresholdDailyJson().get("auxiliarSciBossContact"))}
         };
 
-        String[] months = {
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Agosto",
-                "Septiembre",
-                "Octubre",
-                "Noviembre",
-                "Diciembre"
-        };
+        for (String[] rowInfo : rows) {
+            Row row = sheet.createRow(startRow++);
+            Cell labelCell = row.createCell(0);
+            labelCell.setCellValue(rowInfo[0]);
+            labelCell.setCellStyle(labelStyle);
 
-        System.out.println("--- date: " + this.genericSheetTemplate.dataModel.getArrDate().get(4));
-
-        Row row = this.sheet.createRow(startRow);
-        this.genericSheetTemplate.createCells(0, 8, row, this.workbook, "");
-        this.sheet.addMergedRegion(new CellRangeAddress(startRow, startRow, 0, 8));
-        Cell titleCell = row.createCell(0);
-        titleCell.setCellValue("NIVEL DE ALERTA PARA LOS PRÓXIMOS 6 MESES");
-        CellStyle cellStyle = this.genericSheetTemplate.createHeaderStyle(workbook, (short) 13);
-        titleCell.setCellStyle(cellStyle);
-        row.setHeight((short) 500);
-        Row rowHeader = this.sheet.createRow(startRow + 2);
-        this.genericSheetTemplate.createCells(3, 6, rowHeader, this.workbook, "border");
-        this.sheet.addMergedRegion(new CellRangeAddress(rowHeader.getRowNum(), rowHeader.getRowNum(), 4, 6));
-        rowHeader.getCell(3).setCellValue("MES");
-        rowHeader.getCell(3).setCellStyle(this.genericSheetTemplate.createHeadersTables());
-        rowHeader.getCell(4).setCellValue("NIVEL DE ALERTA");
-        rowHeader.getCell(4).setCellStyle(this.genericSheetTemplate.createHeadersTables());
-        CellStyle centerStyle = workbook.createCellStyle();
-        // Habilitar el ajuste de texto
-        centerStyle.setWrapText(true);
-        // Establecer la alineación vertical para ocupar todo el alto
-        centerStyle.setVerticalAlignment(VerticalAlignment.TOP);
-        centerStyle.setAlignment(HorizontalAlignment.CENTER);
-        int count = 3;
-        for (int i = 4; i < (keys.length - 4) / 2; i++) {
-            if (i % 2 == 0 && type.equalsIgnoreCase("t")) {
-                if (this.jsonObjectMonthly.get(keys[i]).getAsDouble() >= redThreshold) {
-                    Row row1 = this.sheet.createRow(startRow + count);
-                    this.genericSheetTemplate.createCells(3, 6, row1, this.workbook, "border");
-                    row1.getCell(3).setCellValue("");
-                    this.sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                    setStyleColorFill(row1.getCell(4), "red");
-                    ++count;
-                } else if (this.jsonObjectMonthly.get(keys[i]).getAsDouble() >= orangeThreshold) {
-                    Row row1 = this.sheet.createRow(startRow + count);
-                    this.genericSheetTemplate.createCells(0, 8, row1, this.workbook, "border");
-                    this.sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                    setStyleColorFill(row1.getCell(4), "orange");
-                    ++count;
-                }
-            }
-            else {
-//                if (this.jsonObjectThreshold.get(keys[i]).getAsDouble() >= redThreshold) {
-//                    Row row1 = this.sheet.createRow(startRow + count);
-//                    this.genericSheetTemplate.createCells(0, 8, row1, this.workbook, "border");
-//                    setStyleColorFill(row1.getCell(4), "red");
-//                    ++count;
-//                } else if (this.jsonObjectThreshold.get(keys[i]).getAsDouble() >= orangeThreshold) {
-//                    Row row1 = this.sheet.createRow(startRow + count);
-//                    this.genericSheetTemplate.createCells(0, 8, row1, this.workbook, "border");
-//                    setStyleColorFill(row1.getCell(4), "orange");
-//                    ++count;
-//                }
-            }
+            Cell valueCell = row.createCell(1);
+            valueCell.setCellValue(rowInfo[1]);
         }
-        return startRow + count;
+
+        return startRow + 1; // deja una fila vacía después
     }
 
-
-    public void setStyleColorFill(Cell cell, String color) {
-        CellStyle cellStyle = this.workbook.createCellStyle();
-        XSSFColor redColor = new XSSFColor(new java.awt.Color(255, 0, 0), null);
-        XSSFColor orangeColor = new XSSFColor(new java.awt.Color(255, 165, 0), null);
-        if (color.equalsIgnoreCase("red")) {
-            cellStyle.setFillForegroundColor(redColor);
-        } else if (color.equalsIgnoreCase("orange")) {
-            cellStyle.setFillForegroundColor(orangeColor);
-        }
-        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        cell.setCellStyle(cellStyle);
-    }
 }

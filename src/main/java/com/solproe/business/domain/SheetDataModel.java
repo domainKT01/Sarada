@@ -126,4 +126,12 @@ public class SheetDataModel {
     public void setParameterCol(int[] parameterCol) {
         this.parameterCol = parameterCol;
     }
+
+    public JsonObject getThresholdDailyJson() {
+        return this.configFileThreshold[0];
+    }
+
+    public JsonObject getThresholdMonthlyJson() {
+        return this.configFileThreshold[1];
+    }
 }
