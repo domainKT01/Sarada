@@ -13,24 +13,21 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
     private LineChartGenerator chartGenerator;
 
     @Override
-    public void generate(Workbook workbook, SheetDataModel sheetDataModel) {
+    public void generate(Workbook workbook, SheetDataModel model) {
         this.workbook = workbook;
-        this.sheet = workbook.createSheet(sheetDataModel.getSheetName());
+        this.sheet = workbook.createSheet(model.getSheetName());
 
-        // Inicializar colaboradores con acceso a la plantilla
-        this.sectionBuilder = new GenerateSectionSheet(this);
+        this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
         this.chartGenerator = new LineChartGenerator();
 
-        int currentRow = 0;
-
-        currentRow = sectionBuilder.createHeader(sheet, currentRow, sheetDataModel.getTitle());
-//        currentRow = sectionBuilder.createParameterSection(sheet, currentRow, sheetDataModel);
-//        currentRow = sectionBuilder.createThresholdTable(sheet, currentRow, sheetDataModel);
-//        currentRow = sectionBuilder.createAlertSystem(sheet, currentRow, sheetDataModel);
-//
-//        currentRow = chartGenerator.insertTemperatureChart(sheet, currentRow, sheetDataModel);
-//        currentRow = chartGenerator.insertPrecipitationChart(sheet, currentRow, sheetDataModel);
+        int row = 0;
+        row = sectionBuilder.createHeader(sheet, row, model);
+        row = sectionBuilder.createParameterSection(sheet, row, model);
+        row = sectionBuilder.createThresholdTable(sheet, row, model);
+//        row = sectionBuilder.createAlertSystem(sheet, row, model);
+//        row = chartGenerator.insertChart(sheet, row, model);
     }
+
 
     public Workbook getWorkbook() {
         return workbook;
