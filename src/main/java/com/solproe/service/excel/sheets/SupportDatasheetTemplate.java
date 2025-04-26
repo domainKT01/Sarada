@@ -3,6 +3,9 @@ package com.solproe.service.excel.sheets;
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.ExcelSheetTemplate;
 import org.apache.poi.ss.usermodel.*;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SupportDatasheetTemplate implements ExcelSheetTemplate {
@@ -192,55 +195,50 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
         Cell cellThresholdRedHeaderPrecipitation = rowHeader.createCell(columnTable + 6);
         cellThresholdRedHeaderPrecipitation.setCellValue("Precipitación Roja");
         cellThresholdRedHeaderPrecipitation.setCellStyle(setStyle("header"));
-        {
-            int count = 0;
-            for (String key : sheetDataModel.getConfigFileThreshold()[1].asMap().keySet()) {
-                ++count;
-                if (count > 4) {
-                    if (count % 2 == 1) {
-                        Row rowMonth = sheet.createRow(++rowTable);
-                        Cell cellMonth = rowMonth.createCell(1);
-                        cellMonth.setCellStyle(setStyle("date"));
-                        Cell cellValue = rowMonth.createCell(2);
-                        cellValue.setCellStyle(setStyle(""));
-                        cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(key).getAsDouble());
-                        Cell cellOrangeTemperature = rowMonth.createCell(4);
-                        cellOrangeTemperature.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble());
-                        cellOrangeTemperature.setCellStyle(setStyle(""));
-                        Cell cellRedTemperature = rowMonth.createCell(5);
-                        cellRedTemperature.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble());
-                        cellRedTemperature.setCellStyle(setStyle(""));
-                        Cell cellOrangePrecipitation = rowMonth.createCell(6);
-                        cellOrangePrecipitation.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdPrecipitation").getAsDouble());
-                        cellOrangePrecipitation.setCellStyle(setStyle(""));
-                        Cell cellRedPrecipitation = rowMonth.createCell(7);
-                        cellRedPrecipitation.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdPrecipitation").getAsDouble());
-                        cellRedPrecipitation.setCellStyle(setStyle("end"));
-                    }
-                    else {
-                        Cell cell = sheet.getRow(rowTable).createCell(3);
-                        cell.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(key).getAsDouble());
-                        cell.setCellStyle(setStyle(""));
-                    }
-                }
-            }
-            String[] arrDate = {
-                    "Diciembre",
-                    "Noviembre",
-                    "Octubre",
-                    "Septiembre",
-                    "Agosto",
-                    "Julio",
-                    "Junio",
-                    "Mayo",
-                    "Abril",
-                    "Marzo",
-                    "Febrero",
-                    "Enero",
-            };
 
-            for (int i = 11; i >= 0; i--) {
-                Cell cell = sheet.getRow(rowTable - i).getCell(1);
+        List<String> keys = new ArrayList<>(sheetDataModel.getThresholdMonthlyJson().asMap().keySet());
+
+        int dataStartIndex = 5; // omitimos los primeros 4 elementos comunes
+        for (int i = dataStartIndex; i < keys.size(); i += 2) {
+            String tempKey = keys.get(i);
+            String precKey = (i + 1 < keys.size()) ? keys.get(i + 1) : null;
+
+            Row rowMonth = sheet.createRow(++rowTable);
+            Cell cellMonth = rowMonth.createCell(1);
+            cellMonth.setCellStyle(setStyle("date"));
+
+            Cell cellTempValue = rowMonth.createCell(3);
+            cellTempValue.setCellStyle(setStyle(""));
+            cellTempValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(tempKey).getAsDouble());
+
+            if (precKey != null) {
+                Cell cellValue = rowMonth.createCell(2);
+                cellValue.setCellStyle(setStyle(""));
+                cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(precKey).getAsDouble());
+            }
+
+            rowMonth.createCell(4).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble());
+            rowMonth.getCell(4).setCellStyle(setStyle(""));
+            rowMonth.createCell(5).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble());
+            rowMonth.getCell(5).setCellStyle(setStyle(""));
+            rowMonth.createCell(6).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdPrecipitation").getAsDouble());
+            rowMonth.getCell(6).setCellStyle(setStyle(""));
+            rowMonth.createCell(7).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdPrecipitation").getAsDouble());
+            rowMonth.getCell(7).setCellStyle(setStyle("end"));
+        }
+
+        String[] arrDate = {
+                "Diciembre", "Noviembre", "Octubre", "Septiembre", "Agosto", "Julio",
+                "Junio", "Mayo", "Abril", "Marzo", "Febrero", "Enero"
+        };
+
+        for (int i = 11; i >= 0; i--) {
+            Row row = sheet.getRow(rowTable - i);
+            if (row != null) {
+                Cell cell = row.getCell(1);
+                if (cell == null) {
+                    cell = row.createCell(1);
+                }
                 cell.setCellValue(arrDate[i]);
             }
         }

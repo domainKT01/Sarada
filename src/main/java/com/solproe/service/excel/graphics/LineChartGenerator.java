@@ -32,7 +32,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
     }
 
     @Override
-    public int createChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) {
+    public int createChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) throws IOException {
         this.sheet = sheet;
         this.drawing = drawing;
         this.sourceSheet = workbook.getSheet("support data");
@@ -60,6 +60,16 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             createGraphic(parameterSource, anchorTemp);
             rowFinal = sheetDataModel.getStartRow() + height;
             rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+            rowFinal += space;
+            Row monthlyTitle = sheet.createRow(rowFinal);
+            this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
+            sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));
+            monthlyTitle.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 6 MESES PRÓXIMOS DE PRONÓSTICO ");
+            monthlyTitle.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+            rowFinal += 2;
+            sheetDataModel.setStartRow(rowFinal);
+            createSecondChart(sheet, drawing, workbook, sheetDataModel);
+            rowFinal += height;
         } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
             //first graphic
             space += 2;
@@ -103,6 +113,8 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                     {53, 66, 4, 4}
             };
             createGraphic(parameterSource, anchorWind);
+            rowFinal += sheetDataModel.getStartRow() + height;
+            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
         }
         return rowFinal;
     }
@@ -152,7 +164,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
     }
 
     @Override
-    public void createSecondChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) throws IOException {
+    public int createSecondChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) {
         this.sheet = sheet;
         this.drawing = drawing;
         this.sourceSheet = workbook.getSheet("support data");
@@ -160,11 +172,34 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         this.sheet.setColumnWidth(15,4500 );
         this.sheet.setColumnWidth(16,4500 );
         XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow(), 9, sheetDataModel.getStartRow() +20);
-        int[][] parameterSource = {{70, 81, sheetDataModel.getParameterCol()[0], sheetDataModel.getParameterCol()[0]},
-                {70, 81, sheetDataModel.getParameterCol()[1], sheetDataModel.getParameterCol()[1]},
-                {70, 81, sheetDataModel.getParameterCol()[2], sheetDataModel.getParameterCol()[2]},
-                {70, 81, sheetDataModel.getParameterCol()[3], sheetDataModel.getParameterCol()[3]}
-        };
-        createGraphic(parameterSource, anchorTemp);
+        int[][] parameters = new int[4][4];
+        if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
+            if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
+                parameters = new int[][]{
+                        {70, 75, 1, 1},
+                        {70, 75, 2, 2},
+                        {70, 75, 4, 4},
+                        {70, 75, 5, 5}
+                };
+            }
+            else {
+                parameters = new int[][]{
+                        {76, 81, 1, 1},
+                        {76, 81, 2, 2},
+                        {76, 81, 4, 4},
+                        {76, 81, 5, 5}
+                };
+            }
+
+        } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
+            parameters = new int[][]{
+                    {70, 81, 1, 1},
+                    {70, 81, 3, 3},
+                    {70, 81, 6, 6},
+                    {70, 81, 7, 7}
+            };
+        }
+        createGraphic(parameters, anchorTemp);
+        return 0;
     }
 }

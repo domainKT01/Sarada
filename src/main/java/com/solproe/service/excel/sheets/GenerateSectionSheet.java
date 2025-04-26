@@ -172,66 +172,52 @@ public class GenerateSectionSheet {
 
     public int createAlertSystem(Sheet sheet, int startRow, SheetDataModel model) {
         Workbook workbook = template.getWorkbook();
-        //String type = model.getReportType().toUpperCase();
 
-        // Estilo de título
-        CellStyle titleStyle = workbook.createCellStyle();
-        Font titleFont = workbook.createFont();
-        titleFont.setBold(true);
-        titleFont.setFontHeightInPoints((short) 14);
-        titleStyle.setFont(titleFont);
-        titleStyle.setAlignment(HorizontalAlignment.CENTER);
-
-        // Estilo para encabezados
-        CellStyle headerStyle = workbook.createCellStyle();
-        Font boldFont = workbook.createFont();
-        boldFont.setBold(true);
-        headerStyle.setFont(boldFont);
-        headerStyle.setAlignment(HorizontalAlignment.CENTER);
-
-        // Título principal
-        Row titleRow = sheet.createRow(startRow++);
-        Cell titleCell = titleRow.createCell(0);
-        titleCell.setCellValue("Sistema de Alertas");
-        titleCell.setCellStyle(titleStyle);
-        sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 3));
-
-        // Encabezados
-        Row headerRow = sheet.createRow(startRow++);
-        headerRow.createCell(0).setCellValue("Nivel de Alerta");
-        headerRow.createCell(1).setCellValue("Variable");
-        headerRow.createCell(2).setCellValue("Valor");
-        headerRow.createCell(3).setCellValue("Descripción");
-
-        for (int i = 0; i <= 3; i++) {
-            headerRow.getCell(i).setCellStyle(headerStyle);
+        if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+            // Título principal
+            Row titleRow = sheet.createRow(startRow);
+            createCellsRow(sheet, 0, 8, titleRow);
+            titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
+            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 16));
+            sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
+            startRow += 1;
+            String[] alerts = {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
+                    "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
+                    "PREPARACIÓN PARA LA RESPUESTA, ALISTAMIENTO DE RECURSOS, SUMINISTROS Y SERVICIOS E IDENTIFICACIÓN DE DE LAS RUTAS DE INGRESO Y EGRESO."
+            };
+            createAlertChart(sheet, startRow, model, alerts);
         }
-
-//        if (type.contains("INCENDIO")) {
-//            startRow = addIncendioAlertRows(sheet, startRow, model);
-//        } else if (type.contains("MASA")) {
-//            startRow = addMovimientoMasaAlertRows(sheet, startRow, model);
-//        } else if (type.contains("VENDAVAL")) {
-//            startRow = addVendavalAlertRows(sheet, startRow, model);
-//        }
-
         return startRow + 1;
     }
 
-    private int addIncendioAlertRows(Sheet sheet, int row, SheetDataModel model) {
-        Row orange = sheet.createRow(row++);
-        orange.createCell(0).setCellValue("Naranja");
-        orange.createCell(1).setCellValue("Temperatura");
-        orange.createCell(2).setCellValue(model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble());
-        orange.createCell(3).setCellValue("Condiciones cálidas. Monitoreo recomendado.");
+    private void createAlertChart(Sheet sheet, int row, SheetDataModel model, String[] alertsLevel) {
+        Row alertLevel = sheet.createRow(row);
+        createCellsRow(sheet, 0, 8, alertLevel);
+        sheet.addMergedRegion(new CellRangeAddress(alertLevel.getRowNum(), alertLevel.getRowNum(), 2, 3));
+        sheet.addMergedRegion(new CellRangeAddress(alertLevel.getRowNum(), alertLevel.getRowNum(), 4, 6));
+        alertLevel.getCell(2).setCellValue("NIVEL DE ALERTA");
+        alertLevel.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+        alertLevel.getCell(4).setCellValue("ACCIONES POR NIVEL DE ALERTA");
+        alertLevel.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
 
-        Row red = sheet.createRow(row++);
-        red.createCell(0).setCellValue("Roja");
-        red.createCell(1).setCellValue("Temperatura / Ceraunicos");
-        red.createCell(2).setCellValue(model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble());
-        red.createCell(3).setCellValue("Condiciones críticas para incendios forestales.");
-
-        return row;
+        row += 1;
+        String[] titles = {
+                "ROJA",
+                "NARANJA",
+                "AMARILLA"
+        };
+        for (int i = 0; i < titles.length; i++) {
+            Row title = sheet.createRow(row + i);
+            createCellsRow(sheet, 0, 8, title);
+            title.setHeight((short) 1200);
+            title.getCell(2).setCellValue(titles[i]);
+            title.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true, titles[i]));
+            sheet.addMergedRegion(new CellRangeAddress(title.getRowNum(), title.getRowNum(), 2, 3));
+            title.getCell(4).setCellValue(alertsLevel[i]);
+            title.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(title.getRowNum(), title.getRowNum(), 4, 6));
+        }
     }
 
     private int addMovimientoMasaAlertRows(Sheet sheet, int row, SheetDataModel model) {
@@ -315,10 +301,10 @@ public class GenerateSectionSheet {
                     count.set(count.get() + 1);
                 });
 
-        IntStream.range(0, model.getArrPrecipitationPercent().size())
+        IntStream.range(0, model.getArrWindSpeed().size())
                 .filter(i ->
                         model.getReportType() == TypeReportSheet.rainShowerDataModel &&
-                                model.getArrPrecipitationPercent().get(i) >= model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble())
+                                model.getArrWindSpeed().get(i) >= model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble())
                 .forEach(i -> {
                     int data = (int) (double) model.getArrPrecipitationPercent().get(i);
                     Row row = sheet.createRow(startRow + count.get());

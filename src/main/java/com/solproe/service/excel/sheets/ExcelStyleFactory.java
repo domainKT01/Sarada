@@ -1,6 +1,7 @@
 package com.solproe.service.excel.sheets;
 
 import org.apache.poi.ss.usermodel.*;
+import org.jetbrains.annotations.Nullable;
 
 public class ExcelStyleFactory {
     private final Workbook workbook;
@@ -19,7 +20,7 @@ public class ExcelStyleFactory {
         return style;
     }
 
-    public CellStyle createBorderedStyle(boolean bold, boolean center) {
+    public CellStyle createBorderedStyle(boolean bold, boolean center, String... colorBackground) {
         CellStyle style = workbook.createCellStyle();
         if (bold) {
             Font font = workbook.createFont();
@@ -29,6 +30,21 @@ public class ExcelStyleFactory {
         if (center) {
             style.setAlignment(HorizontalAlignment.CENTER);
             style.setVerticalAlignment(VerticalAlignment.CENTER);
+            style.setWrapText(true);
+        }
+        if (colorBackground.length != 0) {
+            System.out.println(colorBackground[0]);
+            switch (colorBackground[0]) {
+                case "ROJA" :
+                    style.setFillForegroundColor(IndexedColors.RED.getIndex());
+                    break;
+                case "NARANJA" :
+                    style.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
+                    break;
+                case "AMARILLA" :
+                    style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
+            }
+            style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
         style.setBorderTop(BorderStyle.MEDIUM);
         style.setBorderBottom(BorderStyle.MEDIUM);

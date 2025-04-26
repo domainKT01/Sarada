@@ -33,6 +33,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 row = this.sectionBuilder.createHeader(sheet, row, model);
             }
             catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         }
@@ -45,6 +46,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
                 model.setStartRow(row);
                 row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
+                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
