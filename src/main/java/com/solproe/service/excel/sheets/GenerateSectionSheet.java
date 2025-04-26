@@ -173,17 +173,25 @@ public class GenerateSectionSheet {
     public int createAlertSystem(Sheet sheet, int startRow, SheetDataModel model) {
         Workbook workbook = template.getWorkbook();
 
+        // Título principal
+        Row titleRow = sheet.createRow(startRow);
+        createCellsRow(sheet, 0, 8, titleRow);
+        titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
+        titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 16));
+        sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
+        startRow += 1;
         if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
-            // Título principal
-            Row titleRow = sheet.createRow(startRow);
-            createCellsRow(sheet, 0, 8, titleRow);
-            titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
-            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 16));
-            sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
-            startRow += 1;
             String[] alerts = {
                     "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
                     "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
+            };
+            createAlertChart(sheet, startRow, model, alerts);
+        }
+
+        if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+            String[] alerts = {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
+                    "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS \n",
                     "PREPARACIÓN PARA LA RESPUESTA, ALISTAMIENTO DE RECURSOS, SUMINISTROS Y SERVICIOS E IDENTIFICACIÓN DE DE LAS RUTAS DE INGRESO Y EGRESO."
             };
             createAlertChart(sheet, startRow, model, alerts);
@@ -201,12 +209,22 @@ public class GenerateSectionSheet {
         alertLevel.getCell(4).setCellValue("ACCIONES POR NIVEL DE ALERTA");
         alertLevel.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
 
+        String[] titles = new String[0];
+        if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+            titles = new String[]{
+                    "ROJA",
+                    "NARANJA",
+            };
+        }
+        else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+            titles = new String[]{
+                    "ROJA",
+                    "NARANJA",
+                    "AMARILLA",
+            };
+        }
         row += 1;
-        String[] titles = {
-                "ROJA",
-                "NARANJA",
-                "AMARILLA"
-        };
+
         for (int i = 0; i < titles.length; i++) {
             Row title = sheet.createRow(row + i);
             createCellsRow(sheet, 0, 8, title);

@@ -17,7 +17,7 @@ public class ExcelSheetGenerator {
         ExcelSheetTemplate excelSheetTemplate = new SupportDatasheetTemplate(datasets);
         excelSheetTemplate.generate(workbook, null);
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         }
         catch (Exception e) {
             System.out.println("sleep exception...");

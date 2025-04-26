@@ -98,8 +98,16 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             XSSFClientAnchor xssfClientAnchor2 = this.drawing.createAnchor(0, 0, 0, 0, 0,
                     rowFinal, 9, rowFinal + height);
             createGraphic(parameterSource2, xssfClientAnchor2);
-            rowFinal += height + 2;
-            this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
+            rowFinal += height + 3;
+            Row monthlyTitle = sheet.createRow(rowFinal);
+            this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
+            sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));
+            monthlyTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN PARA 6 MESES PRÓXIMOS DE PRONÓSTICO");
+            monthlyTitle.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+            rowFinal += 2;
+            sheetDataModel.setStartRow(rowFinal);
+            createSecondChart(sheet, drawing, workbook, sheetDataModel);
+            rowFinal += height;
         } else if (sheetDataModel.getReportType() == TypeReportSheet.rainShowerDataModel) {
             space += 2;
             titleRow.getCell(0).setCellValue("MONITOREO DE VIENTO Km/h PARA 14 DÍAS DE PRONÓSTICO");
@@ -116,7 +124,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             rowFinal += sheetDataModel.getStartRow() + height;
             rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
         }
-        return rowFinal;
+        return rowFinal - 3;
     }
 
     // Método para cambiar el color de una línea

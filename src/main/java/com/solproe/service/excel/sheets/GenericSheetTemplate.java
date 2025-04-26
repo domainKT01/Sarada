@@ -53,9 +53,6 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             }
         }
         System.out.println("final num: " + row);
-
-//        row = sectionBuilder.createAlertSystem(sheet, row, model);
-//        row = chartGenerator.insertChart(sheet, row, model);
     }
 
 
