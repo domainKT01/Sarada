@@ -2,15 +2,18 @@ package com.solproe.service.excel.sheets;
 
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.ExcelSheetTemplate;
+import com.solproe.service.excel.graphics.ExcelGenerateGraphics;
 import com.solproe.service.excel.graphics.LineChartGenerator;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
 
 public class GenericSheetTemplate implements ExcelSheetTemplate {
     private Workbook workbook;
     private Sheet sheet;
     private GenerateSectionSheet sectionBuilder;
-    private LineChartGenerator chartGenerator;
+    private ExcelGenerateGraphics chartGenerator;
+    private ExcelStyleFactory styleFactory;
 
     @Override
     public void generate(Workbook workbook, SheetDataModel model) {
@@ -18,12 +21,37 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         this.sheet = workbook.createSheet(model.getSheetName());
 
         this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
-        this.chartGenerator = new LineChartGenerator();
-
+        this.styleFactory = new ExcelStyleFactory(workbook);
+        this.chartGenerator = new LineChartGenerator(this.sectionBuilder, this.styleFactory);
         int row = 0;
-        row = sectionBuilder.createHeader(sheet, row, model);
-        row = sectionBuilder.createParameterSection(sheet, row, model);
-        row = sectionBuilder.createThresholdTable(sheet, row, model);
+
+        //=============
+        //* HEADER
+        //=============
+        {
+            try {
+                row = this.sectionBuilder.createHeader(sheet, row, model);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //===========
+        //* GRAPHIC
+        //===========
+        {
+            try {
+                XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
+                model.setStartRow(row);
+                row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("final num: " + row);
+
 //        row = sectionBuilder.createAlertSystem(sheet, row, model);
 //        row = chartGenerator.insertChart(sheet, row, model);
     }

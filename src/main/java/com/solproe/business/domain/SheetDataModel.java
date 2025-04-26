@@ -1,6 +1,7 @@
 package com.solproe.business.domain;
 
 import com.google.gson.JsonObject;
+import com.solproe.service.excel.TypeReportSheet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +18,7 @@ public class SheetDataModel {
     private final ArrayList<Double> arrHumidityPercent = new ArrayList<>();
     private final ArrayList<Double> arrCode = new ArrayList<>();
     private JsonObject[] configFileThreshold;
-    private String reportType;
+    private TypeReportSheet reportType;
     private int startRow;
     private int[] parameterCol;
 
@@ -95,11 +96,11 @@ public class SheetDataModel {
         return this.arrCode;
     }
 
-    public void setReportType(String reportType) {
+    public void setReportType(TypeReportSheet reportType) {
         this.reportType = reportType;
     }
 
-    public String getReportType() {
+    public TypeReportSheet getReportType() {
         return this.reportType;
     }
 

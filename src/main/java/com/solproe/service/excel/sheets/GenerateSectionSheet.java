@@ -1,17 +1,19 @@
 package com.solproe.service.excel.sheets;
 
 import com.solproe.business.domain.SheetDataModel;
+import com.solproe.service.excel.TypeReportSheet;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
+
 public class GenerateSectionSheet {
     private final GenericSheetTemplate template;
-    private final Workbook workbook;
     private final ExcelStyleFactory styleFactory;
 
     public GenerateSectionSheet(GenericSheetTemplate template, Workbook workbook) {
         this.template = template;
-        this.workbook = workbook;
         this.styleFactory = new ExcelStyleFactory(template.getWorkbook());
     }
 
@@ -24,6 +26,12 @@ public class GenerateSectionSheet {
         sheet.setColumnWidth(7, 5000);
         sheet.setColumnWidth(8, 5000);
 
+        String maxThreshold = "", projectName, projectId, state, city;
+        projectName = model.getThresholdDailyJson().get("projectName").getAsString();
+        projectId = model.getThresholdDailyJson().get("idProject").getAsString();
+        city = model.getThresholdDailyJson().get("cityName").getAsString();
+        state = model.getThresholdDailyJson().get("stateName").getAsString();
+
         CellStyle boldStyle = workbook.createCellStyle();
         Font boldFont = workbook.createFont();
         boldFont.setBold(true);
@@ -34,76 +42,84 @@ public class GenerateSectionSheet {
         createCellsRow(sheet, 0, 8, titleRow);
         titleRow.getCell(0).setCellValue(model.getTitle());
         sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
-        titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle());
+        titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 14));
 
         // Fila 2: Nombre del evento (tipo de reporte)
+        rowIndex += 1;
         Row typeRow = sheet.createRow(rowIndex++);
         createCellsRow(sheet, 0, 8, typeRow);
-        typeRow.getCell(0).setCellValue("PARÁMETRO A MONITOREAR: :");
-        typeRow.getCell(3).setCellStyle(boldStyle);
-        typeRow.createCell(1).setCellValue(model.getReportType());
+        typeRow.getCell(0).setCellValue("PARÁMETRO A MONITOREAR: ");
+        typeRow.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
         sheet.addMergedRegion(new CellRangeAddress(typeRow.getRowNum(), typeRow.getRowNum(), 3, 8));
         sheet.addMergedRegion(new CellRangeAddress(typeRow.getRowNum(), typeRow.getRowNum(), 0, 2));
 
+        if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+            typeRow.getCell(3).setCellValue("TEMPERATURA PROMEDIO DIARIA EN °C");
+            maxThreshold = "TEMPERATURA MAXIMA MENSUAL PROMEDIO  (°C):";
+        } else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+            typeRow.getCell(3).setCellValue("PRECIPITACIÓN PROMEDIO DIARIA EN mm y PROBABILIDAD DE PRECIPITACIÓN EN %");
+            maxThreshold = "PRECIPITACIÓN MAXIMA MENSUAL PROMEDIO  (mm):";
+        }
+        else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            typeRow.getCell(3).setCellValue("VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h");
+            maxThreshold = "VELOCIDAD DEL VIENTO MAXIMA MENSUAL PROMEDIO  (Km/h):";
+        }
+        typeRow.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+
         // Fila 3: Proyecto / ID del proyecto
+        rowIndex++;
+        Row emptyRow = sheet.createRow(rowIndex++);
+        createCellsRow(sheet, 0, 8, emptyRow);
+        emptyRow.getCell(0).setCellValue("LOCALIZACIÓN ÁREA DE INFLUENCIA");
+        emptyRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 11));
+        sheet.addMergedRegion(new CellRangeAddress(emptyRow.getRowNum(), emptyRow.getRowNum(), 0, 8));
         Row projectRow = sheet.createRow(rowIndex++);
         createCellsRow(sheet, 0, 8, projectRow);
-        projectRow.getCell(0).setCellValue("Proyecto:");
-        projectRow.getCell(0).setCellStyle(boldStyle);
+        //project name
+        projectRow.getCell(0).setCellValue("Nombre del proyecto:");
+        projectRow.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
         sheet.addMergedRegion(new CellRangeAddress(projectRow.getRowNum(), projectRow.getRowNum(), 0, 1));
-        projectRow.createCell(2).setCellValue(model.getThresholdDailyJson().get("projectName").getAsString());
+        sheet.addMergedRegion(new CellRangeAddress(projectRow.getRowNum(), projectRow.getRowNum(), 2, 4));
+        projectRow.createCell(2).setCellValue(projectName);
+        projectRow.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
 
-        Cell idLabel = projectRow.createCell(3);
-        idLabel.setCellValue("ID Proyecto:");
-        idLabel.setCellStyle(boldStyle);
-        projectRow.createCell(4).setCellValue(model.getThresholdDailyJson().get("idProject").getAsString());
+        //project id
+        projectRow.getCell(5).setCellValue("ID Proyecto:");
+        sheet.addMergedRegion(new CellRangeAddress(projectRow.getRowNum(), projectRow.getRowNum(), 5, 6));
+        projectRow.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+        projectRow.getCell(7).setCellValue(projectId);
+        sheet.addMergedRegion(new CellRangeAddress(projectRow.getRowNum(), projectRow.getRowNum(), 7, 8));
+        projectRow.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
 
-        // Fila 4: Municipio / Estado
+
+        //town
         Row locationRow = sheet.createRow(rowIndex++);
         createCellsRow(sheet, 0, 8, locationRow);
         locationRow.getCell(0).setCellValue("Municipio:");
-        locationRow.getCell(0).setCellStyle(boldStyle);
+        locationRow.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
         sheet.addMergedRegion(new CellRangeAddress(locationRow.getRowNum(), locationRow.getRowNum(), 0, 1));
-        locationRow.createCell(2).setCellValue(model.getThresholdDailyJson().get("cityName").getAsString());
+        locationRow.getCell(2).setCellValue(city);
+        sheet.addMergedRegion(new CellRangeAddress(locationRow.getRowNum(), locationRow.getRowNum(), 2,4));
+        locationRow.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
 
-        Cell stateLabel = locationRow.createCell(3);
-        stateLabel.setCellValue("Estado:");
-        stateLabel.setCellStyle(boldStyle);
-        locationRow.createCell(4).setCellValue(model.getThresholdDailyJson().get("stateName").getAsString());
+        //state
+        locationRow.getCell(5).setCellValue("Departamento:");
+        sheet.addMergedRegion(new CellRangeAddress(locationRow.getRowNum(), locationRow.getRowNum(), 5, 6));
+        locationRow.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+        locationRow.createCell(7).setCellValue(state);
+        sheet.addMergedRegion(new CellRangeAddress(locationRow.getRowNum(), locationRow.getRowNum(), 7, 8));
+        locationRow.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
 
-        //createBorder(sheet, 0, 8, 0, 8);
+        //max weather
+        Row maxTemp = sheet.createRow(rowIndex++);
+        createCellsRow(sheet, 0, 8, maxTemp);
+        maxTemp.getCell(0).setCellValue(maxThreshold);
+        sheet.addMergedRegion(new CellRangeAddress(maxTemp.getRowNum(), maxTemp.getRowNum(), 0, 3));
+        maxTemp.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+        sheet.addMergedRegion(new CellRangeAddress(maxTemp.getRowNum(), maxTemp.getRowNum(), 4, 8));
+        maxTemp.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
 
         return rowIndex + 1; // deja una fila vacía después
-    }
-
-    public int createParameterSection(Sheet sheet, int startRow, SheetDataModel data) {
-        Workbook workbook = template.getWorkbook();
-
-        // Crear estilo para etiquetas
-        CellStyle labelStyle = workbook.createCellStyle();
-        Font boldFont = workbook.createFont();
-        boldFont.setBold(true);
-        labelStyle.setFont(boldFont);
-
-        // Datos como pares etiqueta → valor
-        String[][] rows = {
-                {"Nombre del proyecto", data.getThresholdDailyJson().get("projectName").getAsString()},
-                {"ID del proyecto", data.getThresholdDailyJson().get("idProject").getAsString()},
-                {"Ciudad", data.getThresholdDailyJson().get("cityName").getAsString()},
-                {"Estado", data.getThresholdDailyJson().get("stateName").getAsString()},
-        };
-
-        for (String[] rowInfo : rows) {
-            Row row = sheet.createRow(startRow++);
-            Cell labelCell = row.createCell(0);
-            labelCell.setCellValue(rowInfo[0]);
-            labelCell.setCellStyle(labelStyle);
-
-            Cell valueCell = row.createCell(1);
-            valueCell.setCellValue(rowInfo[1]);
-        }
-
-        return startRow + 1; // deja una fila vacía después
     }
 
     public int createThresholdTable(Sheet sheet, int startRow, SheetDataModel model) {
@@ -156,7 +172,7 @@ public class GenerateSectionSheet {
 
     public int createAlertSystem(Sheet sheet, int startRow, SheetDataModel model) {
         Workbook workbook = template.getWorkbook();
-        String type = model.getReportType().toUpperCase();
+        //String type = model.getReportType().toUpperCase();
 
         // Estilo de título
         CellStyle titleStyle = workbook.createCellStyle();
@@ -191,13 +207,13 @@ public class GenerateSectionSheet {
             headerRow.getCell(i).setCellStyle(headerStyle);
         }
 
-        if (type.contains("INCENDIO")) {
-            startRow = addIncendioAlertRows(sheet, startRow, model);
-        } else if (type.contains("MASA")) {
-            startRow = addMovimientoMasaAlertRows(sheet, startRow, model);
-        } else if (type.contains("VENDAVAL")) {
-            startRow = addVendavalAlertRows(sheet, startRow, model);
-        }
+//        if (type.contains("INCENDIO")) {
+//            startRow = addIncendioAlertRows(sheet, startRow, model);
+//        } else if (type.contains("MASA")) {
+//            startRow = addMovimientoMasaAlertRows(sheet, startRow, model);
+//        } else if (type.contains("VENDAVAL")) {
+//            startRow = addVendavalAlertRows(sheet, startRow, model);
+//        }
 
         return startRow + 1;
     }
@@ -242,7 +258,6 @@ public class GenerateSectionSheet {
         red.createCell(0).setCellValue("Roja");
         red.createCell(1).setCellValue("Viento sostenido");
         red.createCell(2).setCellValue(model.getThresholdDailyJson().get("windThresholdRed").getAsDouble());
-
         return row;
     }
 
@@ -252,16 +267,73 @@ public class GenerateSectionSheet {
         }
     }
 
-    public void createBorder(Sheet sheet, int startRow, int endRow, int startCell, int endCell) {
-        CellStyle cellStyle = this.workbook.createCellStyle();
-        cellStyle.setBorderTop(BorderStyle.DOTTED);
-        cellStyle.setBorderRight(BorderStyle.DOTTED);
-        cellStyle.setBorderBottom(BorderStyle.DOTTED);
-        cellStyle.setBorderLeft(BorderStyle.DOTTED);
-        for (int i = startRow; i <= endRow; i++) {
-            for (int j = startCell; j <= endCell; j++) {
-                sheet.getRow(i).getCell(j).setCellStyle(cellStyle);
-            }
+    public int createFooterThresholdDaily(Sheet sheet, int startRow, SheetDataModel model, String... args) {
+        AtomicInteger count = new AtomicInteger();
+        count.set(0);
+
+        IntStream.range(0, model.getArrTemperature().size())
+                .filter(i ->
+                        model.getReportType() == TypeReportSheet.forestFireDataModel &&
+                                model.getArrTemperature().get(i) >= model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble())
+                .forEach(i -> {
+                    int data = (int) (double) model.getArrTemperature().get(i);
+                    Row row = sheet.createRow(startRow + count.get());
+                    createCellsRow(sheet, 0, 8, row);
+                    row.getCell(2).setCellValue(model.getArrDate().get(i));
+                    row.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                    sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 2, 8));
+                    count.set(count.get() + 1);
+                });
+
+        IntStream.range(0, model.getArrPrecipitationPercent().size())
+                .filter(i ->
+                        model.getReportType() == TypeReportSheet.massMovementDataModel &&
+                                model.getArrPrecipitationPercent().get(i) >= model.getThresholdDailyJson().get("precipitationRainPercentOrange").getAsDouble() &&
+                                args[0].equalsIgnoreCase("%"))
+                .forEach(i -> {
+                    int data = (int) (double) model.getArrPrecipitationPercent().get(i);
+                    Row row = sheet.createRow(startRow + count.get());
+                    createCellsRow(sheet, 0, 8, row);
+                    row.getCell(2).setCellValue(model.getArrDate().get(i));
+                    row.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                    sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 2, 8));
+                    count.set(count.get() + 1);
+                });
+
+        IntStream.range(0, model.getArrPrecipitationMm().size())
+                .filter(i ->
+                        model.getReportType() == TypeReportSheet.massMovementDataModel &&
+                                model.getArrPrecipitationMm().get(i) >= model.getThresholdDailyJson().get("precipitationThresholdOrange").getAsDouble() &&
+                                args[0].equalsIgnoreCase("mm"))
+                .forEach(i -> {
+                    int data = (int) (double) model.getArrPrecipitationPercent().get(i);
+                    Row row = sheet.createRow(startRow + count.get());
+                    createCellsRow(sheet, 0, 8, row);
+                    row.getCell(2).setCellValue(model.getArrDate().get(i));
+                    row.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                    sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 2, 8));
+                    count.set(count.get() + 1);
+                });
+
+        IntStream.range(0, model.getArrPrecipitationPercent().size())
+                .filter(i ->
+                        model.getReportType() == TypeReportSheet.rainShowerDataModel &&
+                                model.getArrPrecipitationPercent().get(i) >= model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble())
+                .forEach(i -> {
+                    int data = (int) (double) model.getArrPrecipitationPercent().get(i);
+                    Row row = sheet.createRow(startRow + count.get());
+                    createCellsRow(sheet, 0, 8, row);
+                    row.getCell(2).setCellValue(model.getArrDate().get(i));
+                    row.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                    sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 2, 8));
+                    count.set(count.get() + 1);
+                });
+
+        if (count.get() != 0) {
+            sheet.addMergedRegion(new CellRangeAddress(startRow, startRow + count.get() - 1, 0, 1));
+            sheet.getRow(startRow).getCell(0).setCellValue("FECHA DE LECTURA ANÓMALA:");
+            sheet.getRow(startRow).getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
         }
+        return startRow + count.get();
     }
 }

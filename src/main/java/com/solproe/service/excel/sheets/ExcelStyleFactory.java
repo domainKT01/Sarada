@@ -9,36 +9,36 @@ public class ExcelStyleFactory {
         this.workbook = workbook;
     }
 
-    public CellStyle createHeaderTitleStyle() {
+    public CellStyle createHeaderTitleStyle(short size) {
         CellStyle style = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setBold(true);
-        font.setFontHeightInPoints((short) 14);
+        font.setFontHeightInPoints(size);
         style.setFont(font);
         style.setAlignment(HorizontalAlignment.CENTER);
         return style;
     }
 
-    public CellStyle createBorderedStyle(boolean bold) {
+    public CellStyle createBorderedStyle(boolean bold, boolean center) {
         CellStyle style = workbook.createCellStyle();
-
         if (bold) {
             Font font = workbook.createFont();
             font.setBold(true);
             style.setFont(font);
         }
-
+        if (center) {
+            style.setAlignment(HorizontalAlignment.CENTER);
+            style.setVerticalAlignment(VerticalAlignment.CENTER);
+        }
         style.setBorderTop(BorderStyle.MEDIUM);
         style.setBorderBottom(BorderStyle.MEDIUM);
         style.setBorderLeft(BorderStyle.MEDIUM);
         style.setBorderRight(BorderStyle.MEDIUM);
-
         return style;
     }
 
     public CellStyle createCenterAlignedStyle() {
         CellStyle style = workbook.createCellStyle();
-        style.setAlignment(HorizontalAlignment.CENTER);
         return style;
     }
 
@@ -47,5 +47,4 @@ public class ExcelStyleFactory {
         style.setAlignment(HorizontalAlignment.RIGHT);
         return style;
     }
-
 }

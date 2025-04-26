@@ -19,8 +19,8 @@ public class GenerateGeneralWeatherGraphicsFactory implements ExcelGenerateGraph
     }
 
     @Override
-    public void createChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) throws IOException {
-
+    public int createChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) throws IOException {
+        return 0;
     }
 
     @Override

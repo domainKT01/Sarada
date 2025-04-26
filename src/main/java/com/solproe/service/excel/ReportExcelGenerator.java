@@ -38,21 +38,21 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                     "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE INCENDIOS FORESTALES ",
                     "TEMPERATURA PROMEDIO DIARIA EN °C"
             );
-            forestFireDataModel.setReportType("forestFireDataModel");
+            forestFireDataModel.setReportType(TypeReportSheet.forestFireDataModel);
 
             SheetDataModel massMovementDataModel = new SheetDataModel(
                     "MOVIMIENTOS EN MASA",
                     "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE MOVIMIENTOS EN MASA",
                     "PRECIPITACIÓN PROMEDIO DIARIA EN mm y PROBABILIDAD DE PRECIPITACIÓN EN %"
             );
-            massMovementDataModel.setReportType("massMovementDataModel");
+            massMovementDataModel.setReportType(TypeReportSheet.massMovementDataModel);
 
             SheetDataModel rainShowerDataModel = new SheetDataModel(
                     "VENDAVALES",
                     "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE VENDAVALES",
                     "VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h"
             );
-            rainShowerDataModel.setReportType("rainShowerDataModel");
+            rainShowerDataModel.setReportType(TypeReportSheet.rainShowerDataModel);
 
             forestFireDataModel.setConfigFileThreshold(this.configFileThreshold);
             massMovementDataModel.setConfigFileThreshold(this.configFileThreshold);

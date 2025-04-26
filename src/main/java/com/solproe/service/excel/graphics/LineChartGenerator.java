@@ -1,6 +1,11 @@
 package com.solproe.service.excel.graphics;
 
 import com.solproe.business.domain.SheetDataModel;
+import com.solproe.service.excel.ExcelSheetTemplate;
+import com.solproe.service.excel.TypeReportSheet;
+import com.solproe.service.excel.sheets.ExcelStyleFactory;
+import com.solproe.service.excel.sheets.GenerateSectionSheet;
+import com.solproe.service.excel.sheets.GenericSheetTemplate;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xddf.usermodel.PresetColor;
@@ -9,6 +14,7 @@ import org.apache.poi.xddf.usermodel.XDDFLineProperties;
 import org.apache.poi.xddf.usermodel.XDDFSolidFillProperties;
 import org.apache.poi.xddf.usermodel.chart.*;
 import org.apache.poi.xssf.usermodel.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -16,37 +22,93 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
     private Sheet sheet;
     private XSSFDrawing drawing;
     private Sheet sourceSheet;
+    private GenerateSectionSheet generateSectionSheet;
+    private ExcelStyleFactory styleFactory;
+
+
+    public LineChartGenerator(GenerateSectionSheet generateSectionSheet, ExcelStyleFactory styleFactory) {
+        this.generateSectionSheet = generateSectionSheet;
+        this.styleFactory = styleFactory;
+    }
 
     @Override
-    public void createChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) {
+    public int createChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) {
         this.sheet = sheet;
         this.drawing = drawing;
         this.sourceSheet = workbook.getSheet("support data");
         this.sheet.setColumnWidth(13,4500 );
         this.sheet.setColumnWidth(15,4500 );
         this.sheet.setColumnWidth(16,4500 );
-        if (sheetDataModel.getReportType().equals("forestFireDataModel")) {
-            XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
-            int[][] parameterSource = {{2, 15, 1, 1}, {2, 15, 2, 2}, {2, 15, 3, 3}, {2, 15, 4, 4}};
+        int rowFinal = 0;
+        int space = 2;
+        int height = 25;
+        Row titleRow = sheet.createRow(sheetDataModel.getStartRow() + space);
+        this.generateSectionSheet.createCellsRow(sheet, 0, 8, titleRow);
+        sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
+        if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
+            space += 2;
+            titleRow.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 14 DÍAS DE PRONÓSTICO ");
+            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+            XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+            int[][] parameterSource = {
+                    {2, 15, 1, 1},
+                    {2, 15, 2, 2},
+                    {2, 15, 3, 3},
+                    {2, 15, 4, 4}
+            };
             createGraphic(parameterSource, anchorTemp);
-        } else if (sheetDataModel.getReportType().equalsIgnoreCase("massMovementDataModel")) {
+            rowFinal = sheetDataModel.getStartRow() + height;
+            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+        } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
+            //first graphic
+            space += 2;
+            titleRow.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN % PARA 14 DÍAS DE PRONÓSTICO");
+            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
             int[][] parameterSource1 = {{19, 33, 1, 1}, {19, 33, 2, 2}, {19, 33, 3, 3}, {19, 33, 4, 4}};
-            int[][] parameterSource2 = {{36, 49, 1, 1}, {36, 49, 2, 2}, {36, 49, 3, 3}, {36, 49, 4, 4}};
-            System.out.println("second graphic: " + sheetDataModel.getStartRow() + " number of last row");
-            XSSFClientAnchor xssfClientAnchor1 = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
-            XSSFClientAnchor xssfClientAnchor2 = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow() + 5,
-                    9, sheetDataModel.getStartRow() + 23);
+            XSSFClientAnchor xssfClientAnchor1 = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+            rowFinal = sheetDataModel.getStartRow() + height + 2;
             createGraphic(parameterSource1, xssfClientAnchor1);
+            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "%");
+            //second graphic
+            rowFinal += space;
+            Row row = sheet.createRow(rowFinal);
+            this.generateSectionSheet.createCellsRow(sheet, 0, 8, row);
+            sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 0, 8));
+            row.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+            row.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN (mm) PARA 14 DÍAS DE PRONÓSTICO");
+            int[][] parameterSource2 = {
+                    {36, 49, 1, 1},
+                    {36, 49, 2, 2},
+                    {36, 49, 3, 3},
+                    {36, 49, 4, 4}
+            };
+            rowFinal += 2;
+            XSSFClientAnchor xssfClientAnchor2 = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                    rowFinal, 9, rowFinal + height);
             createGraphic(parameterSource2, xssfClientAnchor2);
-        } else if (sheetDataModel.getReportType().equalsIgnoreCase("rainShowerDataModel")) {
-            XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0, 11, 9, 31);
-            int[][] parameterSource = {{53, 66, 1, 1}, {53, 66, 2, 2}, {53, 66, 3, 3}, {53, 66, 4, 4}};
+            rowFinal += height + 2;
+            this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
+        } else if (sheetDataModel.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            space += 2;
+            titleRow.getCell(0).setCellValue("MONITOREO DE VIENTO Km/h PARA 14 DÍAS DE PRONÓSTICO");
+            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+            XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+            int[][] parameterSource = {
+                    {53, 66, 1, 1},
+                    {53, 66, 2, 2},
+                    {53, 66, 3, 3},
+                    {53, 66, 4, 4}
+            };
             createGraphic(parameterSource, anchorWind);
         }
+        return rowFinal;
     }
 
     // Método para cambiar el color de una línea
-    private static void setLineColor(XDDFLineChartData.Series series, PresetColor color) {
+    private static void setLineColor(@NotNull XDDFLineChartData.Series series, PresetColor color) {
         XDDFSolidFillProperties fill = new XDDFSolidFillProperties(XDDFColor.from(color));
         XDDFLineProperties line = new XDDFLineProperties();
         line.setFillProperties(fill);
