@@ -58,7 +58,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                     {2, 15, 4, 4}
             };
             createGraphic(parameterSource, anchorTemp);
-            rowFinal = sheetDataModel.getStartRow() + height;
+            rowFinal = sheetDataModel.getStartRow() + height + 3;
             rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
             rowFinal += space;
             Row monthlyTitle = sheet.createRow(rowFinal);
@@ -99,6 +99,8 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                     rowFinal, 9, rowFinal + height);
             createGraphic(parameterSource2, xssfClientAnchor2);
             rowFinal += height + 3;
+            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
+            rowFinal += 3;
             Row monthlyTitle = sheet.createRow(rowFinal);
             this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
             sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));

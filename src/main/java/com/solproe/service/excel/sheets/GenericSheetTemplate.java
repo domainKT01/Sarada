@@ -46,9 +46,19 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
                 model.setStartRow(row);
                 row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
-                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
             }
             catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        //===============
+        //* Alerts Charts
+        //===============
+        {
+            try{
+                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
