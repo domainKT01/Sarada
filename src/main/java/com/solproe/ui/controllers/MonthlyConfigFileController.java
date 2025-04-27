@@ -87,7 +87,7 @@ public class MonthlyConfigFileController implements Initializable {
                 return;
             }
 
-            boolean firstSemester = filled.get(0).isFirstSemester();
+            boolean firstSemester = filled.getFirst().isFirstSemester();
 
             for (MonthlyDataPair pair : filled) {
                 if (!pair.isComplete()) {

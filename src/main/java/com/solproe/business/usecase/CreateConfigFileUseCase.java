@@ -1,5 +1,6 @@
 package com.solproe.business.usecase;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.solproe.business.domain.ConfigFileThreshold;
 import com.solproe.business.dto.MonthlyData;
@@ -85,6 +86,7 @@ public class CreateConfigFileUseCase {
 
         for (MonthlyData data : model.getMonthlyData()) {
             String month = data.getMonth().toLowerCase();
+            JsonArray jsonArray = new JsonArray();
             jsonObject.addProperty(month + "DataGrade", data.getGrade());
             jsonObject.addProperty(month + "DataPercent", data.getPercent());
         }
