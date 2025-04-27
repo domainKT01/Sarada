@@ -32,7 +32,6 @@ public class ExcelStyleFactory {
             style.setWrapText(true);
         }
         if (colorBackground.length != 0) {
-            System.out.println(colorBackground[0]);
             switch (colorBackground[0]) {
                 case "ROJA" :
                     style.setFillForegroundColor(IndexedColors.RED.getIndex());

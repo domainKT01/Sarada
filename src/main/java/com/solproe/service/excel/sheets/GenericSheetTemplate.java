@@ -62,8 +62,24 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 throw new RuntimeException(e);
             }
         }
+
+        //===============
+        //* Notifications
+        //===============
+        {
+            row += 3;
+            try{
+                row = this.sectionBuilder.createNotificationChart(sheet, row, model);
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
         System.out.println("final num: " + row);
     }
+
+
 
 
     public Workbook getWorkbook() {

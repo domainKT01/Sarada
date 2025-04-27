@@ -282,7 +282,6 @@ public class GenerateSectionSheet {
                 sheet.addMergedRegion(new CellRangeAddress(orange.getRowNum(), orange.getRowNum(), 4, 6));
                 row += 1;
             }
-            System.out.println("row: " + row);
         } catch (Exception e) {
             System.out.println("threshold: " + e.getMessage());
         }
@@ -380,7 +379,6 @@ public class GenerateSectionSheet {
                 if (model.getReportType() == TypeReportSheet.forestFireDataModel && count % 2 == 1) {
                     if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble()) {
                         if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 15) {
-                            System.out.println("first sem red: " + data);
                             Row row1 = sheet.createRow(row + outRange);
                             createCellsRow(sheet, 0, 8, row1);
                             int index = data.indexOf("DataGrade");
@@ -393,7 +391,6 @@ public class GenerateSectionSheet {
                             outRange += 1;
                         }
                         else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 15) {
-                            System.out.println("second sem red: " + data);
                             Row row1 = sheet.createRow(row + outRange);
                             createCellsRow(sheet, 0, 8, row1);
                             int index = data.indexOf("DataGrade");
@@ -408,7 +405,6 @@ public class GenerateSectionSheet {
                     }
                     else if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("orangeThresholdTemperature").getAsDouble()) {
                         if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 15) {
-                            System.out.println("first sem orange: " + data);
                             Row row1 = sheet.createRow(row + outRange);
                             createCellsRow(sheet, 0, 8, row1);
                             int index = data.indexOf("DataGrade");
@@ -421,7 +417,6 @@ public class GenerateSectionSheet {
                             outRange += 1;
                         }
                         else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 15) {
-                            System.out.println("second sem orange: " + data);
                             Row row1 = sheet.createRow(row + outRange);
                             createCellsRow(sheet, 0, 8, row1);
                             int index = data.indexOf("DataGrade");
@@ -491,8 +486,9 @@ public class GenerateSectionSheet {
                 }
                 count += 1;
             }
+            row += outRange;
         }
-        return 0;
+        return row;
     }
 
     public void createCellsRow(Sheet sheet, int startCell, int endCell, Row row) {
@@ -569,5 +565,130 @@ public class GenerateSectionSheet {
             sheet.getRow(startRow).getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
         }
         return startRow + count.get();
+    }
+
+    public int createNotificationChart(Sheet sheet, int row, SheetDataModel model) {
+        Row title = sheet.createRow(row);
+        createCellsRow(sheet, 0, 8, title);
+        title.getCell(0).setCellValue("MECANISMOS  DE NOTIFICACIÓN Y AVISO PREVIO ");
+        title.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+        sheet.addMergedRegion(new CellRangeAddress(title.getRowNum(), title.getRowNum(), 0, 8));
+        row += 2;
+        for (int i = 0; i<= 16; i++) {
+            Row row1 = sheet.createRow(row + i);
+            createCellsRow(sheet, 0, 8, row1);
+        }
+        {
+            Row header = sheet.getRow(row);
+            header.getCell(0).setCellValue("TIPO DE ALERTA");
+            header.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 0, 2));
+            header.setHeight((short) 1600);
+            header.getCell(3).setCellValue("FECHA DE NOTIFICACIÓN (Un día antes y el día esperado de Ocurrencia)\n");
+            header.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+            header.getCell(4).setCellValue("NOTIFICACIÓN Y CADENA DE LLAMADO");
+            header.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+            header.getCell(5).setCellValue("CONTACTO RESPONSABLE");
+            header.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 5, 6));
+            header.getCell(7).setCellValue("MENSAJE");
+            header.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 7, 8));
+            row += 1;
+        }
+        String[] notification;
+        String[] message;
+        String[] alert;
+        if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja" +
+                            " y activación de mecanismos de alarma",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área" +
+                            " y/o Auxiliar del Comandante de Incidentes al número telefónico:",
+            };
+
+            message = new String[] {
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR INCENDIO FORESTAL",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS" +
+                            " PARA REACCIÓN INMEDIATA) ALERTA ROJA POR INCENDIO FORESTAL",
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A INCENDIOS FORESTALES",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR INCENDIO FORESTAL",
+            };
+
+            alert = new String[] {
+                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
+                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+            };
+        }
+        else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta" +
+                            " Roja y activación de mecanismos de alarma",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+            };
+
+            message = new String[] {
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR MOVIMIENTOS EN MASA",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR MOVIMIENTOS EN MASA",
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A MOVIMIENTOS EN MASA",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR MOVIMIENTOS EN MASA",
+            };
+
+            alert = new String[] {
+                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
+                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+            };
+        } else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja y" +
+                            " activación de mecanismos de alarma",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:"
+            };
+
+            message = new String[] {
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR VENDAVALES",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR VENDAVALES",
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A VENDAVALES",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA" +
+                            " REACCIÓN INMEDIATA) ALERTA ROJA POR VENDAVALES",
+            };
+
+            alert = new String[] {
+                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
+                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+            };
+        }
+        int rowsNum = 4;
+        {
+            //code
+        }
+        return  row + 3;
     }
 }
