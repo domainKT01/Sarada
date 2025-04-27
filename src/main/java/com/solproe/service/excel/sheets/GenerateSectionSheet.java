@@ -596,9 +596,9 @@ public class GenerateSectionSheet {
             sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 7, 8));
             row += 1;
         }
-        String[] notification;
-        String[] message;
-        String[] alert;
+        String[] notification = new String[0];
+        String[] message = new String[0];
+        String[] alert = new String[0];
         if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
             notification = new String[] {
                     "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
@@ -685,10 +685,24 @@ public class GenerateSectionSheet {
                     "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
             };
         }
-        int rowsNum = 4;
-        {
-            //code
-        }
+        row = generateChartNotification(sheet, row, model, notification, message, alert);
         return  row + 3;
+    }
+
+    public int generateChartNotification(Sheet sheet, int row, SheetDataModel model, String[] notification, String[] message, String[] alert) {
+        int rowsNum = 4;
+        for (int i = 0; i < 4; i++) {
+            Row row1 = sheet.getRow(row);
+            row1.getCell(0).setCellValue(alert[i]);
+            row1.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 0, 2));
+            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 3, 3));
+            row1.getCell(4).setCellValue(notification[i]);
+            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 4, 4));
+            row += rowsNum;
+        }
+        return row;
     }
 }
