@@ -690,9 +690,10 @@ public class GenerateSectionSheet {
     }
 
     public int generateChartNotification(Sheet sheet, int row, SheetDataModel model, String[] notification, String[] message, String[] alert) {
-        int rowsNum = 4;
+        int rowsNum = 3;
         for (int i = 0; i < 4; i++) {
             Row row1 = sheet.getRow(row);
+            createCellsRow(sheet, 0, 8, row1);
             row1.getCell(0).setCellValue(alert[i]);
             row1.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
             sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 0, 2));
@@ -701,7 +702,26 @@ public class GenerateSectionSheet {
             row1.getCell(4).setCellValue(notification[i]);
             row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
             sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 4, 4));
-            row += rowsNum;
+            row1.getCell(5).setCellValue("Jefe Sci");
+            row1.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 5, 6));
+            Row bossSciContact = sheet.createRow(row + 1);
+            createCellsRow(sheet, 5, 6, bossSciContact);
+            bossSciContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            bossSciContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("sciBossContact").getAsLong());
+            sheet.addMergedRegion(new CellRangeAddress(bossSciContact.getRowNum(), bossSciContact.getRowNum(), 5, 6));
+            Row auxiliarBoss = sheet.createRow(row + 2);
+            createCellsRow(sheet, 5, 6, auxiliarBoss);
+            auxiliarBoss.getCell(5).setCellValue("Auxiliar Jefe SCI");
+            auxiliarBoss.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(auxiliarBoss.getRowNum(), auxiliarBoss.getRowNum(), 5, 6));
+            Row auxiliarBossContact = sheet.createRow(row + 3);
+            createCellsRow(sheet, 5, 6, auxiliarBossContact);
+            auxiliarBossContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("auxiliarSciBossContact").getAsLong());
+            auxiliarBossContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(auxiliarBossContact.getRowNum(), auxiliarBossContact.getRowNum(), 5, 6));
+
+            row += rowsNum + 1;
         }
         return row;
     }
