@@ -198,7 +198,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
 
         List<String> keys = new ArrayList<>(sheetDataModel.getThresholdMonthlyJson().asMap().keySet());
 
-        int dataStartIndex = 5; // omitimos los primeros 4 elementos comunes
+        int dataStartIndex = 6; // omitimos los primeros 4 elementos comunes
         for (int i = dataStartIndex; i < keys.size(); i += 2) {
             String tempKey = keys.get(i);
             String precKey = (i + 1 < keys.size()) ? keys.get(i + 1) : null;
@@ -207,12 +207,12 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             Cell cellMonth = rowMonth.createCell(1);
             cellMonth.setCellStyle(setStyle("date"));
 
-            Cell cellTempValue = rowMonth.createCell(3);
+            Cell cellTempValue = rowMonth.createCell(2);
             cellTempValue.setCellStyle(setStyle(""));
             cellTempValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(tempKey).getAsDouble());
 
             if (precKey != null) {
-                Cell cellValue = rowMonth.createCell(2);
+                Cell cellValue = rowMonth.createCell(3);
                 cellValue.setCellStyle(setStyle(""));
                 cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(precKey).getAsDouble());
             }
@@ -233,13 +233,28 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
         };
 
         for (int i = 11; i >= 0; i--) {
-            Row row = sheet.getRow(rowTable - i);
-            if (row != null) {
-                Cell cell = row.getCell(1);
-                if (cell == null) {
-                    cell = row.createCell(1);
+            Row row = sheet.getRow(rowTable - i + 6);
+            if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
+                if (row != null) {
+                    Cell cell = row.getCell(1);
+                    if (cell != null) {
+                        cell = row.createCell(1);
+                        cell.setCellValue(arrDate[i]);
+                        cell.setCellStyle(setStyle("date"));
+                    }
                 }
-                cell.setCellValue(arrDate[i]);
+                if (i == 6) {
+                    break;
+                }
+            }
+            else if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 2) {
+                if (row != null) {
+                    Cell cell = row.getCell(1);
+                    if (cell == null) {
+                        cell = row.createCell(1);
+                    }
+                    cell.setCellValue(arrDate[i - 6]);
+                }
             }
         }
     }

@@ -9,12 +9,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import org.jetbrains.annotations.NotNull;
+
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class MonthlyConfigFileController implements Initializable {
 
+    public TextField yellowThresholdTemperature;
+    public TextField yellowThresholdPrecipitation;
     @FXML private TextField orangeThresholdTemperature;
     @FXML private TextField redThresholdTemperature;
     @FXML private TextField orangeThresholdPrecipitation;
@@ -70,13 +74,7 @@ public class MonthlyConfigFileController implements Initializable {
 
     private void saveConfig() {
         try {
-            MonthlyThresholdInputModel inputModel = new MonthlyThresholdInputModel();
-
-            // Validar y agregar los umbrales
-            inputModel.setOrangeTemperatureThreshold(Double.parseDouble(orangeThresholdTemperature.getText()));
-            inputModel.setRedTemperatureThreshold(Double.parseDouble(redThresholdTemperature.getText()));
-            inputModel.setOrangePrecipitationThreshold(Double.parseDouble(orangeThresholdPrecipitation.getText()));
-            inputModel.setRedPrecipitationThreshold(Double.parseDouble(redThresholdPrecipitation.getText()));
+            MonthlyThresholdInputModel inputModel = getMonthlyThresholdInputModel();
 
             // Obtener pares de datos mensuales
             List<MonthlyDataPair> allMonths = getMonthlyDataPairs();
@@ -117,6 +115,19 @@ public class MonthlyConfigFileController implements Initializable {
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Error", "Error al guardar configuración mensual: " + e.getMessage());
         }
+    }
+
+    @NotNull
+    private MonthlyThresholdInputModel getMonthlyThresholdInputModel() {
+        MonthlyThresholdInputModel inputModel = new MonthlyThresholdInputModel();
+
+        // Validar y agregar los umbrales
+        inputModel.setOrangeTemperatureThreshold(Double.parseDouble(orangeThresholdTemperature.getText()));
+        inputModel.setRedTemperatureThreshold(Double.parseDouble(redThresholdTemperature.getText()));
+        inputModel.setOrangePrecipitationThreshold(Double.parseDouble(orangeThresholdPrecipitation.getText()));
+        inputModel.setRedPrecipitationThreshold(Double.parseDouble(redThresholdPrecipitation.getText()));
+        inputModel.setYellowPrecipitationThreshold(Double.parseDouble(yellowThresholdPrecipitation.getText()));
+        return inputModel;
     }
 
 

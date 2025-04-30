@@ -80,6 +80,7 @@ public class CreateConfigFileUseCase {
         jsonObject.addProperty("redThresholdTemperature", model.getRedTemperatureThreshold());
         jsonObject.addProperty("orangeThresholdPrecipitation", model.getOrangePrecipitationThreshold());
         jsonObject.addProperty("redThresholdPrecipitation", model.getRedPrecipitationThreshold());
+        jsonObject.addProperty("yellowThresholdPrecipitation", model.getYellowPrecipitationThreshold());
 
         boolean isFirstSemester = model.getMonthlyData().getFirst().isFirstSemester(); // suposición
         jsonObject.addProperty("stage", isFirstSemester ? 1 : 2);

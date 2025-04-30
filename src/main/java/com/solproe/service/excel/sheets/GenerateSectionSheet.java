@@ -2,10 +2,12 @@ package com.solproe.service.excel.sheets;
 
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.TypeReportSheet;
+import com.solproe.util.DateUtil;
 import com.solproe.util.JsonObjectToMap;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -141,13 +143,20 @@ public class GenerateSectionSheet {
             };
             startRow = createAlertChart(sheet, startRow, model, alerts);
         }
-
-        if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+        else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
             String[] alerts = {
                     "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
                     "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
                     "PREPARACIÓN PARA LA RESPUESTA, ALISTAMIENTO DE RECURSOS, SUMINISTROS Y SERVICIOS E IDENTIFICACIÓN DE DE LAS RUTAS DE INGRESO Y EGRESO."
             };
+            startRow = createAlertChart(sheet, startRow, model, alerts);
+        }
+        else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            String[] alerts = {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
+                    "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
+            };
+            startRow += 5;
             startRow = createAlertChart(sheet, startRow, model, alerts);
         }
         return startRow + 1;
@@ -220,6 +229,27 @@ public class GenerateSectionSheet {
             row = createChartDateAlerts(sheet, row, model, alertsLevel, threshold, titles, "%");
             row += 2;
             row = createChartMonthlyAlerts(sheet, row, model, titles);
+        }
+        else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            titles = new String[] {
+                    "ROJA",
+                    "NARANJA",
+            };
+            params = new String[] {
+                    "UMBRAL DE VELOCIDAD DEL VIENTO Y NIVEL DE ALERTA - MONITOREO DIARIO",
+                    "UMBRAL DE VELOCIDAD DEL VIENTO (Km/h)",
+                    model.getThresholdDailyJson().get("windThresholdRed").getAsString() + " km/h",
+                    model.getThresholdDailyJson().get("windThresholdOrange").getAsString() + " km/h",
+            };
+            String[] threshold = {
+                    "windThresholdRed",
+                    "windThresholdOrange",
+            };
+            row = createThresholdComments(sheet, row, titles, alertsLevel);
+            row = createChartThreshold(sheet, row, params);
+            row += 2;
+            row = createChartDateAlerts(sheet, row, model, alertsLevel, threshold, titles);
+            //row = createChartMonthlyAlerts(sheet, row, model, titles);
         }
         return  row;
     }
@@ -317,6 +347,8 @@ public class GenerateSectionSheet {
                     else {
                         arrData = model.getArrPrecipitationPercent();
                     }
+                } else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+                    arrData = model.getArrWindSpeed();
                 }
                 if (arrData.get(i) >= model.getThresholdDailyJson().get(threshold[0]).getAsDouble()) {
                     Row data = sheet.createRow(row);
@@ -359,134 +391,166 @@ public class GenerateSectionSheet {
             row += 2;
         }
         {
-            Row header = sheet.createRow(row);
-            header.setHeight((short) 700);
-            createCellsRow(sheet, 0, 8, header);
-            header.getCell(3).setCellValue("MES");
-            header.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-            header.getCell(4).setCellValue("NIVEL DE ALERTA");
-            header.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 4, 6));
-            Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
-            int count = 0;
-            int outRange = 0;
-            row += 1;
-            for (String data : map.keySet()) {
-                if (count < 5) {
+            try {
+                Row header = sheet.createRow(row);
+                header.setHeight((short) 700);
+                createCellsRow(sheet, 0, 8, header);
+                header.getCell(3).setCellValue("MES");
+                header.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                header.getCell(4).setCellValue("NIVEL DE ALERTA");
+                header.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 4, 6));
+                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
+                int count = 0;
+                int outRange = 0;
+                row += 1;
+                for (String data : map.keySet()) {
+                    if (count < 5) {
+                        count += 1;
+                        continue;
+                    }
+                    if (model.getReportType() == TypeReportSheet.forestFireDataModel && count % 2 == 0) {
+                        if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble()) {
+                            if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataGrade");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[0]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                            else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataGrade");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[0]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                        }
+                        else if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("orangeThresholdTemperature").getAsDouble()) {
+                            if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataGrade");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[1]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                            else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataGrade");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[1]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                        }
+                    }
+                    else if (model.getReportType() == TypeReportSheet.massMovementDataModel && count % 2 == 1) {
+                        if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble()) {
+                            if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataPercent");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[0]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                            else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataPercent");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[0]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                        }
+                        else if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble()) {
+                            if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16)  {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataPercent");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[1]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                            else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataPercent");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[1]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                        }
+                        else if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("yellowThresholdPrecipitation").getAsDouble()) {
+                            if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16)  {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataPercent");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[2]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "AMARILLA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                            else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
+                                Row row1 = sheet.createRow(row + outRange);
+                                createCellsRow(sheet, 0, 8, row1);
+                                int index = data.indexOf("DataPercent");
+                                String month = data.substring(0, index).trim();
+                                row1.getCell(3).setCellValue(month);
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(4).setCellValue(titles[2]);
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
+                                outRange += 1;
+                            }
+                        }
+                    }
                     count += 1;
-                    continue;
                 }
-                if (model.getReportType() == TypeReportSheet.forestFireDataModel && count % 2 == 1) {
-                    if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble()) {
-                        if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 15) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataGrade");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[0]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                        else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 15) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataGrade");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[0]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                    }
-                    else if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("orangeThresholdTemperature").getAsDouble()) {
-                        if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 15) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataGrade");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[1]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                        else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 15) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataGrade");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[1]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                    }
-                }
-                else if (model.getReportType() == TypeReportSheet.massMovementDataModel && count % 2 == 0) {
-                    if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble()) {
-                        if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataPercent");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[0]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                        else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataPercent");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[0]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                    }
-                    else if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble()) {
-                        if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16)  {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataPercent");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[1]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                        else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16) {
-                            Row row1 = sheet.createRow(row + outRange);
-                            createCellsRow(sheet, 0, 8, row1);
-                            int index = data.indexOf("DataPercent");
-                            String month = data.substring(0, index).trim();
-                            row1.getCell(3).setCellValue(month);
-                            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                            row1.getCell(4).setCellValue(titles[1]);
-                            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
-                            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
-                            outRange += 1;
-                        }
-                    }
-                }
-                count += 1;
+                row += outRange;
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             }
-            row += outRange;
+
         }
         return row;
     }
@@ -720,9 +784,129 @@ public class GenerateSectionSheet {
             auxiliarBossContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("auxiliarSciBossContact").getAsLong());
             auxiliarBossContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
             sheet.addMergedRegion(new CellRangeAddress(auxiliarBossContact.getRowNum(), auxiliarBossContact.getRowNum(), 5, 6));
+            row1.getCell(7).setCellValue(message[i]);
+            row1.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 7, 8));
+            List<Double> valuesDaily;
+            List<Double> valuesMonthly = new ArrayList<>();
+            if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+                valuesDaily = model.getArrTemperature();
+                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
+                List<String> months = new ArrayList<>();
+                int count = 0;
+                for (String key : map.keySet()) {
+                    if (count < 5) {
+                        count += 1;
+                        continue;
+                    }
+                    if (key.contains("DataGrade")) {
+                        valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
+                        int index = key.indexOf("DataGrade");
+                        String month = key.substring(0, index).trim();
+                        months.add(month);
+                    }
+                }
 
+                switch (i) {
+                    case 0 :
+                        Double thresholdOrange = model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble();
+                        Double thresholdRed = model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
+                        break;
+                    case 1 :
+                        Double threshold2 = model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
+                        break;
+                    case 2 :
+                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdTemperature").getAsDouble();
+                        Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
+                        break;
+                    case 3 :
+                        Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold4, valuesMonthly, row1, months, "months", "red");
+                        break;
+                }
+            }
+            else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+                valuesDaily = model.getArrPrecipitationPercent();
+                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
+                List<String> months = new ArrayList<>();
+                int count = 0;
+                for (String key : map.keySet()) {
+                    if (count < 5) {
+                        count += 1;
+                        continue;
+                    }
+                    if (key.contains("DataPercent")) {
+                        valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
+                        int index = key.indexOf("DataPercent");
+                        String month = key.substring(0, index).trim();
+                        months.add(month);
+                    }
+                }
+
+                switch (i) {
+                    case 0 :
+                        Double thresholdOrange = model.getThresholdDailyJson().get("precipitationRainPercentOrange").getAsDouble();
+                        Double thresholdRed = model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
+                        break;
+                    case 1 :
+                        Double threshold2 = model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
+                        break;
+                    case 2 :
+                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble();
+                        Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
+                        break;
+                    case 3 :
+                        Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold4, valuesMonthly, row1, months, "months", "red");
+                        break;
+                }
+            }
+            else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+                valuesDaily = model.getArrWindSpeed();
+                switch (i) {
+                    case 0 :
+                        Double thresholdOrange = model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble();
+                        Double thresholdRed = model.getThresholdDailyJson().get("windThresholdRed").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
+                        break;
+                    case 1 :
+                        Double threshold2 = model.getThresholdDailyJson().get("windThresholdRed").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
+                        break;
+                }
+            }
             row += rowsNum + 1;
         }
         return row;
+    }
+
+    public void setFieldThresholdChart(Double thresholdOrange, Double thresholdRed, List<Double> values, Row row, List<String> dates, String... type) {
+        StringBuilder date = new StringBuilder();
+        for (int i = 0; i < values.size(); i++) {
+            if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("days")) {
+                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
+                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
+                }
+            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("days")) {
+                if (values.get(i) >= thresholdRed) {
+                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
+                }
+            } else if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("months")) {
+                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
+                    date.append("(").append(dates.get(i)).append(")");
+                }
+            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("months")) {
+                if (values.get(i) >= thresholdRed) {
+                    date.append("(").append(dates.get(i)).append(")");
+                }
+            }
+        }
+        row.getCell(3).setCellValue(date.toString());
     }
 }

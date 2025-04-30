@@ -8,6 +8,7 @@ public class MonthlyThresholdInputModel {
     private double redTemperatureThreshold;
     private double orangePrecipitationThreshold;
     private double redPrecipitationThreshold;
+    private double yellowPrecipitationThreshold;
     private List<MonthlyData> monthlyData = new ArrayList<>();
 
     public double getOrangeTemperatureThreshold() {
@@ -40,6 +41,14 @@ public class MonthlyThresholdInputModel {
 
     public void setRedPrecipitationThreshold(double redPrecipitationThreshold) {
         this.redPrecipitationThreshold = redPrecipitationThreshold;
+    }
+
+    public double getYellowPrecipitationThreshold() {
+        return yellowPrecipitationThreshold;
+    }
+
+    public void setYellowPrecipitationThreshold(double yellowPrecipitationThreshold) {
+        this.yellowPrecipitationThreshold = yellowPrecipitationThreshold;
     }
 
     public List<MonthlyData> getMonthlyData() {
