@@ -1,7 +1,7 @@
 package com.solproe.business.usecase;
 
 import com.google.gson.JsonObject;
-import com.solproe.business.adapters.OpenMeteoAdapter;
+import com.solproe.business.adapters.OpenMeteoAdapterJson;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
@@ -43,8 +43,8 @@ public class GenerateReportUseCase implements RequestInterface {
     public void successResponse(JsonObject jsonObject) {
         try {
             //generate linked list openMeteoAdapter
-            OpenMeteoAdapter openMeteoAdapter = new OpenMeteoAdapter(jsonObject);
-            OpenMeteoForecastList openMeteoForecastList = openMeteoAdapter.setWeatherForecastDto();
+            OpenMeteoAdapterJson openMeteoAdapterJson = new OpenMeteoAdapterJson(jsonObject);
+            OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
             ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
             this.configFileJson = readConfigFileUseCase.readConfigFile("threshold");

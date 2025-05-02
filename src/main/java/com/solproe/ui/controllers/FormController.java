@@ -14,6 +14,9 @@ import java.util.ResourceBundle;
 
 public class FormController implements Initializable {
 
+    public Button saveButton;
+
+    public Button updateButton;
     @FXML
     private TextField projectName;
     @FXML
@@ -48,8 +51,6 @@ public class FormController implements Initializable {
     private TextField percentRainRed;
     @FXML
     private TextField ceraunicosRed;
-    @FXML
-    private Button buttonSave;
 
     private ConfigFileViewModel viewModel;
 
@@ -57,7 +58,7 @@ public class FormController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.viewModel = new ConfigFileViewModel();
-        buttonSave.setOnMouseClicked(event -> saveConfig());
+        this.saveButton.setOnMouseClicked(_ -> saveConfig());
     }
 
     private void saveConfig() {
@@ -97,7 +98,7 @@ public class FormController implements Initializable {
     }
 
     // Método para parsear Strings a Long y manejar posibles errores
-    private long parseLong(String value) {
+        private long parseLong(String value) {
         try {
             return Long.parseLong(value);
         } catch (NumberFormatException e) {

@@ -26,6 +26,7 @@ public class RequestApi {
                 Gson gson = new Gson();
                 assert responseBody != null;
                 JsonObject jsonObject = gson.fromJson(responseBody.string(), JsonObject.class);
+                System.out.println(jsonObject.toString());
                 this.onResponse(jsonObject);
             }
             else {

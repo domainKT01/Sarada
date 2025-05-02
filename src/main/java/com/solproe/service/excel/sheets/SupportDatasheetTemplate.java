@@ -35,6 +35,8 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             createValuesTable(53, 1, parametersWind, this.dataModel.get(2));
             String[] parametersMonths = {"orangeThresholdTemperature", "redThresholdTemperature", "Temperatura", "Precipitación"};
             createMonthValues(69, 1, parametersMonths, this.dataModel.get(2));
+            String[] parametersCeraunic = {"ceraunicosThresholdRed", "ceraunic"};
+            createCodeChart(79, 1, parametersCeraunic, this.dataModel.get(1));
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -51,7 +53,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
             cellValueHeader.setCellValue(parameters[2]);
             cellValueHeader.setCellStyle(setStyle("header"));
-            Cell cellThresholdOrangeHeader = rowHeader.createCell(columnTable +2);
+            Cell cellThresholdOrangeHeader = rowHeader.createCell(columnTable + 2);
             cellThresholdOrangeHeader.setCellValue("Alerta Naranja");
             cellThresholdOrangeHeader.setCellStyle(setStyle("header"));
             Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 3);
@@ -256,6 +258,44 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
                     cell.setCellValue(arrDate[i - 6]);
                 }
             }
+        }
+    }
+
+    public void createCodeChart(int rowTable, int columnTable, String[] parameters, SheetDataModel sheetDataModel) {
+        try {
+            Row rowHeader = this.sheet.createRow(rowTable - 1);
+            Cell cellDateHeader = rowHeader.createCell(columnTable);
+            cellDateHeader.setCellValue("Fecha");
+            cellDateHeader.setCellStyle(setStyle("header"));
+            Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
+            cellValueHeader.setCellValue(parameters[1]);
+            cellValueHeader.setCellStyle(setStyle("header"));
+            Cell cellThresholdRedHeader = rowHeader.createCell(columnTable + 2);
+            cellThresholdRedHeader.setCellValue("Alerta Roja");
+            cellThresholdRedHeader.setCellStyle(setStyle("header"));
+            for (int i = 0; i < sheetDataModel.getArrDate().size(); i++) {
+                Row row = sheet.createRow(rowTable + i);
+                Cell cellDate = row.createCell(columnTable);
+                Cell cellValue = row.createCell(columnTable + 1);
+                Cell cellThresholdOrange = row.createCell(columnTable + 2);
+                cellDate.setCellValue(sheetDataModel.getArrDate().get(i));
+                cellDate.setCellStyle(setStyle("date"));
+                cellThresholdOrange.setCellValue(sheetDataModel.getThresholdDailyJson().get("ceraunicosThresholdRed").getAsDouble());
+                cellThresholdOrange.setCellStyle(setStyle("end"));
+                if (parameters[1].equalsIgnoreCase("ceraunic")) {
+                    System.out.println("ceraunic count: " + i);
+                    cellValue.setCellValue(sheetDataModel.getArrCode().get(i));
+                    if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
+                            .get(parameters[0]).getAsDouble()) {
+                        cellValue.setCellStyle(setStyle("red"));
+                    } else {
+                        cellValue.setCellStyle(setStyle(""));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

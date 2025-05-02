@@ -54,9 +54,17 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
             );
             rainShowerDataModel.setReportType(TypeReportSheet.rainShowerDataModel);
 
+            SheetDataModel ceraunicDataModel = new SheetDataModel(
+                    "CERAUNICO",
+                    "MONITOREO DE PARÁMETROS HIDROMETEOROLÓGICOS PARA LA ALERTA DE OCURRENCIA DE FENÓMENOS CERÁUNICOS",
+                    "ESTADO DEL CLIMA ESPERADO"
+            );
+            ceraunicDataModel.setReportType(TypeReportSheet.ceraunic);
+
             forestFireDataModel.setConfigFileThreshold(this.configFileThreshold);
             massMovementDataModel.setConfigFileThreshold(this.configFileThreshold);
             rainShowerDataModel.setConfigFileThreshold(this.configFileThreshold);
+            ceraunicDataModel.setConfigFileThreshold(this.configFileThreshold);
 
             for (WeatherNode weatherNode : forecastList.getNodeList()) {
                 forestFireDataModel.addTemperature(weatherNode.getTemp());
@@ -82,12 +90,21 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                 massMovementDataModel.addWindSpeed(weatherNode.getSpeedWind());
                 massMovementDataModel.addTemperature(weatherNode.getTemp());
                 massMovementDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
+
+                ceraunicDataModel.addHumidityPercent(weatherNode.getHumidity());
+                ceraunicDataModel.addCode(weatherNode.getCode());
+                ceraunicDataModel.addDate(weatherNode.getDate());
+                ceraunicDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
+                ceraunicDataModel.addWindSpeed(weatherNode.getSpeedWind());
+                ceraunicDataModel.addTemperature(weatherNode.getTemp());
+                ceraunicDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
             }
 
             this.dataModelList = new ArrayList<>();
             this.dataModelList.add(forestFireDataModel);
             this.dataModelList.add(massMovementDataModel);
             this.dataModelList.add(rainShowerDataModel);
+            this.dataModelList.add(ceraunicDataModel);
             this.generateExcelFile();
         }
         catch (Exception e) {

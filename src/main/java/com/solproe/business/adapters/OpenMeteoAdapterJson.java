@@ -6,11 +6,11 @@ import com.google.gson.JsonObject;
 import com.solproe.business.domain.WeatherNode;
 import com.solproe.business.dto.OpenMeteoForecastList;
 
-public class OpenMeteoAdapter {
+public class OpenMeteoAdapterJson {
     private final JsonObject jsObject;
 
 
-    public OpenMeteoAdapter(JsonObject jsObject) {
+    public OpenMeteoAdapterJson(JsonObject jsObject) {
         this.jsObject = jsObject;
     }
 

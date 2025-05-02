@@ -125,6 +125,13 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             createGraphic(parameterSource, anchorWind);
             rowFinal += sheetDataModel.getStartRow() + height;
             rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+        } else if (sheetDataModel.getReportType() == TypeReportSheet.ceraunic) {
+            XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+            int[][] parameterSource = {
+                    {53, 66, 1, 1},
+                    {53, 66, 2, 2},
+            };
         }
         return rowFinal - 3;
     }
@@ -135,6 +142,27 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         XDDFLineProperties line = new XDDFLineProperties();
         line.setFillProperties(fill);
         series.setLineProperties(line);
+    }
+
+    public void createSimpleGraphic(int[][] parameters, XSSFClientAnchor anchor) {
+        // Configurar datos del gráfico
+        XSSFChart chart = this.drawing.createChart(anchor);
+        XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
+        bottomAxis.setTitle("Dates");
+        XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
+
+        XDDFDataSource<String> categories = XDDFDataSourcesFactory.fromStringCellRange((XSSFSheet) this.sourceSheet,
+                new CellRangeAddress(parameters[0][0], parameters[0][1], parameters[0][2], parameters[0][3]));
+
+        XDDFNumericalDataSource<Double> value = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
+                new CellRangeAddress(parameters[1][0], parameters[1][1], parameters[1][2], parameters[1][3]));
+
+        // Crear el gráfico de líneas
+        XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
+        XDDFLineChartData.Series series = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
+        series.setSmooth(false);
+        series.setMarkerStyle(MarkerStyle.CIRCLE);
+        chart.plot(chartData);
     }
 
     private void createGraphic(int[][] parameters, XSSFClientAnchor anchor) {

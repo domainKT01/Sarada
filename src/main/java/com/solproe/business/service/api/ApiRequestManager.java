@@ -1,7 +1,7 @@
 package com.solproe.business.service.api;
 
 import com.google.gson.JsonObject;
-import com.solproe.business.adapters.OpenMeteoAdapter;
+import com.solproe.business.adapters.OpenMeteoAdapterJson;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
@@ -29,8 +29,8 @@ public class ApiRequestManager implements RequestInterface {
     @Override
     public void successResponse(JsonObject jsonObject) {
         //generate linked list openMeteoAdapter
-        OpenMeteoAdapter openMeteoAdapter = new OpenMeteoAdapter(jsonObject);
-        OpenMeteoForecastList openMeteoForecastList = openMeteoAdapter.setWeatherForecastDto();
+        OpenMeteoAdapterJson openMeteoAdapterJson = new OpenMeteoAdapterJson(jsonObject);
+        OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
 
         //generate excel file
         this.excelInterface.generate("/home/prueba/Documentos/graficos.xlsx", openMeteoForecastList);

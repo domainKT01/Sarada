@@ -51,7 +51,7 @@ public class MainController implements Initializable {
 
         this.createConfig.setOnMousePressed(_ -> {
             try {
-                this.formController = this.setCenter("/views/config/create-file-config.fxml").getController();
+                this.formController = this.setCenter("/create-file-config.fxml").getController();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
