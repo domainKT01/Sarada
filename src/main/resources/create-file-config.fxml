@@ -18,31 +18,31 @@
                 <TextField fx:id="cityName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
                 <Label text="Umbral de incendio forestal - Alerta Naranja (°C):" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <TextField fx:id="forestFireThresholdOrange" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="forestFireOrange" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
                 <Label text="Umbral de incendio forestal - Alerta Roja (°C):" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <TextField fx:id="forestFireThresholdRed" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <TextField fx:id="forestFireRed" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 
                 <Label text="Umbral de precipitación movimiento en masa - Alerta Naranja (mm):" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <TextField fx:id="precipitationThresholdOrange" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <TextField fx:id="precipitationOrange" GridPane.columnIndex="1" GridPane.rowIndex="5" />
 
                 <Label text="Umbral de precipitación movimiento en masa - Alerta Roja (mm):" GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                <TextField fx:id="precipitationThresholdRed" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                <TextField fx:id="precipitationRed" GridPane.columnIndex="1" GridPane.rowIndex="6" />
 
                 <Label text="Umbral de precipitación por probabilidad de lluvia (%) - Alerta Naranja:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                <TextField fx:id="precipitationRainPercentOrange" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                <TextField fx:id="percentRainOrange" GridPane.columnIndex="1" GridPane.rowIndex="7" />
 
                 <Label text="Umbral de precipitación por probabilidad de lluvia (%) - Alerta Roja:" GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                <TextField fx:id="precipitationRainPercentRed" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                <TextField fx:id="percentRainRed" GridPane.columnIndex="1" GridPane.rowIndex="8" />
 
                 <Label text="Umbral de velocidad del viento (Km/h) - Alerta Naranja:" GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                <TextField fx:id="windThresholdOrange" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                <TextField fx:id="windOrange" GridPane.columnIndex="1" GridPane.rowIndex="9" />
 
                 <Label text="Umbral de velocidad del viento (Km/h) - Alerta Roja:" GridPane.columnIndex="0" GridPane.rowIndex="10" />
-                <TextField fx:id="windThresholdRed" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                <TextField fx:id="windRed" GridPane.columnIndex="1" GridPane.rowIndex="10" />
 
                 <Label text="Umbral de clima esperado para fenómenos ceráunicos - Alerta Roja" GridPane.columnIndex="0" GridPane.rowIndex="11" />
-                <TextField fx:id="ceraunicosThresholdRed" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                <TextField fx:id="ceraunicosRed" GridPane.columnIndex="1" GridPane.rowIndex="11" />
 
                 <Label text="Proyecto ID" GridPane.columnIndex="0" GridPane.rowIndex="12" />
                 <TextField fx:id="idProject" GridPane.columnIndex="1" GridPane.rowIndex="12" />

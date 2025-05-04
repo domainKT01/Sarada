@@ -42,4 +42,8 @@ public class ConfigFileViewModel {
         return createConfigFileUseCase.createConfigFileMonthly(model);
     }
 
+    public boolean createConfigCodesFile() {
+        return false;
+    }
+
 }
