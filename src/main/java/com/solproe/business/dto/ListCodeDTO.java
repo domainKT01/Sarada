@@ -1,5 +1,7 @@
 package com.solproe.business.dto;
 
+import java.lang.reflect.Field;
+
 public class ListCodeDTO {
     private Integer clearSky;
     private Integer mainlyClear, partlyCloudy, overcast;
@@ -15,16 +17,143 @@ public class ListCodeDTO {
     private Integer thunderstorm;
 
     public ListCodeDTO(Builder builder) {
-        this.clearSky = builder.clearSky;
-        this.mainlyClear = builder.mainlyClear;
-        this.partlyCloudy = builder.partlyCloudy;
-        this.fog = builder.fog;
-        this.depositingRimeFog = builder.depositingRimeFog;
-        this.lightDrizzle = builder.lightDrizzle;
-        this.moderateDrizzle = builder.moderateDrizzle;
+        Class<?> builderClass = builder.getClass();
+        Class<?> dtoClass = this.getClass();
+
+        Field[] builderFields = builderClass.getDeclaredFields();
+
+        try {
+            for (Field builderField : builderFields) {
+                String fieldName = builderField.getName();
+                try {
+                    if (builderClass.getDeclaredField(fieldName).get(builder) != null) {
+                        Field dtoField = dtoClass.getDeclaredField(fieldName);
+                        // Asegurarse de que los tipos sean compatibles (o intentar convertirlos)
+                        if (dtoField.getType().isAssignableFrom(builderField.getType())) {
+                            builderField.setAccessible(true);
+                            dtoField.setAccessible(true);
+                            Object value = builderField.get(builder);
+                            dtoField.set(this, value);
+                        }
+                    }
+                } catch (NoSuchFieldException e) {
+                    // El campo no existe en el DTO, se ignora
+                } catch (IllegalAccessException e) {
+                    // Error al acceder al campo, podrías loggear o lanzar una excepción
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            // Manejar otras excepciones que puedan ocurrir durante la reflexión
+            e.printStackTrace();
+        }
     }
 
+    public Integer getClearSky() {
+        return clearSky;
+    }
 
+    public Integer getMainlyClear() {
+        return mainlyClear;
+    }
+
+    public Integer getPartlyCloudy() {
+        return partlyCloudy;
+    }
+
+    public Integer getOvercast() {
+        return overcast;
+    }
+
+    public Integer getFog() {
+        return fog;
+    }
+
+    public Integer getDepositingRimeFog() {
+        return depositingRimeFog;
+    }
+
+    public Integer getLightDrizzle() {
+        return lightDrizzle;
+    }
+
+    public Integer getModerateDrizzle() {
+        return moderateDrizzle;
+    }
+
+    public Integer getDenseIntensityDrizzle() {
+        return denseIntensityDrizzle;
+    }
+
+    public Integer getLightFreezingDrizzle() {
+        return lightFreezingDrizzle;
+    }
+
+    public Integer getDenseIntensityFreezingDrizzle() {
+        return denseIntensityFreezingDrizzle;
+    }
+
+    public Integer getSlightRain() {
+        return slightRain;
+    }
+
+    public Integer getModerateRain() {
+        return moderateRain;
+    }
+
+    public Integer getHeavyIntensityRain() {
+        return heavyIntensityRain;
+    }
+
+    public Integer getLightFreezingRain() {
+        return lightFreezingRain;
+    }
+
+    public Integer getHeavyIntensityFreezingRain() {
+        return heavyIntensityFreezingRain;
+    }
+
+    public Integer getSlightSnowFall() {
+        return slightSnowFall;
+    }
+
+    public Integer getModerateSnowfall() {
+        return moderateSnowfall;
+    }
+
+    public Integer getHeavyIntensitySnowFall() {
+        return heavyIntensitySnowFall;
+    }
+
+    public Integer getSnowGrains() {
+        return snowGrains;
+    }
+
+    public Integer getSlightRainShower() {
+        return slightRainShower;
+    }
+
+    public Integer getModerateRainShower() {
+        return moderateRainShower;
+    }
+
+    public Integer getViolentRinShower() {
+        return violentRinShower;
+    }
+
+    public Integer getSlightSnowShower() {
+        return slightSnowShower;
+    }
+
+    public Integer getHeavySnowShower() {
+        return heavySnowShower;
+    }
+
+    public Integer getThunderstorm() {
+        return thunderstorm;
+    }
+
+    @SuppressWarnings("FieldCanBeLocal")
     public static class Builder {
         private Integer clearSky;
         private Integer mainlyClear, partlyCloudy, overcast;

@@ -4,93 +4,112 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.solproe.ui.controllers.CodeListControllerView"
-        styleClass="view-code">
-    <VBox styleClass="view-card">
-        <Label text="Cielo despejado:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="clearSkyCode"/>
+<BorderPane stylesheets="@/codeList.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.solproe.ui.controllers.CodeListControllerView"
+            styleClass="view-code">
+    <center>
+        <HBox fx:id="horizontalContainerSlider" styleClass="container-view">
+            <VBox styleClass="view-card">
+                <Label text="Cielo despejado:" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="clearSky"/>
 
-        <Label text="Principalmente despejado:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="mainlyClear"/>
+                <Label text="Principalmente despejado:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                       styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="mainlyClear"/>
 
-        <Label text="Parcialmente nublado:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="valueCod" fx:id="partlyCloud"/>
+                <Label text="Parcialmente nublado:" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                       styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="valueCod" fx:id="partlyCloud"/>
 
-        <Label text="Nublado:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod" fx:id="overcast"/>
+                <Label text="Nublado:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod" fx:id="overcast"/>
 
-        <Label text="Niebla:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod" fx:id="fog"/>
+                <Label text="Niebla:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod" fx:id="fog"/>
 
-        <Label text="Niebla de rima depositante:" GridPane.columnIndex="0" GridPane.rowIndex="10" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="11" styleClass="valueCod" fx:id="depositingRimeFog"/>
+                <Label text="Niebla de rima depositante:" GridPane.columnIndex="0" GridPane.rowIndex="10"
+                       styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="11" styleClass="valueCod"
+                           fx:id="depositingRimeFog"/>
 
-        <Label text="Llovizna ligera:" GridPane.columnIndex="0" GridPane.rowIndex="12" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="13" styleClass="valueCod" fx:id="lightDrizzle"/>
-    </VBox>
+                <Label text="Llovizna ligera:" GridPane.columnIndex="0" GridPane.rowIndex="12" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="13" styleClass="valueCod" fx:id="lightDrizzle"/>
+            </VBox>
 
-    <VBox styleClass="view-card">
-        <Label text="Llovizna moderada:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="moderateDrizzle"/>
+            <VBox styleClass="view-card">
+                <Label text="Llovizna moderada:" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="moderateDrizzle"/>
 
-        <Label text="Llovizna densa intensidad:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="denseIntensityDrizzle"/>
+                <Label text="Llovizna densa intensidad:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                       styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="denseIntensityDrizzle"/>
 
-        <Label text="Llovizna helada ligera:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="valueCod" fx:id="lightFreezingDrizzle"/>
+                <Label text="Llovizna helada ligera:" GridPane.columnIndex="0" GridPane.rowIndex="4"
+                       styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="valueCod"
+                           fx:id="lightFreezingDrizzle"/>
 
-        <Label text="Llovizna helada densa intensidad:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod" fx:id="moderateFreezingDrizzle"/>
+                <Label text="Llovizna helada densa intensidad:" GridPane.columnIndex="0" GridPane.rowIndex="6"
+                       styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod"
+                           fx:id="heavyIntensityFreezingRain"/>
 
-        <Label text="Lluvia ligera:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod" fx:id="slightRain"/>
+                <Label text="Lluvia ligera:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod" fx:id="slightRain"/>
 
-        <Label text="Lluvia moderada:" GridPane.columnIndex="0" GridPane.rowIndex="10" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="11" styleClass="valueCod" fx:id="moderateRain"/>
+                <Label text="Lluvia moderada:" GridPane.columnIndex="0" GridPane.rowIndex="10" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="11" styleClass="valueCod" fx:id="moderateRain"/>
 
-        <Label text="LLuvia fuerte:" GridPane.columnIndex="0" GridPane.rowIndex="12" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="13" styleClass="valueCod" fx:id="heavyRain"/>
-    </VBox>
+                <Label text="LLuvia fuerte:" GridPane.columnIndex="0" GridPane.rowIndex="12" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="13" styleClass="valueCod"
+                           fx:id="heavyIntensityRain"/>
+            </VBox>
 
-    <VBox styleClass="view-card">
-        <Label text="Nevada ligera:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="slightSnowFall"/>
+            <VBox styleClass="view-card">
+                <Label text="Nevada ligera:" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="slightSnowFall"/>
 
-        <Label text="Nevada moderada:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="moderateSnowFall"/>
+                <Label text="Nevada moderada:" GridPane.columnIndex="0" GridPane.rowIndex="2" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="moderateSnowfall"/>
 
-        <Label text="Nevada Fuerte:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="valueCod" fx:id="heavySnowFall"/>
+                <Label text="Nevada Fuerte:" GridPane.columnIndex="0" GridPane.rowIndex="4" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="5" styleClass="valueCod"
+                           fx:id="heavyIntensitySnowFall"/>
 
-        <Label text="Granos de nieve:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod" fx:id="snowGrains"/>
+                <Label text="Granos de nieve:" GridPane.columnIndex="0" GridPane.rowIndex="6" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod" fx:id="snowGrains"/>
 
-        <Label text="Aguacero ligero:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod" fx:id="slightRainShower"/>
+                <Label text="Aguacero ligero:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod"
+                           fx:id="slightRainShower"/>
 
-        <Label text="Aguacero moderado:" GridPane.columnIndex="0" GridPane.rowIndex="10" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="11" styleClass="valueCod" fx:id="moderateRainShower"/>
+                <Label text="Aguacero moderado:" GridPane.columnIndex="0" GridPane.rowIndex="10" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="11" styleClass="valueCod"
+                           fx:id="moderateRainShower"/>
 
-        <Label text="Aguacero violento:" GridPane.columnIndex="0" GridPane.rowIndex="12" styleClass="textCod"/>
-        <TextField GridPane.columnIndex="0" GridPane.rowIndex="13" styleClass="valueCod" fx:id="violentRainShower"/>
-    </VBox>
+                <Label text="Aguacero violento:" GridPane.columnIndex="0" GridPane.rowIndex="12" styleClass="textCod"/>
+                <TextField GridPane.columnIndex="0" GridPane.rowIndex="13" styleClass="valueCod"
+                           fx:id="violentRainShower"/>
+            </VBox>
 
-    <VBox styleClass="view-card">
-        <Label text="Nevada aislada ligera:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="slightSnowShower"/>
+            <VBox styleClass="view-card">
+                <Label text="Nevada aislada ligera:" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="slightSnowShower"/>
 
-        <Label text="Nevada aislada fuerte:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="heavySnowShower"/>
+                <Label text="Nevada aislada fuerte:" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="heavySnowShower"/>
 
-        <Label text="Tormenta eléctrica ligera:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="slightStorm"/>
+                <Label text="Tormenta eléctrica ligera:" styleClass="textCod"/>
+                <TextField styleClass="valueCod" fx:id="thunderstorm"/>
+            </VBox>
+        </HBox>
+    </center>
 
-        <Label text="Tormenta eléctrica moderada:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="moderateStorm"/>
-
-        <Label text="Tormenta eléctrica con granizo ligero y fuerte:" styleClass="textCod"/>
-        <TextField styleClass="valueCod" fx:id="thunderstormWithSlightAndHeavyHail"/>
-    </VBox>
-</HBox>
+    <bottom>
+        <HBox fx:id="horizontalBottomContainer" styleClass="bottom-container">
+            <Button text="Guardar" styleClass="button-save" fx:id="buttonSave" />
+        </HBox>
+    </bottom>
+</BorderPane>
 
 

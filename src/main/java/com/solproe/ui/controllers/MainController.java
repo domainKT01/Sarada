@@ -65,7 +65,7 @@ public class MainController implements Initializable {
 
         this.createCodeList.setOnMouseClicked(_ -> {
            try {
-               this.setCenter("/views/config/create-form-code.fxml");
+               this.setCenter("/views/config/listCode/view.fxml");
            }
            catch (IOException e) {
                System.out.println(e.getMessage());
