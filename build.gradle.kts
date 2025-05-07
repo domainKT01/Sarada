@@ -2,10 +2,11 @@ plugins {
     id("java")
     application
     id("org.openjfx.javafxplugin") version "0.0.13"
+    id("org.beryx.jlink") version "2.25.0"
 }
 
 group = "com.solproe"
-version = "1.0-SNAPSHOT"
+version = "2.1.1"
 
 javafx {
     version = "21"
@@ -13,9 +14,30 @@ javafx {
         "javafx.graphics", "javafx.media", "javafx.web")
 }
 
+application {
+    mainClass = "com.solproe.App"
+}
+
 repositories {
     mavenCentral()
     google()
+}
+
+tasks.jar {
+    manifest {
+        attributes(mapOf(
+            "Main-Class" to application.mainClass.get(),
+            "Created-By" to "Gradle Kotlin DSL",
+            "Implementation-Version" to version
+        ))
+    }
+    from(configurations.runtimeClasspath.get().map {
+        if (it.isDirectory) it else zipTree(it)
+    })
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from("src/main/resources") {
+        into("/") // Ajusta la ruta si es necesario
+    }
 }
 
 dependencies {
@@ -50,11 +72,21 @@ dependencies {
 
 }
 
-application {
-    mainModule = "com.solproe"
-    mainClass = "com.solproe.MainApp"
-}
-
 tasks.test {
     useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_23
+    targetCompatibility = JavaVersion.VERSION_23
+}
+
+jlink {
+    imageZip.set(project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip"))
+    options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
+    launcher {
+        name = "sarada" // Cambia "app" al nombre de tu aplicación
+    }
+    extraModulePaths.set(javafx.modules)
+    addExtraModulePath(javafx.modules.toString())
 }

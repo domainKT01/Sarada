@@ -14,7 +14,6 @@ module com.solproe {
     requires org.apache.poi.ooxml;
     requires annotations;
     requires org.apache.commons.io;
-    requires kotlin.stdlib;
     requires org.apache.logging.log4j;
 
     exports com.solproe;

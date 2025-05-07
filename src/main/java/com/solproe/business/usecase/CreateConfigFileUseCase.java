@@ -30,7 +30,7 @@ public class CreateConfigFileUseCase {
                 return true;
             }
             catch (Exception e) {
-                System.out.println("use case exception");
+                System.out.println("use case exception: " + e.getMessage());
             }
         }
         return false;
