@@ -42,96 +42,100 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         int rowFinal = 0;
         int space = 2;
         int height = 25;
-        Row titleRow = sheet.createRow(sheetDataModel.getStartRow() + space);
-        this.generateSectionSheet.createCellsRow(sheet, 0, 8, titleRow);
-        sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
-        if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
-            space += 2;
-            titleRow.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 14 DÍAS DE PRONÓSTICO ");
-            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-            XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0,
-                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
-            int[][] parameterSource = {
-                    {2, 15, 1, 1},
-                    {2, 15, 2, 2},
-                    {2, 15, 3, 3},
-                    {2, 15, 4, 4}
-            };
-            createGraphic(parameterSource, anchorTemp);
-            rowFinal = sheetDataModel.getStartRow() + height + 3;
-            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
-            rowFinal += space;
-            Row monthlyTitle = sheet.createRow(rowFinal);
-            this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
-            sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));
-            monthlyTitle.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 6 MESES PRÓXIMOS DE PRONÓSTICO ");
-            monthlyTitle.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-            rowFinal += 2;
-            sheetDataModel.setStartRow(rowFinal);
-            createSecondChart(sheet, drawing, workbook, sheetDataModel);
-            rowFinal += height;
-        } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
-            //first graphic
-            space += 2;
-            titleRow.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN % PARA 14 DÍAS DE PRONÓSTICO");
-            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-            int[][] parameterSource1 = {{19, 33, 1, 1}, {19, 33, 2, 2}, {19, 33, 3, 3}, {19, 33, 4, 4}};
-            XSSFClientAnchor xssfClientAnchor1 = this.drawing.createAnchor(0, 0, 0, 0, 0,
-                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
-            rowFinal = sheetDataModel.getStartRow() + height + 2;
-            createGraphic(parameterSource1, xssfClientAnchor1);
-            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "%");
-            //second graphic
-            rowFinal += space;
-            Row row = sheet.createRow(rowFinal);
-            this.generateSectionSheet.createCellsRow(sheet, 0, 8, row);
-            sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 0, 8));
-            row.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-            row.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN (mm) PARA 14 DÍAS DE PRONÓSTICO");
-            int[][] parameterSource2 = {
-                    {36, 49, 1, 1},
-                    {36, 49, 2, 2},
-                    {36, 49, 3, 3},
-                    {36, 49, 4, 4}
-            };
-            rowFinal += 2;
-            XSSFClientAnchor xssfClientAnchor2 = this.drawing.createAnchor(0, 0, 0, 0, 0,
-                    rowFinal, 9, rowFinal + height);
-            createGraphic(parameterSource2, xssfClientAnchor2);
-            rowFinal += height + 3;
-            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
-            rowFinal += 3;
-            Row monthlyTitle = sheet.createRow(rowFinal);
-            this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
-            sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));
-            monthlyTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN PARA 6 MESES PRÓXIMOS DE PRONÓSTICO");
-            monthlyTitle.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-            rowFinal += 2;
-            sheetDataModel.setStartRow(rowFinal);
-            createSecondChart(sheet, drawing, workbook, sheetDataModel);
-            rowFinal += height;
-        } else if (sheetDataModel.getReportType() == TypeReportSheet.rainShowerDataModel) {
-            space += 2;
-            titleRow.getCell(0).setCellValue("MONITOREO DE VIENTO Km/h PARA 14 DÍAS DE PRONÓSTICO");
-            titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-            XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
-                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
-            int[][] parameterSource = {
-                    {53, 66, 1, 1},
-                    {53, 66, 2, 2},
-                    {53, 66, 3, 3},
-                    {53, 66, 4, 4}
-            };
-            createGraphic(parameterSource, anchorWind);
-            rowFinal += sheetDataModel.getStartRow() + height;
-            rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
-        } else if (sheetDataModel.getReportType() == TypeReportSheet.ceraunic) {
-            XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
-                    sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
-            int[][] parameterSource = {
-                    {53, 66, 1, 1},
-                    {53, 66, 2, 2},
-            };
+        try {
+            Row titleRow = sheet.createRow(sheetDataModel.getStartRow() + space);
+            this.generateSectionSheet.createCellsRow(sheet, 0, 8, titleRow);
+            sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
+            if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
+                space += 2;
+                titleRow.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 14 DÍAS DE PRONÓSTICO ");
+                titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+                XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                        sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+                int[][] parameterSource = {
+                        {2, 15, 1, 1},
+                        {2, 15, 2, 2},
+                        {2, 15, 3, 3},
+                        {2, 15, 4, 4}
+                };
+                createGraphic(parameterSource, anchorTemp);
+                rowFinal = sheetDataModel.getStartRow() + height + 3;
+                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+                rowFinal += space;
+                Row monthlyTitle = sheet.createRow(rowFinal);
+                this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
+                sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));
+                monthlyTitle.getCell(0).setCellValue("MONITOREO DE TEMPERATURA PARA 6 MESES PRÓXIMOS DE PRONÓSTICO ");
+                monthlyTitle.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+                rowFinal += 2;
+                sheetDataModel.setStartRow(rowFinal);
+                createSecondChart(sheet, drawing, workbook, sheetDataModel);
+                rowFinal += height;
+            } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
+                //first graphic
+                space += 2;
+                titleRow.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN % PARA 14 DÍAS DE PRONÓSTICO");
+                titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+                int[][] parameterSource1 = {{19, 33, 1, 1}, {19, 33, 2, 2}, {19, 33, 3, 3}, {19, 33, 4, 4}};
+                XSSFClientAnchor xssfClientAnchor1 = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                        sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+                rowFinal = sheetDataModel.getStartRow() + height + 2;
+                createGraphic(parameterSource1, xssfClientAnchor1);
+                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "%");
+                //second graphic
+                rowFinal += space;
+                Row row = sheet.createRow(rowFinal);
+                this.generateSectionSheet.createCellsRow(sheet, 0, 8, row);
+                sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 0, 8));
+                row.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+                row.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN (mm) PARA 14 DÍAS DE PRONÓSTICO");
+                int[][] parameterSource2 = {
+                        {36, 49, 1, 1},
+                        {36, 49, 2, 2},
+                        {36, 49, 3, 3},
+                        {36, 49, 4, 4}
+                };
+                rowFinal += 2;
+                XSSFClientAnchor xssfClientAnchor2 = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                        rowFinal, 9, rowFinal + height);
+                createGraphic(parameterSource2, xssfClientAnchor2);
+                rowFinal += height + 3;
+                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
+                rowFinal += 3;
+                Row monthlyTitle = sheet.createRow(rowFinal);
+                this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
+                sheet.addMergedRegion(new CellRangeAddress(monthlyTitle.getRowNum(), monthlyTitle.getRowNum(), 0, 8));
+                monthlyTitle.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN PARA 6 MESES PRÓXIMOS DE PRONÓSTICO");
+                monthlyTitle.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+                rowFinal += 2;
+                sheetDataModel.setStartRow(rowFinal);
+                createSecondChart(sheet, drawing, workbook, sheetDataModel);
+                rowFinal += height;
+            } else if (sheetDataModel.getReportType() == TypeReportSheet.rainShowerDataModel) {
+                space += 2;
+                titleRow.getCell(0).setCellValue("MONITOREO DE VIENTO Km/h PARA 14 DÍAS DE PRONÓSTICO");
+                titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
+                XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                        sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+                int[][] parameterSource = {
+                        {53, 66, 1, 1},
+                        {53, 66, 2, 2},
+                        {53, 66, 3, 3},
+                        {53, 66, 4, 4}
+                };
+                createGraphic(parameterSource, anchorWind);
+                rowFinal += sheetDataModel.getStartRow() + height;
+                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+            } else if (sheetDataModel.getReportType() == TypeReportSheet.ceraunic) {
+                XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                        sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
+                int[][] parameterSource = {
+                        {53, 66, 1, 1},
+                        {53, 66, 2, 2},
+                };
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return rowFinal - 3;
     }
@@ -203,41 +207,45 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
 
     @Override
     public int createSecondChart(Sheet sheet, XSSFDrawing drawing, Workbook workbook, SheetDataModel sheetDataModel) {
-        this.sheet = sheet;
-        this.drawing = drawing;
-        this.sourceSheet = workbook.getSheet("support data");
-        this.sheet.setColumnWidth(13,4500 );
-        this.sheet.setColumnWidth(15,4500 );
-        this.sheet.setColumnWidth(16,4500 );
-        XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow(), 9, sheetDataModel.getStartRow() +20);
-        int[][] parameters = new int[4][4];
-        if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
-            if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
-                parameters = new int[][]{
-                        {70, 75, 1, 1},
-                        {70, 75, 2, 2},
-                        {70, 75, 4, 4},
-                        {70, 75, 5, 5}
-                };
-            }
-            else {
-                parameters = new int[][]{
-                        {76, 81, 1, 1},
-                        {76, 81, 2, 2},
-                        {76, 81, 4, 4},
-                        {76, 81, 5, 5}
-                };
-            }
+        try {
+            this.sheet = sheet;
+            this.drawing = drawing;
+            this.sourceSheet = workbook.getSheet("support data");
+            this.sheet.setColumnWidth(13,4500 );
+            this.sheet.setColumnWidth(15,4500 );
+            this.sheet.setColumnWidth(16,4500 );
+            XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow(), 9, sheetDataModel.getStartRow() +20);
+            int[][] parameters = new int[4][4];
+            if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
+                if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
+                    parameters = new int[][]{
+                            {70, 75, 1, 1},
+                            {70, 75, 2, 2},
+                            {70, 75, 4, 4},
+                            {70, 75, 5, 5}
+                    };
+                }
+                else {
+                    parameters = new int[][]{
+                            {76, 81, 1, 1},
+                            {76, 81, 2, 2},
+                            {76, 81, 4, 4},
+                            {76, 81, 5, 5}
+                    };
+                }
 
-        } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
-            parameters = new int[][]{
-                    {70, 81, 1, 1},
-                    {70, 81, 3, 3},
-                    {70, 81, 6, 6},
-                    {70, 81, 7, 7}
-            };
+            } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
+                parameters = new int[][]{
+                        {70, 81, 1, 1},
+                        {70, 81, 3, 3},
+                        {70, 81, 6, 6},
+                        {70, 81, 7, 7}
+                };
+            }
+            createGraphic(parameters, anchorTemp);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        createGraphic(parameters, anchorTemp);
         return 0;
     }
 }

@@ -26,7 +26,7 @@ public class ExcelService {
             System.out.println("generated file");
         }
         catch (IOException e) {
-            System.out.println("exc");
+            System.out.println("exc: " + e.getMessage());
         }
     }
 }

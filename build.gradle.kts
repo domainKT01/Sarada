@@ -2,7 +2,7 @@ plugins {
     id("java")
     application
     id("org.openjfx.javafxplugin") version "0.0.13"
-    id("org.beryx.jlink") version "2.25.0"
+    id("org.beryx.jlink") version "3.1.1"
 }
 
 group = "com.solproe"
@@ -85,7 +85,7 @@ jlink {
     imageZip.set(project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip"))
     options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
     launcher {
-        name = "sarada" // Cambia "app" al nombre de tu aplicación
+        name = "sarada"
     }
     extraModulePaths.set(javafx.modules)
     addExtraModulePath(javafx.modules.toString())

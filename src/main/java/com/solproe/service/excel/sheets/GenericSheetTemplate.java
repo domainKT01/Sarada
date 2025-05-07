@@ -61,6 +61,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 try{
                     row = this.sectionBuilder.createAlertSystem(sheet, row, model);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
@@ -84,7 +85,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
             this.styleFactory = new ExcelStyleFactory(workbook);
             this.chartGenerator = new LineChartGenerator(this.sectionBuilder, this.styleFactory);
-            int row = 0;
+            int row = 1;
 
             //=============
             //* HEADER
@@ -109,6 +110,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                     row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }

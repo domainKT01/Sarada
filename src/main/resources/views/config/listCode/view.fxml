@@ -52,7 +52,7 @@
                 <Label text="Llovizna helada densa intensidad:" GridPane.columnIndex="0" GridPane.rowIndex="6"
                        styleClass="textCod"/>
                 <TextField GridPane.columnIndex="0" GridPane.rowIndex="7" styleClass="valueCod"
-                           fx:id="heavyIntensityFreezingRain"/>
+                           fx:id="heavyIntensityFreezingDrizzle"/>
 
                 <Label text="Lluvia ligera:" GridPane.columnIndex="0" GridPane.rowIndex="8" styleClass="textCod"/>
                 <TextField GridPane.columnIndex="0" GridPane.rowIndex="9" styleClass="valueCod" fx:id="slightRain"/>

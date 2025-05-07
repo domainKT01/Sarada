@@ -137,6 +137,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             }
         }
         catch (Exception e) {
+            e.printStackTrace();
             System.out.println("chart exc: " + e.getMessage());
         }
     }
@@ -175,89 +176,93 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
     }
 
     public void createMonthValues(int rowTable, int columnTable, String[] parameters, SheetDataModel sheetDataModel) {
-        Row rowHeader = this.sheet.createRow(rowTable);
-        Cell cellDateHeader = rowHeader.createCell(columnTable);
-        cellDateHeader.setCellValue("Fecha");
-        cellDateHeader.setCellStyle(setStyle("header"));
-        Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
-        cellValueHeader.setCellValue(parameters[2]);
-        cellValueHeader.setCellStyle(setStyle("header"));
-        Cell cellPrecValue = rowHeader.createCell(columnTable + 2);
-        cellPrecValue.setCellValue(parameters[3]);
-        cellPrecValue.setCellStyle(setStyle("header"));
-        Cell cellThresholdOrangeHeaderTemperature = rowHeader.createCell(columnTable + 3);
-        cellThresholdOrangeHeaderTemperature.setCellValue("Temperatura Naranja");
-        cellThresholdOrangeHeaderTemperature.setCellStyle(setStyle("header"));
-        Cell cellThresholdRedHeaderTemperature = rowHeader.createCell(columnTable + 4);
-        cellThresholdRedHeaderTemperature.setCellValue("Temperatura Roja");
-        cellThresholdRedHeaderTemperature.setCellStyle(setStyle("header"));
-        Cell cellThresholdOrangeHeaderPrecipitation = rowHeader.createCell(columnTable + 5);
-        cellThresholdOrangeHeaderPrecipitation.setCellValue("Precipitación Naranja");
-        cellThresholdOrangeHeaderPrecipitation.setCellStyle(setStyle("header"));
-        Cell cellThresholdRedHeaderPrecipitation = rowHeader.createCell(columnTable + 6);
-        cellThresholdRedHeaderPrecipitation.setCellValue("Precipitación Roja");
-        cellThresholdRedHeaderPrecipitation.setCellStyle(setStyle("header"));
+        try {
+            Row rowHeader = this.sheet.createRow(rowTable);
+            Cell cellDateHeader = rowHeader.createCell(columnTable);
+            cellDateHeader.setCellValue("Fecha");
+            cellDateHeader.setCellStyle(setStyle("header"));
+            Cell cellValueHeader = rowHeader.createCell(columnTable + 1);
+            cellValueHeader.setCellValue(parameters[2]);
+            cellValueHeader.setCellStyle(setStyle("header"));
+            Cell cellPrecValue = rowHeader.createCell(columnTable + 2);
+            cellPrecValue.setCellValue(parameters[3]);
+            cellPrecValue.setCellStyle(setStyle("header"));
+            Cell cellThresholdOrangeHeaderTemperature = rowHeader.createCell(columnTable + 3);
+            cellThresholdOrangeHeaderTemperature.setCellValue("Temperatura Naranja");
+            cellThresholdOrangeHeaderTemperature.setCellStyle(setStyle("header"));
+            Cell cellThresholdRedHeaderTemperature = rowHeader.createCell(columnTable + 4);
+            cellThresholdRedHeaderTemperature.setCellValue("Temperatura Roja");
+            cellThresholdRedHeaderTemperature.setCellStyle(setStyle("header"));
+            Cell cellThresholdOrangeHeaderPrecipitation = rowHeader.createCell(columnTable + 5);
+            cellThresholdOrangeHeaderPrecipitation.setCellValue("Precipitación Naranja");
+            cellThresholdOrangeHeaderPrecipitation.setCellStyle(setStyle("header"));
+            Cell cellThresholdRedHeaderPrecipitation = rowHeader.createCell(columnTable + 6);
+            cellThresholdRedHeaderPrecipitation.setCellValue("Precipitación Roja");
+            cellThresholdRedHeaderPrecipitation.setCellStyle(setStyle("header"));
 
-        List<String> keys = new ArrayList<>(sheetDataModel.getThresholdMonthlyJson().asMap().keySet());
+            List<String> keys = new ArrayList<>(sheetDataModel.getThresholdMonthlyJson().asMap().keySet());
 
-        int dataStartIndex = 6; // omitimos los primeros 4 elementos comunes
-        for (int i = dataStartIndex; i < keys.size(); i += 2) {
-            String tempKey = keys.get(i);
-            String precKey = (i + 1 < keys.size()) ? keys.get(i + 1) : null;
+            int dataStartIndex = 6; // omitimos los primeros 4 elementos comunes
+            for (int i = dataStartIndex; i < keys.size(); i += 2) {
+                String tempKey = keys.get(i);
+                String precKey = (i + 1 < keys.size()) ? keys.get(i + 1) : null;
 
-            Row rowMonth = sheet.createRow(++rowTable);
-            Cell cellMonth = rowMonth.createCell(1);
-            cellMonth.setCellStyle(setStyle("date"));
+                Row rowMonth = sheet.createRow(++rowTable);
+                Cell cellMonth = rowMonth.createCell(1);
+                cellMonth.setCellStyle(setStyle("date"));
 
-            Cell cellTempValue = rowMonth.createCell(2);
-            cellTempValue.setCellStyle(setStyle(""));
-            cellTempValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(tempKey).getAsDouble());
+                Cell cellTempValue = rowMonth.createCell(2);
+                cellTempValue.setCellStyle(setStyle(""));
+                cellTempValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(tempKey).getAsDouble());
 
-            if (precKey != null) {
-                Cell cellValue = rowMonth.createCell(3);
-                cellValue.setCellStyle(setStyle(""));
-                cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(precKey).getAsDouble());
+                if (precKey != null) {
+                    Cell cellValue = rowMonth.createCell(3);
+                    cellValue.setCellStyle(setStyle(""));
+                    cellValue.setCellValue(sheetDataModel.getConfigFileThreshold()[1].get(precKey).getAsDouble());
+                }
+
+                rowMonth.createCell(4).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble());
+                rowMonth.getCell(4).setCellStyle(setStyle(""));
+                rowMonth.createCell(5).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble());
+                rowMonth.getCell(5).setCellStyle(setStyle(""));
+                rowMonth.createCell(6).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdPrecipitation").getAsDouble());
+                rowMonth.getCell(6).setCellStyle(setStyle(""));
+                rowMonth.createCell(7).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdPrecipitation").getAsDouble());
+                rowMonth.getCell(7).setCellStyle(setStyle("end"));
             }
 
-            rowMonth.createCell(4).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdTemperature").getAsDouble());
-            rowMonth.getCell(4).setCellStyle(setStyle(""));
-            rowMonth.createCell(5).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdTemperature").getAsDouble());
-            rowMonth.getCell(5).setCellStyle(setStyle(""));
-            rowMonth.createCell(6).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("orangeThresholdPrecipitation").getAsDouble());
-            rowMonth.getCell(6).setCellStyle(setStyle(""));
-            rowMonth.createCell(7).setCellValue(sheetDataModel.getConfigFileThreshold()[1].get("redThresholdPrecipitation").getAsDouble());
-            rowMonth.getCell(7).setCellStyle(setStyle("end"));
-        }
+            String[] arrDate = {
+                    "Diciembre", "Noviembre", "Octubre", "Septiembre", "Agosto", "Julio",
+                    "Junio", "Mayo", "Abril", "Marzo", "Febrero", "Enero"
+            };
 
-        String[] arrDate = {
-                "Diciembre", "Noviembre", "Octubre", "Septiembre", "Agosto", "Julio",
-                "Junio", "Mayo", "Abril", "Marzo", "Febrero", "Enero"
-        };
-
-        for (int i = 11; i >= 0; i--) {
-            Row row = sheet.getRow(rowTable - i + 6);
-            if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
-                if (row != null) {
-                    Cell cell = row.getCell(1);
-                    if (cell != null) {
-                        cell = row.createCell(1);
-                        cell.setCellValue(arrDate[i]);
-                        cell.setCellStyle(setStyle("date"));
+            for (int i = 11; i >= 0; i--) {
+                Row row = sheet.getRow(rowTable - i + 6);
+                if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
+                    if (row != null) {
+                        Cell cell = row.getCell(1);
+                        if (cell != null) {
+                            cell = row.createCell(1);
+                            cell.setCellValue(arrDate[i]);
+                            cell.setCellStyle(setStyle("date"));
+                        }
+                    }
+                    if (i == 6) {
+                        break;
                     }
                 }
-                if (i == 6) {
-                    break;
-                }
-            }
-            else if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 2) {
-                if (row != null) {
-                    Cell cell = row.getCell(1);
-                    if (cell == null) {
-                        cell = row.createCell(1);
+                else if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 2) {
+                    if (row != null) {
+                        Cell cell = row.getCell(1);
+                        if (cell == null) {
+                            cell = row.createCell(1);
+                        }
+                        cell.setCellValue(arrDate[i - 6]);
                     }
-                    cell.setCellValue(arrDate[i - 6]);
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -283,7 +288,6 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
                 cellThresholdOrange.setCellValue(sheetDataModel.getThresholdDailyJson().get("ceraunicosThresholdRed").getAsDouble());
                 cellThresholdOrange.setCellStyle(setStyle("end"));
                 if (parameters[1].equalsIgnoreCase("ceraunic")) {
-                    System.out.println("ceraunic count: " + i);
                     cellValue.setCellValue(sheetDataModel.getArrCode().get(i));
                     if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
                             .get(parameters[0]).getAsDouble()) {

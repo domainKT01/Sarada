@@ -27,11 +27,9 @@ public class CodeListControllerView implements Initializable {
     @FXML
     private TextField lightDrizzle, moderateDrizzle, denseIntensityDrizzle;
     @FXML
-    private TextField lightFreezingDrizzle, denseIntensityFreezingDrizzle;
+    private TextField lightFreezingDrizzle, heavyIntensityFreezingDrizzle;
     @FXML
     private TextField slightRain, moderateRain, heavyIntensityRain;
-    @FXML
-    private TextField lightFreezingRain, heavyIntensityFreezingRain;
     @FXML
     private TextField slightSnowFall, moderateSnowfall, heavyIntensitySnowFall;
     @FXML
@@ -49,6 +47,29 @@ public class CodeListControllerView implements Initializable {
         this.buttonSave.setOnMouseClicked(_ -> {
             ListCodeDTO listCodeDTO = ListCodeDTO.builder()
                     .clearSky(Integer.parseInt(this.clearSky.getText()))
+                    .mainlyClear(Integer.parseInt(this.mainlyClear.getText()))
+                    .partlyCloudy(Integer.parseInt(this.partlyCloud.getText()))
+                    .overcast(Integer.parseInt(this.overcast.getText()))
+                    .fog(Integer.parseInt(this.fog.getText()))
+                    .depositingRimeFog(Integer.parseInt(this.depositingRimeFog.getText()))
+                    .lightDrizzle(Integer.parseInt(this.lightDrizzle.getText()))
+                    .moderateDrizzle(Integer.parseInt(this.moderateDrizzle.getText()))
+                    .denseIntensityDrizzle(Integer.parseInt(this.denseIntensityDrizzle.getText()))
+                    .lightFreezingDrizzle(Integer.parseInt(this.lightFreezingDrizzle.getText()))
+                    .heavyIntensityFreezingDrizzle(Integer.parseInt(this.heavyIntensityFreezingDrizzle.getText()))
+                    .slightRain(Integer.parseInt(this.slightRain.getText()))
+                    .moderateRain(Integer.parseInt(this.moderateRain.getText()))
+                    .heavyIntensityRain(Integer.parseInt(this.heavyIntensityRain.getText()))
+                    .slightSnowFall(Integer.parseInt(this.slightSnowFall.getText()))
+                    .moderateSnowfall(Integer.parseInt(this.moderateSnowfall.getText()))
+                    .heavyIntensitySnowFall(Integer.parseInt(this.heavyIntensitySnowFall.getText()))
+                    .snowGrains(Integer.parseInt(this.snowGrains.getText()))
+                    .slightRainShower(Integer.parseInt(this.slightRainShower.getText()))
+                    .moderateRainShower(Integer.parseInt(this.moderateRainShower.getText()))
+                    .violentRainShower(Integer.parseInt(this.violentRainShower.getText()))
+                    .slightSnowShower(Integer.parseInt(this.slightSnowShower.getText()))
+                    .heavySnowShower(Integer.parseInt(this.heavySnowShower.getText()))
+                    .thunderstorm(Integer.parseInt(this.thunderstorm.getText()))
                     .build();
         });
     }

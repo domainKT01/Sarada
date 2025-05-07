@@ -159,7 +159,7 @@ public class ListCodeDTO {
         private Integer mainlyClear, partlyCloudy, overcast;
         private Integer fog, depositingRimeFog;
         private Integer lightDrizzle, moderateDrizzle, denseIntensityDrizzle;
-        private Integer lightFreezingDrizzle, denseIntensityFreezingDrizzle;
+        private Integer lightFreezingDrizzle, heavyIntensityFreezingDrizzle;
         private Integer slightRain, moderateRain, heavyIntensityRain;
         private Integer lightFreezingRain, heavyIntensityFreezingRain;
         private Integer slightSnowFall, moderateSnowfall, heavyIntensitySnowFall;
@@ -180,6 +180,11 @@ public class ListCodeDTO {
 
         public Builder partlyCloudy(int partlyCloudy) {
             this.partlyCloudy = partlyCloudy;
+            return this;
+        }
+
+        public Builder overcast(int overcast) {
+            this.overcast = overcast;
             return this;
         }
 
@@ -213,8 +218,8 @@ public class ListCodeDTO {
             return this;
         }
 
-        public Builder denseIntensityFreezingDrizzle(int denseIntensityFreezingDrizzle) {
-            this.denseIntensityFreezingDrizzle = denseIntensityFreezingDrizzle;
+        public Builder heavyIntensityFreezingDrizzle(int heavyIntensityFreezingDrizzle) {
+            this.heavyIntensityFreezingDrizzle = heavyIntensityFreezingDrizzle;
             return this;
         }
 
