@@ -21,114 +21,61 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         this.workbook = workbook;
         this.sheet = workbook.createSheet(model.getSheetName());
 
-        if (model.getReportType() != TypeReportSheet.ceraunic) {
-            this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
-            this.styleFactory = new ExcelStyleFactory(workbook);
-            this.chartGenerator = new LineChartGenerator(this.sectionBuilder, this.styleFactory);
-            int row = 0;
+        this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
+        this.styleFactory = new ExcelStyleFactory(workbook);
+        this.chartGenerator = new LineChartGenerator(this.sectionBuilder, this.styleFactory);
+        int row = 0;
 
-            //=============
-            //* HEADER
-            //=============
-            {
-                try {
-                    row = this.sectionBuilder.createHeader(sheet, row, model);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-
-            //===========
-            //* GRAPHIC
-            //===========
-            {
-                try {
-                    XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
-                    model.setStartRow(row);
-                    row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-
-            //===============
-            //* Alerts Charts
-            //===============
-            {
-                try{
-                    row = this.sectionBuilder.createAlertSystem(sheet, row, model);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-
-            //===============
-            //* Notifications
-            //===============
-            {
-                row += 3;
-                try{
-                    row = this.sectionBuilder.createNotificationChart(sheet, row, model);
-                }
-                catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    throw new RuntimeException(e);
-                }
+        //=============
+        //* HEADER
+        //=============
+        {
+            try {
+                row = this.sectionBuilder.createHeader(sheet, row, model);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         }
-        else  {
-            this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
-            this.styleFactory = new ExcelStyleFactory(workbook);
-            this.chartGenerator = new LineChartGenerator(this.sectionBuilder, this.styleFactory);
-            int row = 1;
 
-            //=============
-            //* HEADER
-            //=============
-            {
-                try {
-                    row = this.sectionBuilder.createHeader(sheet, row, model);
-                }
-                catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
+        //===========
+        //* GRAPHIC
+        //===========
+        {
+            try {
+                XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
+                model.setStartRow(row);
+                row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+        }
 
-            //===========
-            //* GRAPHIC
-            //===========
-            {
-                try {
-                    XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
-                    model.setStartRow(row);
-                    row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
-                    System.out.println("ceraunic row: " + row);
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+        //===============
+        //* Alerts Charts
+        //===============
+        {
+            try {
+                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             }
+        }
 
-            //===============
-            //* Alerts Charts
-            //===============
-            {
-                try{
-                    row = this.sectionBuilder.createAlertSystem(sheet, row, model);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
+        //===============
+        //* Notifications
+        //===============
+        {
+            row += 3;
+            try {
+                row = this.sectionBuilder.createNotificationChart(sheet, row, model);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException(e);
             }
         }
     }
-
-
 
 
     public Workbook getWorkbook() {

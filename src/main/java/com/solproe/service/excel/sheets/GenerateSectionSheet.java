@@ -1,5 +1,6 @@
 package com.solproe.service.excel.sheets;
 
+import com.google.gson.JsonObject;
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.TypeReportSheet;
 import com.solproe.util.DateUtil;
@@ -7,6 +8,7 @@ import com.solproe.util.JsonObjectToMap;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -139,7 +141,6 @@ public class GenerateSectionSheet {
         Workbook workbook = this.template.getWorkbook();
 
         // Título principal
-        System.out.println("start row " + startRow);
         Row titleRow = sheet.createRow(startRow);
         createCellsRow(sheet, 0, 8, titleRow);
         titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
@@ -169,6 +170,13 @@ public class GenerateSectionSheet {
                     "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
             };
             startRow += 5;
+            startRow = createAlertChart(sheet, startRow, model, alerts);
+        }
+        else if (model.getReportType() == TypeReportSheet.ceraunic) {
+            sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
+            String[] alerts = {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
+            };
             startRow = createAlertChart(sheet, startRow, model, alerts);
         }
         return startRow + 1;
@@ -263,6 +271,22 @@ public class GenerateSectionSheet {
                 row += 2;
                 row = createChartDateAlerts(sheet, row, model, alertsLevel, threshold, titles);
                 //row = createChartMonthlyAlerts(sheet, row, model, titles);
+            } else if (model.getReportType() == TypeReportSheet.ceraunic) {
+                titles = new String[] {
+                        "ROJA",
+                };
+                params = new String[] {
+                        "UMBRAL DE FENÓMENO CERÁUNICO Y NIVEL DE ALERTA",
+                        "UMBRAL SEGÚN CLIMA ESPERADO",
+                        "Tormenta Eléctrica",
+                };
+                row = createThresholdComments(sheet, row, titles, alertsLevel);
+                row = createChartThreshold(sheet, row, params);
+                row += 2;
+                String[] threshold = {
+                        "thunderstorm"
+                };
+                row = createChartDateAlerts(sheet, row, model, alertsLevel, threshold, titles);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -320,17 +344,20 @@ public class GenerateSectionSheet {
                 row += 1;
             }
             {
-                Row orange = sheet.createRow(row);
-                createCellsRow(sheet, 0, 8, orange);
-                orange.getCell(2).setCellValue("NARANJA");
-                orange.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
-                sheet.addMergedRegion(new CellRangeAddress(orange.getRowNum(), orange.getRowNum(), 2, 3));
-                orange.getCell(4).setCellValue(params[3]);
-                orange.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-                sheet.addMergedRegion(new CellRangeAddress(orange.getRowNum(), orange.getRowNum(), 4, 6));
-                row += 1;
+                if (params.length > 3) {
+                    Row orange = sheet.createRow(row);
+                    createCellsRow(sheet, 0, 8, orange);
+                    orange.getCell(2).setCellValue("NARANJA");
+                    orange.getCell(2).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                    sheet.addMergedRegion(new CellRangeAddress(orange.getRowNum(), orange.getRowNum(), 2, 3));
+                    orange.getCell(4).setCellValue(params[3]);
+                    orange.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                    sheet.addMergedRegion(new CellRangeAddress(orange.getRowNum(), orange.getRowNum(), 4, 6));
+                    row += 1;
+                }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("threshold: " + e.getMessage());
         }
         return row;
@@ -367,8 +394,17 @@ public class GenerateSectionSheet {
                     }
                 } else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
                     arrData = model.getArrWindSpeed();
+                } else if (model.getReportType() == TypeReportSheet.ceraunic) {
+                    arrData = model.getArrCode();
                 }
-                if (arrData.get(i) >= model.getThresholdDailyJson().get(threshold[0]).getAsDouble()) {
+                JsonObject jsonObjectThreshold;
+                if (model.getReportType() == TypeReportSheet.ceraunic) {
+                    jsonObjectThreshold = model.getThresholdCodeList();
+                }
+                else {
+                    jsonObjectThreshold = model.getThresholdDailyJson();
+                }
+                if (arrData.get(i) >= jsonObjectThreshold.get(threshold[0]).getAsDouble()) {
                     Row data = sheet.createRow(row);
                     createCellsRow(sheet, 0, 8, data);
                     data.getCell(1).setCellValue(model.getArrDate().get(i));
@@ -380,7 +416,7 @@ public class GenerateSectionSheet {
                     data.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
                     sheet.addMergedRegion(new CellRangeAddress(data.getRowNum(), data.getRowNum(), 4, 7));
                     row += 1;
-                } else if (arrData.get(i) >= model.getThresholdDailyJson().get(threshold[1]).getAsDouble()) {
+                } else if (model.getReportType() != TypeReportSheet.ceraunic && arrData.get(i) >= model.getThresholdDailyJson().get(threshold[1]).getAsDouble()) {
                     Row data = sheet.createRow(row);
                     createCellsRow(sheet, 0, 8, data);
                     data.getCell(1).setCellValue(model.getArrDate().get(i));
@@ -741,31 +777,27 @@ public class GenerateSectionSheet {
             };
         } else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
             notification = new String[] {
-                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
-                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja y" +
-                            " activación de mecanismos de alarma",
-                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-                            "Auxiliar del Comandante de Incidentes al número telefónico:",
-                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-                            "Auxiliar del Comandante de Incidentes al número telefónico:"
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA"
             };
 
             message = new String[] {
-                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR VENDAVALES",
-                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
-                            "REACCIÓN INMEDIATA) ALERTA ROJA POR VENDAVALES",
-                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A VENDAVALES",
-                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA" +
-                            " REACCIÓN INMEDIATA) ALERTA ROJA POR VENDAVALES",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA) ALERTA ROJA POR FENÓMENOS CERÁUNICOS"
             };
 
             alert = new String[] {
-                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
-                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
-                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
-                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n"
+            };
+        } else if (model.getReportType() == TypeReportSheet.ceraunic) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja y activación de mecanismos de alarma"
+            };
+
+            message = new String[] {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA) ALERTA ROJA POR FENÓMENOS CERÁUNICOS"
+            };
+
+            alert = new String[] {
+                   "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA"
             };
         }
         row = generateChartNotification(sheet, row, model, notification, message, alert);
@@ -774,7 +806,7 @@ public class GenerateSectionSheet {
 
     public int generateChartNotification(Sheet sheet, int row, SheetDataModel model, String[] notification, String[] message, String[] alert) {
         int rowsNum = 3;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < alert.length; i++) {
             Row row1 = sheet.getRow(row);
             createCellsRow(sheet, 0, 8, row1);
             row1.getCell(0).setCellValue(alert[i]);

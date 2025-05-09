@@ -91,13 +91,13 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                 massMovementDataModel.addTemperature(weatherNode.getTemp());
                 massMovementDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
 
-//                ceraunicDataModel.addHumidityPercent(weatherNode.getHumidity());
-//                ceraunicDataModel.addCode(weatherNode.getCode());
-//                ceraunicDataModel.addDate(weatherNode.getDate());
-//                ceraunicDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
-//                ceraunicDataModel.addWindSpeed(weatherNode.getSpeedWind());
-//                ceraunicDataModel.addTemperature(weatherNode.getTemp());
-//                ceraunicDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
+                ceraunicDataModel.addHumidityPercent(weatherNode.getHumidity());
+                ceraunicDataModel.addCode(weatherNode.getCode());
+                ceraunicDataModel.addDate(weatherNode.getDate());
+                ceraunicDataModel.addPrecipitationPercent(weatherNode.getPrecipitation());
+                ceraunicDataModel.addWindSpeed(weatherNode.getSpeedWind());
+                ceraunicDataModel.addTemperature(weatherNode.getTemp());
+                ceraunicDataModel.addPrecipitationMm(weatherNode.getPrecipitationMm());
             }
 
             this.dataModelList = new ArrayList<>();

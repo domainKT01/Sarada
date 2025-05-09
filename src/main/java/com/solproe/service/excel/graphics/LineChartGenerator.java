@@ -1,11 +1,9 @@
 package com.solproe.service.excel.graphics;
 
 import com.solproe.business.domain.SheetDataModel;
-import com.solproe.service.excel.ExcelSheetTemplate;
 import com.solproe.service.excel.TypeReportSheet;
 import com.solproe.service.excel.sheets.ExcelStyleFactory;
 import com.solproe.service.excel.sheets.GenerateSectionSheet;
-import com.solproe.service.excel.sheets.GenericSheetTemplate;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xddf.usermodel.PresetColor;
@@ -131,14 +129,20 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 rowFinal += sheetDataModel.getStartRow() + height;
                 rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
             } else if (sheetDataModel.getReportType() == TypeReportSheet.ceraunic) {
+                space += 2;
+                titleRow.getCell(0).setCellValue("MONITOREO DE ESTADO DEL CLIMA PARA 14 DÍAS DE PRONÓSTICO");
+                titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
                 XSSFClientAnchor anchorCeraunic = this.drawing.createAnchor(0, 0, 0, 0, 0,
                         sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
                 int[][] parameterSource = {
-                        {53, 66, 1, 1},
-                        {53, 66, 2, 2},
+                        {79, 92, 1, 1},
+                        {79, 92, 2, 2},
+                        {79, 92, 3, 3}
                 };
                 createGraphic(parameterSource, anchorCeraunic);
-                rowFinal += sheetDataModel.getStartRow() + height;
+                rowFinal = sheetDataModel.getStartRow() + height + 3;
+                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+                rowFinal += 3;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,27 +158,6 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         series.setLineProperties(line);
     }
 
-    public void createSimpleGraphic(int[][] parameters, XSSFClientAnchor anchor) {
-        // Configurar datos del gráfico
-        XSSFChart chart = this.drawing.createChart(anchor);
-        XDDFCategoryAxis bottomAxis = chart.createCategoryAxis(AxisPosition.BOTTOM);
-        bottomAxis.setTitle("Dates");
-        XDDFValueAxis leftAxis = chart.createValueAxis(AxisPosition.LEFT);
-
-        XDDFDataSource<String> categories = XDDFDataSourcesFactory.fromStringCellRange((XSSFSheet) this.sourceSheet,
-                new CellRangeAddress(parameters[0][0], parameters[0][1], parameters[0][2], parameters[0][3]));
-
-        XDDFNumericalDataSource<Double> value = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
-                new CellRangeAddress(parameters[1][0], parameters[1][1], parameters[1][2], parameters[1][3]));
-
-        // Crear el gráfico de líneas
-        XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
-        XDDFLineChartData.Series series = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
-        series.setSmooth(false);
-        series.setMarkerStyle(MarkerStyle.CIRCLE);
-        chart.plot(chartData);
-    }
-
     private void createGraphic(int[][] parameters, XSSFClientAnchor anchor) {
         // Configurar datos del gráfico
         XSSFChart chart = this.drawing.createChart(anchor);
@@ -188,7 +171,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         XDDFNumericalDataSource<Double> value = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
                 new CellRangeAddress(parameters[1][0], parameters[1][1], parameters[1][2], parameters[1][3]));
 
-        if (parameters.length > 2) {
+        if (parameters.length > 3) {
             XDDFNumericalDataSource<Double> sourceThresholdOrange = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
                     new CellRangeAddress(parameters[2][0], parameters[2][1], parameters[2][2], parameters[2][3]));
 
@@ -209,14 +192,21 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             seriesThresholdRed.setSmooth(false);
             seriesThresholdRed.setMarkerStyle(MarkerStyle.DOT);
             setLineColor(seriesThresholdRed, PresetColor.RED);
+            chart.plot(chartData);
         }
         else {
+            XDDFNumericalDataSource<Double> sourceThresholdRed = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
+                    new CellRangeAddress(parameters[2][0], parameters[2][1], parameters[2][2], parameters[2][3]));
             // Crear el gráfico de líneas
             XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
             XDDFLineChartData.Series seriesTemp = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
             seriesTemp.setSmooth(false);
             seriesTemp.setMarkerStyle(MarkerStyle.CIRCLE);
             setLineColor(seriesTemp, PresetColor.BLUE);
+            XDDFLineChartData.Series seriesThresholdOrange = (XDDFLineChartData.Series) chartData.addSeries(categories, sourceThresholdRed);
+            seriesThresholdOrange.setSmooth(false);
+            seriesThresholdOrange.setMarkerStyle(MarkerStyle.PLUS);
+            setLineColor(seriesThresholdOrange, PresetColor.RED);
             chart.plot(chartData);
         }
     }

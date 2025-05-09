@@ -5,6 +5,7 @@ import com.google.gson.JsonParser;
 import com.solproe.business.repository.ReadConfigFile;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Objects;
@@ -21,7 +22,8 @@ public class ReadConfigFileUseCase  {
     public JsonObject readConfigFile(String type) {
         try {
             this.type = type;
-            if (type.equalsIgnoreCase("threshold") || type.equalsIgnoreCase("monthlyThreshold")) {
+            if (type.equalsIgnoreCase("threshold") || type.equalsIgnoreCase("monthlyThreshold") ||
+                    type.equalsIgnoreCase("listCode")) {
                 String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
                         this.type + ".json";
                 try (FileInputStream fs = new FileInputStream(this.readConfigFile.readFile(path))) {

@@ -36,7 +36,6 @@ public class ApiCommandInvoker implements RequestInterface {
     }
 
     public void executeCommand() {
-        System.out.println("execute command");
         this.command.execute();
     }
 
@@ -48,7 +47,6 @@ public class ApiCommandInvoker implements RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
-        System.out.println(jsonObject);
         this.requestInterface.successResponse(jsonObject);
     }
 }

@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import java.io.IOException;
+import java.net.ConnectException;
 
 public class RequestApi {
     private final OkHttpClient okHttpClient = new OkHttpClient();
@@ -32,7 +33,7 @@ public class RequestApi {
                 this.failedResponse(response);
             }
         }
-        catch (Exception e) {
+        catch (ConnectException e) {
             System.out.println(e.getMessage() + " api request exception");
             throw new IOException();
         }

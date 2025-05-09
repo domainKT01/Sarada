@@ -7,11 +7,15 @@ import javax.inject.Inject;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import java.io.IOException;
+import java.net.ConnectException;
+
 public class GetRequestApi implements ApiCommandInterface, RequestInterface {
     private Request request;
     private final RequestApi requestApi;
     private final RequestInterface requestInterface;
     private String baseUrl;
+    private int count = 0;
 
 
     @Inject
@@ -28,7 +32,16 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
                     .build();
             this.requestApi.sendRequest(this.request);
         }
-        catch (Exception e) {
+        catch (IOException e) {
+            if (this.count < 3) {
+                try {
+                    Thread.sleep(2000);
+                    execute();
+                    ++this.count;
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
             System.out.println(e.getMessage() + " get request exception");
             throw new RuntimeException();
         }
@@ -37,7 +50,6 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
     @Override
     public void setAnyParameter(Object parameter) {
         this.baseUrl = parameter.toString();
-        System.out.println(this.baseUrl);
         this.request = new Request.Builder()
                 .url(this.baseUrl)
                 .build();

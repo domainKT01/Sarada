@@ -285,7 +285,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
                 Cell cellThresholdOrange = row.createCell(columnTable + 2);
                 cellDate.setCellValue(sheetDataModel.getArrDate().get(i));
                 cellDate.setCellStyle(setStyle("date"));
-                cellThresholdOrange.setCellValue(sheetDataModel.getThresholdDailyJson().get("ceraunicosThresholdRed").getAsDouble());
+                cellThresholdOrange.setCellValue(sheetDataModel.getThresholdCodeList().get("thunderstorm").getAsDouble());
                 cellThresholdOrange.setCellStyle(setStyle("end"));
                 if (parameters[1].equalsIgnoreCase("ceraunic")) {
                     cellValue.setCellValue(sheetDataModel.getArrCode().get(i));
