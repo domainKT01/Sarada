@@ -1,6 +1,7 @@
 package com.solproe.ui.controllers;
 
 import com.solproe.business.dto.ListCodeDTO;
+import com.solproe.ui.viewModels.ConfigFileViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -71,6 +72,9 @@ public class CodeListControllerView implements Initializable {
                     .heavySnowShower(Integer.parseInt(this.heavySnowShower.getText()))
                     .thunderstorm(Integer.parseInt(this.thunderstorm.getText()))
                     .build();
+
+            ConfigFileViewModel viewModel = new ConfigFileViewModel();
+            boolean bool = viewModel.createConfigCodesFile(listCodeDTO);
         });
     }
 }

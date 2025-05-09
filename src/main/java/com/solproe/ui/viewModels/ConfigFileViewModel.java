@@ -1,11 +1,13 @@
 package com.solproe.ui.viewModels;
 
 import com.solproe.business.domain.ConfigFileThreshold;
+import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.dto.ThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
+import com.solproe.service.config.JsonConfigFileGenerator;
 
 
 public class ConfigFileViewModel {
@@ -42,8 +44,16 @@ public class ConfigFileViewModel {
         return createConfigFileUseCase.createConfigFileMonthly(model);
     }
 
-    public boolean createConfigCodesFile() {
-        return false;
+    public boolean createConfigCodesFile(ListCodeDTO listCodeDTO) {
+        boolean bool;
+        try {
+            ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
+            CreateConfigFileUseCase useCase = new CreateConfigFileUseCase("listCode", generator);
+            bool = useCase.createConfigCodeList(listCodeDTO);
+            return bool;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

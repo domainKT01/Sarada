@@ -28,6 +28,7 @@ public class JsonConfigFileGenerator implements ConfigFileGenerator {
 
         try (Writer writer = new FileWriter(file)) {
             gson.toJson(finalJson, writer);
+            System.out.println("generated...");
         } catch (IOException e) {
             throw new RuntimeException("Error escribiendo archivo JSON: " + e.getMessage(), e);
         }

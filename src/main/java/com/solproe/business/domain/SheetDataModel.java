@@ -135,4 +135,8 @@ public class SheetDataModel {
     public JsonObject getThresholdMonthlyJson() {
         return this.configFileThreshold[1];
     }
+
+    public JsonObject getThresholdCodeList() {
+        return this.configFileThreshold[2];
+    }
 }

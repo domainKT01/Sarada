@@ -3,9 +3,12 @@ package com.solproe.business.usecase;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.solproe.business.domain.ConfigFileThreshold;
+import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
+
+import java.lang.reflect.Field;
 import java.util.Objects;
 
 public class CreateConfigFileUseCase {
@@ -92,5 +95,25 @@ public class CreateConfigFileUseCase {
             jsonObject.addProperty(month + "DataPercent", data.getPercent());
         }
         return jsonObject;
+    }
+
+
+    public boolean createConfigCodeList(ListCodeDTO listCodeDTO) {
+        try {
+            Class<?> dto = listCodeDTO.getClass();
+            JsonObject jsonObject = new JsonObject();
+
+            for (Field field : dto.getDeclaredFields()) {
+                field.setAccessible(true);
+                jsonObject.addProperty(field.getName(), (Integer) field.get(listCodeDTO));
+            }
+            String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
+                    this.type + ".json";
+            this.configFileGenerator.generate(jsonObject, path);
+            return true;
+        }
+        catch (IllegalAccessException e){
+            throw new RuntimeException(e);
+        }
     }
 }

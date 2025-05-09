@@ -7,12 +7,11 @@ public class ListCodeDTO {
     private Integer mainlyClear, partlyCloudy, overcast;
     private Integer fog, depositingRimeFog;
     private Integer lightDrizzle, moderateDrizzle, denseIntensityDrizzle;
-    private Integer lightFreezingDrizzle, denseIntensityFreezingDrizzle;
+    private Integer lightFreezingDrizzle, heavyIntensityFreezingDrizzle;
     private Integer slightRain, moderateRain, heavyIntensityRain;
-    private Integer lightFreezingRain, heavyIntensityFreezingRain;
     private Integer slightSnowFall, moderateSnowfall, heavyIntensitySnowFall;
     private Integer snowGrains;
-    private Integer slightRainShower, moderateRainShower,violentRinShower;
+    private Integer slightRainShower, moderateRainShower,violentRainShower;
     private Integer slightSnowShower, heavySnowShower;
     private Integer thunderstorm;
 
@@ -23,7 +22,7 @@ public class ListCodeDTO {
         Field[] builderFields = builderClass.getDeclaredFields();
 
         try {
-            for (Field builderField : builderFields) {
+            for (Field builderField : builderClass.getDeclaredFields()) {
                 String fieldName = builderField.getName();
                 try {
                     if (builderClass.getDeclaredField(fieldName).get(builder) != null) {
@@ -37,7 +36,7 @@ public class ListCodeDTO {
                         }
                     }
                 } catch (NoSuchFieldException e) {
-                    // El campo no existe en el DTO, se ignora
+                    System.out.println("not field: " + e.getMessage());
                 } catch (IllegalAccessException e) {
                     // Error al acceder al campo, podrías loggear o lanzar una excepción
                     e.printStackTrace();
@@ -90,7 +89,7 @@ public class ListCodeDTO {
     }
 
     public Integer getDenseIntensityFreezingDrizzle() {
-        return denseIntensityFreezingDrizzle;
+        return heavyIntensityFreezingDrizzle;
     }
 
     public Integer getSlightRain() {
@@ -103,14 +102,6 @@ public class ListCodeDTO {
 
     public Integer getHeavyIntensityRain() {
         return heavyIntensityRain;
-    }
-
-    public Integer getLightFreezingRain() {
-        return lightFreezingRain;
-    }
-
-    public Integer getHeavyIntensityFreezingRain() {
-        return heavyIntensityFreezingRain;
     }
 
     public Integer getSlightSnowFall() {
@@ -138,7 +129,7 @@ public class ListCodeDTO {
     }
 
     public Integer getViolentRinShower() {
-        return violentRinShower;
+        return violentRainShower;
     }
 
     public Integer getSlightSnowShower() {
@@ -161,7 +152,6 @@ public class ListCodeDTO {
         private Integer lightDrizzle, moderateDrizzle, denseIntensityDrizzle;
         private Integer lightFreezingDrizzle, heavyIntensityFreezingDrizzle;
         private Integer slightRain, moderateRain, heavyIntensityRain;
-        private Integer lightFreezingRain, heavyIntensityFreezingRain;
         private Integer slightSnowFall, moderateSnowfall, heavyIntensitySnowFall;
         private Integer snowGrains;
         private Integer slightRainShower, moderateRainShower,violentRainShower;
@@ -235,16 +225,6 @@ public class ListCodeDTO {
 
         public Builder heavyIntensityRain(int heavyIntensityRain) {
             this.heavyIntensityRain = heavyIntensityRain;
-            return this;
-        }
-
-        public Builder lightFreezingRain(int lightFreezingRain) {
-            this.lightFreezingRain = lightFreezingRain;
-            return this;
-        }
-
-        public Builder heavyIntensityFreezingRain(int heavyIntensityFreezingRain) {
-            this.heavyIntensityFreezingRain = heavyIntensityFreezingRain;
             return this;
         }
 

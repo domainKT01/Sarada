@@ -69,6 +69,10 @@ public class GenerateSectionSheet {
                 typeRow.getCell(3).setCellValue("VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h");
                 maxThreshold = "VELOCIDAD DEL VIENTO MAXIMA MENSUAL PROMEDIO  (Km/h):";
             }
+            else if (model.getReportType() == TypeReportSheet.ceraunic) {
+                typeRow.getCell(3).setCellValue("ESTADO DEL CLIMA ESPERADO");
+                maxThreshold = "DENSIDAD DE DESCARGAS A TIERRA (DDT)";
+            }
             typeRow.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
 
             // Fila 3: Proyecto / ID del proyecto
@@ -132,14 +136,14 @@ public class GenerateSectionSheet {
     }
 
     public int createAlertSystem(Sheet sheet, int startRow, SheetDataModel model) {
-        Workbook workbook = template.getWorkbook();
+        Workbook workbook = this.template.getWorkbook();
 
         // Título principal
+        System.out.println("start row " + startRow);
         Row titleRow = sheet.createRow(startRow);
         createCellsRow(sheet, 0, 8, titleRow);
         titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
         titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 16));
-        System.out.println("type: " + model.getReportType());
 
         startRow += 1;
         if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
@@ -419,17 +423,16 @@ public class GenerateSectionSheet {
                 int outRange = 0;
                 row += 1;
                 for (String data : map.keySet()) {
-                    if (count <= 6) {
+                    if (count < 5) {
                         count += 1;
                         continue;
                     }
-                    if (model.getReportType() == TypeReportSheet.forestFireDataModel && count % 2 == 1) {
+                    if (model.getReportType() == TypeReportSheet.forestFireDataModel && count % 2 == 0) {
                         if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble()) {
                             if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16 && data.contains("DataGrade")) {
                                 Row row1 = sheet.createRow(row + outRange);
                                 createCellsRow(sheet, 0, 8, row1);
                                 int index = data.indexOf("DataGrade");
-                                System.out.println("month: " + data);
                                 String month = data.substring(0, index);
                                 row1.getCell(3).setCellValue(month);
                                 row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
@@ -478,7 +481,7 @@ public class GenerateSectionSheet {
                             }
                         }
                     }
-                    else if (model.getReportType() == TypeReportSheet.massMovementDataModel && count % 2 == 0) {
+                    else if (model.getReportType() == TypeReportSheet.massMovementDataModel && count % 2 == 1) {
                         if (model.getThresholdMonthlyJson().get(data).getAsDouble() >= model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble()) {
                             if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 1 && count <= 16 && data.contains("DataPercent")) {
                                 Row row1 = sheet.createRow(row + outRange);
@@ -494,6 +497,7 @@ public class GenerateSectionSheet {
                             }
                             else if (model.getThresholdMonthlyJson().get("stage").getAsDouble() == 2 && count > 16 && data.contains("DataPercent")) {
                                 Row row1 = sheet.createRow(row + outRange);
+
                                 createCellsRow(sheet, 0, 8, row1);
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();

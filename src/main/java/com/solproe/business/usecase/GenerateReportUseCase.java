@@ -13,6 +13,7 @@ public class GenerateReportUseCase implements RequestInterface {
     private ExcelFileGenerator excelFileGenerator;
     private JsonObject configFileJson;
     private JsonObject monthlyConfigFile;
+    private JsonObject listCodeFile;
     private ReadConfigFile readConfigFile;
 
 
@@ -49,8 +50,9 @@ public class GenerateReportUseCase implements RequestInterface {
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
             this.configFileJson = readConfigFileUseCase.readConfigFile("threshold");
             this.monthlyConfigFile = readConfigFileUseCase.readConfigFile("monthlyThreshold");
+            this.listCodeFile = readConfigFileUseCase.readConfigFile("listCode");
             String path = "/home/daniel/Documentos/" + openMeteoForecastList.getNodeList().getFirst().getDate() + "(";
-            this.excelFileGenerator.setConfigFile(this.configFileJson, this.monthlyConfigFile);
+            this.excelFileGenerator.setConfigFile(this.configFileJson, this.monthlyConfigFile, this.listCodeFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);
         }
         catch (Exception e) {

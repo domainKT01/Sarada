@@ -79,7 +79,6 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                     throw new RuntimeException(e);
                 }
             }
-            System.out.println("final num: " + row);
         }
         else  {
             this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
@@ -108,8 +107,20 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                     XSSFDrawing drawing = (XSSFDrawing) sheet.createDrawingPatriarch();
                     model.setStartRow(row);
                     row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
+                    System.out.println("ceraunic row: " + row);
                 }
                 catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            //===============
+            //* Alerts Charts
+            //===============
+            {
+                try{
+                    row = this.sectionBuilder.createAlertSystem(sheet, row, model);
+                } catch (Exception e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
                 }

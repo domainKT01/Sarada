@@ -76,7 +76,11 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 space += 2;
                 titleRow.getCell(0).setCellValue("MONITOREO DE PRECIPITACIÓN % PARA 14 DÍAS DE PRONÓSTICO");
                 titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 13));
-                int[][] parameterSource1 = {{19, 33, 1, 1}, {19, 33, 2, 2}, {19, 33, 3, 3}, {19, 33, 4, 4}};
+                int[][] parameterSource1 = {
+                        {19, 33, 1, 1},
+                        {19, 33, 2, 2},
+                        {19, 33, 3, 3},
+                        {19, 33, 4, 4}};
                 XSSFClientAnchor xssfClientAnchor1 = this.drawing.createAnchor(0, 0, 0, 0, 0,
                         sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
                 rowFinal = sheetDataModel.getStartRow() + height + 2;
@@ -127,12 +131,14 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 rowFinal += sheetDataModel.getStartRow() + height;
                 rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
             } else if (sheetDataModel.getReportType() == TypeReportSheet.ceraunic) {
-                XSSFClientAnchor anchorWind = this.drawing.createAnchor(0, 0, 0, 0, 0,
+                XSSFClientAnchor anchorCeraunic = this.drawing.createAnchor(0, 0, 0, 0, 0,
                         sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
                 int[][] parameterSource = {
                         {53, 66, 1, 1},
                         {53, 66, 2, 2},
                 };
+                createGraphic(parameterSource, anchorCeraunic);
+                rowFinal += sheetDataModel.getStartRow() + height;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,27 +188,37 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
         XDDFNumericalDataSource<Double> value = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
                 new CellRangeAddress(parameters[1][0], parameters[1][1], parameters[1][2], parameters[1][3]));
 
-        XDDFNumericalDataSource<Double> sourceThresholdOrange = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
-                new CellRangeAddress(parameters[2][0], parameters[2][1], parameters[2][2], parameters[2][3]));
+        if (parameters.length > 2) {
+            XDDFNumericalDataSource<Double> sourceThresholdOrange = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
+                    new CellRangeAddress(parameters[2][0], parameters[2][1], parameters[2][2], parameters[2][3]));
 
-        XDDFNumericalDataSource<Double> sourceThresholdRed = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
-                new CellRangeAddress(parameters[3][0], parameters[3][1], parameters[3][2], parameters[3][3]));
+            XDDFNumericalDataSource<Double> sourceThresholdRed = XDDFDataSourcesFactory.fromNumericCellRange((XSSFSheet) this.sourceSheet,
+                    new CellRangeAddress(parameters[3][0], parameters[3][1], parameters[3][2], parameters[3][3]));
 
-        // Crear el gráfico de líneas
-        XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
-        XDDFLineChartData.Series seriesTemp = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
-        seriesTemp.setSmooth(false);
-        seriesTemp.setMarkerStyle(MarkerStyle.CIRCLE);
-        setLineColor(seriesTemp, PresetColor.BLUE);
-        XDDFLineChartData.Series seriesThresholdOrange = (XDDFLineChartData.Series) chartData.addSeries(categories, sourceThresholdOrange);
-        seriesThresholdOrange.setSmooth(false);
-        seriesThresholdOrange.setMarkerStyle(MarkerStyle.PLUS);
-        setLineColor(seriesThresholdOrange, PresetColor.ORANGE);
-        XDDFLineChartData.Series seriesThresholdRed = (XDDFLineChartData.Series) chartData.addSeries(categories, sourceThresholdRed) ;
-        seriesThresholdRed.setSmooth(false);
-        seriesThresholdRed.setMarkerStyle(MarkerStyle.DOT);
-        setLineColor(seriesThresholdRed, PresetColor.RED);
-        chart.plot(chartData);
+            // Crear el gráfico de líneas
+            XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
+            XDDFLineChartData.Series seriesTemp = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
+            seriesTemp.setSmooth(false);
+            seriesTemp.setMarkerStyle(MarkerStyle.CIRCLE);
+            setLineColor(seriesTemp, PresetColor.BLUE);
+            XDDFLineChartData.Series seriesThresholdOrange = (XDDFLineChartData.Series) chartData.addSeries(categories, sourceThresholdOrange);
+            seriesThresholdOrange.setSmooth(false);
+            seriesThresholdOrange.setMarkerStyle(MarkerStyle.PLUS);
+            setLineColor(seriesThresholdOrange, PresetColor.ORANGE);
+            XDDFLineChartData.Series seriesThresholdRed = (XDDFLineChartData.Series) chartData.addSeries(categories, sourceThresholdRed) ;
+            seriesThresholdRed.setSmooth(false);
+            seriesThresholdRed.setMarkerStyle(MarkerStyle.DOT);
+            setLineColor(seriesThresholdRed, PresetColor.RED);
+        }
+        else {
+            // Crear el gráfico de líneas
+            XDDFLineChartData chartData = (XDDFLineChartData) chart.createData(ChartTypes.LINE, bottomAxis, leftAxis);
+            XDDFLineChartData.Series seriesTemp = (XDDFLineChartData.Series) chartData.addSeries(categories, value);
+            seriesTemp.setSmooth(false);
+            seriesTemp.setMarkerStyle(MarkerStyle.CIRCLE);
+            setLineColor(seriesTemp, PresetColor.BLUE);
+            chart.plot(chartData);
+        }
     }
 
     @Override
@@ -236,10 +252,10 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
 
             } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
                 parameters = new int[][]{
-                        {70, 81, 1, 1},
-                        {70, 81, 3, 3},
-                        {70, 81, 6, 6},
-                        {70, 81, 7, 7}
+                        {70, 75, 1, 1},
+                        {70, 75, 3, 3},
+                        {70, 75, 6, 6},
+                        {70, 75, 7, 7}
                 };
             }
             createGraphic(parameters, anchorTemp);
