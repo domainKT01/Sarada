@@ -4,6 +4,7 @@ import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.ui.viewModels.ConfigFileViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -75,6 +76,22 @@ public class CodeListControllerView implements Initializable {
 
             ConfigFileViewModel viewModel = new ConfigFileViewModel();
             boolean bool = viewModel.createConfigCodesFile(listCodeDTO);
+
+            if (bool) {
+                showAlert(Alert.AlertType.INFORMATION, "Configuración guardada", "El archivo de configuración se ha guardado correctamente.");
+            }
+            else {
+                showAlert(Alert.AlertType.ERROR, "Error", "Hubo un problema al guardar el archivo de configuración.");
+            }
         });
+    }
+
+    // Método para mostrar alertas
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

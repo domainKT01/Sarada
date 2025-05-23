@@ -22,7 +22,7 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
+    public void exec(String[] args) {
         launch();
     }
 }

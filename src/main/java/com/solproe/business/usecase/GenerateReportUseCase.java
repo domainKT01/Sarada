@@ -6,6 +6,7 @@ import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.business.repository.ReadConfigFile;
+import com.solproe.util.OsInfo;
 import okhttp3.Response;
 
 public class GenerateReportUseCase implements RequestInterface {
@@ -15,7 +16,7 @@ public class GenerateReportUseCase implements RequestInterface {
     private JsonObject monthlyConfigFile;
     private JsonObject listCodeFile;
     private ReadConfigFile readConfigFile;
-
+    private String path;
 
 
     public void setRequestInterface(RequestInterface requestInterface) {
@@ -50,8 +51,13 @@ public class GenerateReportUseCase implements RequestInterface {
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
             this.configFileJson = readConfigFileUseCase.readConfigFile("threshold");
             this.monthlyConfigFile = readConfigFileUseCase.readConfigFile("monthlyThreshold");
+
+            OsInfo osInfo = new OsInfo();
+            if (osInfo.getOsName().equalsIgnoreCase("windows")) {
+
+            }
             this.listCodeFile = readConfigFileUseCase.readConfigFile("listCode");
-            String path = "/home/daniel/Documentos/" + openMeteoForecastList.getNodeList().getFirst().getDate() + "(";
+            String path = "C:\\Users\\JARED CORONEL\\Desktop\\" + openMeteoForecastList.getNodeList().getFirst().getDate() + "(";
             this.excelFileGenerator.setConfigFile(this.configFileJson, this.monthlyConfigFile, this.listCodeFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);
         }

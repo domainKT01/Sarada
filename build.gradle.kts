@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.1.1"
+version = "2.1.4"
 
 javafx {
     version = "21"
@@ -16,6 +16,7 @@ javafx {
 
 application {
     mainClass = "com.solproe.App"
+    mainModule = "com.solproe"
 }
 
 repositories {
@@ -70,6 +71,9 @@ dependencies {
     implementation("org.apache.poi:poi-ooxml:5.3.0")
     implementation("org.apache.logging.log4j:log4j-core:2.24.3")
 
+    //task manager
+    implementation("org.quartz-scheduler:quartz:2.3.0")
+
 }
 
 tasks.test {
@@ -79,14 +83,4 @@ tasks.test {
 java {
     sourceCompatibility = JavaVersion.VERSION_23
     targetCompatibility = JavaVersion.VERSION_23
-}
-
-jlink {
-    imageZip.set(project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip"))
-    options.set(listOf("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages"))
-    launcher {
-        name = "sarada"
-    }
-    extraModulePaths.set(javafx.modules)
-    addExtraModulePath(javafx.modules.toString())
 }

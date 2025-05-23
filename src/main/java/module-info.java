@@ -15,6 +15,8 @@ module com.solproe {
     requires annotations;
     requires org.apache.commons.io;
     requires org.apache.logging.log4j;
+    requires quartz;
+    requires slf4j.api;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;
