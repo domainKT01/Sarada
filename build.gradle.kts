@@ -24,22 +24,26 @@ repositories {
     google()
 }
 
-tasks.jar {
+tasks.named<Jar>("jar") {
     manifest {
-        attributes(mapOf(
+        attributes(
             "Main-Class" to application.mainClass.get(),
             "Created-By" to "Gradle Kotlin DSL",
             "Implementation-Version" to version
-        ))
+        )
     }
+
     from(configurations.runtimeClasspath.get().map {
         if (it.isDirectory) it else zipTree(it)
     })
+
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
     from("src/main/resources") {
         into("/") // Ajusta la ruta si es necesario
     }
 }
+
 
 dependencies {
 
@@ -80,7 +84,12 @@ tasks.test {
     useJUnitPlatform()
 }
 
+sourceSets {
+    create("feature")
+}
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_23
-    targetCompatibility = JavaVersion.VERSION_23
+    registerFeature("feature") {
+        usingSourceSet(sourceSets["main"])
+    }
 }
