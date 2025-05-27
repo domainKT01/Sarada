@@ -9,6 +9,8 @@ import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.util.OsInfo;
 import okhttp3.Response;
 
+import java.io.File;
+
 public class GenerateReportUseCase implements RequestInterface {
     private RequestInterface requestInterface;
     private ExcelFileGenerator excelFileGenerator;
@@ -54,10 +56,16 @@ public class GenerateReportUseCase implements RequestInterface {
 
             OsInfo osInfo = new OsInfo();
             if (osInfo.getOsName().equalsIgnoreCase("windows")) {
-
+                this.path = "C:\\Users\\Public\\Documents\\Reports";
+            } else if (osInfo.getOsName().equalsIgnoreCase("linux")) {
+                this.path = "/home/" + osInfo.getUserName() + "/Reports";
+            }
+            File folder = new File(this.path);
+            if (!folder.exists()) {
+                folder.mkdir();
             }
             this.listCodeFile = readConfigFileUseCase.readConfigFile("listCode");
-            String path = "C:\\Users\\JARED CORONEL\\Desktop\\" + openMeteoForecastList.getNodeList().getFirst().getDate() + "(";
+            String path = this.path + openMeteoForecastList.getNodeList().getFirst().getDate() + "(";
             this.excelFileGenerator.setConfigFile(this.configFileJson, this.monthlyConfigFile, this.listCodeFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);
         }

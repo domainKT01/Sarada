@@ -103,7 +103,7 @@ public class FormController implements Initializable {
             return Long.parseLong(value);
         } catch (NumberFormatException e) {
             showAlert(AlertType.ERROR, "Error de formato", "El valor debe ser un número válido.");
-            throw e; // Re-lanzar la excepción para que el flujo de control se detenga
+            throw e;
         }
     }
 
@@ -113,7 +113,7 @@ public class FormController implements Initializable {
             return Double.parseDouble(value);
         } catch (NumberFormatException e) {
             showAlert(AlertType.ERROR, "Error de formato", "El valor debe ser un número válido.");
-            throw e; // Re-lanzar la excepción para que el flujo de control se detenga
+            throw e;
         }
     }
 

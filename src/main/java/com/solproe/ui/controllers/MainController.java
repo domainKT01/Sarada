@@ -214,9 +214,4 @@ public class MainController implements Initializable {
     public ConfigFileViewModel getConfigFileViewModel() {
         return configFileViewModel;
     }
-
-    // Si los controladores hijos necesitan llamar métodos en MainController:
-    // public void notifyMainController(String message) {
-    //     logger.info("Notificación recibida de un controlador hijo: {}", message);
-    // }
 }
