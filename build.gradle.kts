@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.2.1"
+version = "2.2.5"
 
 javafx {
     version = "21"
@@ -33,7 +33,10 @@ tasks.named<Jar>("jar") {
         )
     }
 
-    from(configurations.runtimeClasspath.get().map {
+    // ⛔ Excluir JavaFX del jar
+    from(configurations.runtimeClasspath.get().filterNot {
+        it.name.startsWith("javafx")
+    }.map {
         if (it.isDirectory) it else zipTree(it)
     })
 
@@ -43,6 +46,7 @@ tasks.named<Jar>("jar") {
         into("/") // Ajusta la ruta si es necesario
     }
 }
+
 
 
 dependencies {
@@ -73,6 +77,9 @@ dependencies {
     //service
     implementation("org.apache.poi:poi:5.3.0")
     implementation("org.apache.poi:poi-ooxml:5.3.0")
+    // Forzar una versión de log4j
+    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
 
     //task manager
     implementation("org.quartz-scheduler:quartz:2.3.0")
@@ -93,4 +100,12 @@ java {
     registerFeature("feature") {
         usingSourceSet(sourceSets["main"])
     }
+    modularity.inferModulePath = true
+}
+
+tasks.register<Copy>("copyDependencies") {
+    from(configurations.runtimeClasspath.get().filterNot {
+        it.name.startsWith("javafx")
+    })
+    into("$buildDir/deps")
 }

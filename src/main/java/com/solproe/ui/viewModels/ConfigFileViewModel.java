@@ -9,7 +9,6 @@ import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
 import com.solproe.service.config.ConfigPropertiesGenerator;
-import com.solproe.service.config.JsonConfigFileGenerator;
 import com.solproe.util.ValidateLoad;
 
 
@@ -39,12 +38,12 @@ public class ConfigFileViewModel {
         ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", "Sarada");
         ValidateLoad validateLoad = new ValidateLoad("threshold.json", "Sarada");
         if (validateLoad.validateFirstRun()) {
-            return useCase.createFileConfig(config, configProperties);
+            return useCase.createConfigFile(config, configProperties);
         }
         else {
-            boolean bool = useCase.createConfigPropertiesFile(configProperties);
+            boolean bool = useCase.createPropertiesFile(configProperties);
             if (bool) {
-                return useCase.createConfigPropertiesFile(configProperties);
+                return useCase.createPropertiesFile(configProperties);
             }
             return false;
         }
@@ -55,7 +54,7 @@ public class ConfigFileViewModel {
         ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase(configFileGenerator);
         ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("monthlyThreshold.json", "Sarada");
-        return createConfigFileUseCase.createConfigFileMonthly(model, config);
+        return createConfigFileUseCase.createMonthlyConfigFile(model, config);
     }
 
     public boolean createConfigCodesFile(ListCodeDTO listCodeDTO) {
@@ -64,7 +63,7 @@ public class ConfigFileViewModel {
             ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
             CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
             ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("listCode.json", "Sarada");
-            bool = useCase.createConfigCodeList(listCodeDTO, config);
+            bool = useCase.createCodeListConfig(listCodeDTO, config);
             return bool;
         } catch (Exception e) {
             return false;

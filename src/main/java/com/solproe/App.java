@@ -9,7 +9,6 @@ public class App {
             //code
         }
         else {
-
             MainApp mainApp = new MainApp();
             mainApp.exec();
         }

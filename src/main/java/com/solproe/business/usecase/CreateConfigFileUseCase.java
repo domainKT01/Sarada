@@ -12,103 +12,108 @@ import java.lang.reflect.Field;
 import java.nio.file.Path;
 
 public class CreateConfigFileUseCase {
+
     private final ConfigFileGenerator configFileGenerator;
 
-
     public CreateConfigFileUseCase(ConfigFileGenerator configFileGenerator) {
-       this.configFileGenerator = configFileGenerator;
+        this.configFileGenerator = configFileGenerator;
     }
 
-
-    public boolean createFileConfig(Object object, ConfigPropertiesGeneratorInterface config) {
+    public boolean createConfigFile(Object object, ConfigPropertiesGeneratorInterface config) {
         try {
-            ConfigFileThreshold configFileThreshold = (ConfigFileThreshold) object;
-            JsonObject jsonObject = this.createConfigFileThreshold(configFileThreshold);
-            Path path = config.getAppConfigPath();
-            this.configFileGenerator.generate(jsonObject, path);
-            return true;
+            if (!(object instanceof ConfigFileThreshold configFileThreshold)) {
+                throw new IllegalArgumentException("Unsupported object type");
+            }
+
+            JsonObject jsonObject = buildConfigFileThreshold(configFileThreshold);
+            return generateFile(jsonObject, config.getAppConfigPath());
+
         } catch (Exception e) {
-            System.out.println("use case exception: " + e.getMessage());
+            System.err.println("CreateConfigFileUseCase#createConfigFile: " + e.getMessage());
+            return false;
         }
-        return false;
     }
 
-
-    public JsonObject createConfigFileThreshold(ConfigFileThreshold data) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("forestFireThresholdOrange", data.getForestFireThresholdOrange());
-        jsonObject.addProperty("forestFireThresholdRed", data.getForestFireThresholdRed());
-        jsonObject.addProperty("precipitationThresholdOrange", data.getPrecipitationThresholdOrange());
-        jsonObject.addProperty("precipitationThresholdRed", data.getPrecipitationThresholdRed());
-        jsonObject.addProperty("windThresholdOrange", data.getWindThresholdOrange());
-        jsonObject.addProperty("windThresholdRed", data.getWindThresholdRed());
-        jsonObject.addProperty("precipitationRainPercentOrange", data.getPrecipitationRainPercentOrange());
-        jsonObject.addProperty("precipitationRainPercentRed", data.getPrecipitationRainPercentRed());
-        jsonObject.addProperty("ceraunicosThresholdRed", data.getCeraunicosThresholdRed());
-        jsonObject.addProperty("projectName", data.getIdProject());
-        jsonObject.addProperty("stateName", data.getStateName());
-        jsonObject.addProperty("cityName", data.getCityName());
-        jsonObject.addProperty("idProject", data.getIdProject());
-        jsonObject.addProperty("sciBoss", data.getSciBoss());
-        jsonObject.addProperty("sciBossContact", data.getSciBossContact());
-        jsonObject.addProperty("auxiliarSciBoss", data.getAuxiliarSciBoss());
-        jsonObject.addProperty("auxiliarSciBossContact", data.getAuxiliarSciBossContact());
-        return jsonObject;
-    }
-
-
-    public boolean createConfigFileMonthly(MonthlyThresholdInputModel model, ConfigPropertiesGeneratorInterface config) {
+    public boolean createMonthlyConfigFile(MonthlyThresholdInputModel model, ConfigPropertiesGeneratorInterface config) {
         try {
-            JsonObject jsonObject = this.createMonthlyConfigFileThreshold(model);
-            Path path = config.getAppConfigPath();
-            this.configFileGenerator.generate(jsonObject, path);
-            return true;
+            JsonObject jsonObject = buildMonthlyConfigFile(model);
+            return generateFile(jsonObject, config.getAppConfigPath());
+
         } catch (Exception e) {
-            System.out.println("Use case exception:");
+            System.err.println("CreateConfigFileUseCase#createMonthlyConfigFile: " + e.getMessage());
+            return false;
         }
-        return false;
     }
 
+    public boolean createCodeListConfig(ListCodeDTO dto, ConfigPropertiesGeneratorInterface config) {
+        try {
+            JsonObject jsonObject = buildCodeListConfig(dto);
+            return generateFile(jsonObject, config.getAppConfigPath());
 
-    public JsonObject createMonthlyConfigFileThreshold(MonthlyThresholdInputModel model) {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("orangeThresholdTemperature", model.getOrangeTemperatureThreshold());
-        jsonObject.addProperty("redThresholdTemperature", model.getRedTemperatureThreshold());
-        jsonObject.addProperty("orangeThresholdPrecipitation", model.getOrangePrecipitationThreshold());
-        jsonObject.addProperty("redThresholdPrecipitation", model.getRedPrecipitationThreshold());
-        jsonObject.addProperty("yellowThresholdPrecipitation", model.getYellowPrecipitationThreshold());
+        } catch (IllegalAccessException e) {
+            System.err.println("CreateConfigFileUseCase#createCodeListConfig: " + e.getMessage());
+            return false;
+        }
+    }
 
-        boolean isFirstSemester = model.getMonthlyData().getFirst().isFirstSemester(); // suposición
-        jsonObject.addProperty("stage", isFirstSemester ? 1 : 2);
+    public boolean createPropertiesFile(ConfigPropertiesGeneratorInterface config) {
+        return config.createPropertyFile();
+    }
+
+    // ========== Métodos privados ==========
+
+    private JsonObject buildConfigFileThreshold(ConfigFileThreshold data) {
+        JsonObject json = new JsonObject();
+        json.addProperty("forestFireThresholdOrange", data.getForestFireThresholdOrange());
+        json.addProperty("forestFireThresholdRed", data.getForestFireThresholdRed());
+        json.addProperty("precipitationThresholdOrange", data.getPrecipitationThresholdOrange());
+        json.addProperty("precipitationThresholdRed", data.getPrecipitationThresholdRed());
+        json.addProperty("windThresholdOrange", data.getWindThresholdOrange());
+        json.addProperty("windThresholdRed", data.getWindThresholdRed());
+        json.addProperty("precipitationRainPercentOrange", data.getPrecipitationRainPercentOrange());
+        json.addProperty("precipitationRainPercentRed", data.getPrecipitationRainPercentRed());
+        json.addProperty("ceraunicosThresholdRed", data.getCeraunicosThresholdRed());
+        json.addProperty("projectName", data.getIdProject());
+        json.addProperty("stateName", data.getStateName());
+        json.addProperty("cityName", data.getCityName());
+        json.addProperty("idProject", data.getIdProject());
+        json.addProperty("sciBoss", data.getSciBoss());
+        json.addProperty("sciBossContact", data.getSciBossContact());
+        json.addProperty("auxiliarSciBoss", data.getAuxiliarSciBoss());
+        json.addProperty("auxiliarSciBossContact", data.getAuxiliarSciBossContact());
+        return json;
+    }
+
+    private JsonObject buildMonthlyConfigFile(MonthlyThresholdInputModel model) {
+        JsonObject json = new JsonObject();
+        json.addProperty("orangeThresholdTemperature", model.getOrangeTemperatureThreshold());
+        json.addProperty("redThresholdTemperature", model.getRedTemperatureThreshold());
+        json.addProperty("orangeThresholdPrecipitation", model.getOrangePrecipitationThreshold());
+        json.addProperty("redThresholdPrecipitation", model.getRedPrecipitationThreshold());
+        json.addProperty("yellowThresholdPrecipitation", model.getYellowPrecipitationThreshold());
+
+        boolean isFirstSemester = model.getMonthlyData().getFirst().isFirstSemester(); // suposición válida
+        json.addProperty("stage", isFirstSemester ? 1 : 2);
 
         for (MonthlyData data : model.getMonthlyData()) {
             String month = data.getMonth().toLowerCase();
-            jsonObject.addProperty(month + "DataGrade", data.getGrade());
-            jsonObject.addProperty(month + "DataPercent", data.getPercent());
+            json.addProperty(month + "DataGrade", data.getGrade());
+            json.addProperty(month + "DataPercent", data.getPercent());
         }
-        return jsonObject;
+        return json;
     }
 
-
-    public boolean createConfigCodeList(ListCodeDTO listCodeDTO, ConfigPropertiesGeneratorInterface config) {
-        try {
-            Class<?> dto = listCodeDTO.getClass();
-            JsonObject jsonObject = new JsonObject();
-
-            for (Field field : dto.getDeclaredFields()) {
-                field.setAccessible(true);
-                jsonObject.addProperty(field.getName(), (Integer) field.get(listCodeDTO));
-            }
-            Path path = config.getAppConfigPath();
-            this.configFileGenerator.generate(jsonObject, path);
-            return true;
+    private JsonObject buildCodeListConfig(ListCodeDTO dto) throws IllegalAccessException {
+        JsonObject json = new JsonObject();
+        for (Field field : dto.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            json.addProperty(field.getName(), (Integer) field.get(dto));
         }
-        catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return json;
     }
 
-    public boolean createConfigPropertiesFile(ConfigPropertiesGeneratorInterface config) {
-        return config.createPropertyFile();
+    private boolean generateFile(JsonObject jsonObject, Path path) {
+        this.configFileGenerator.generate(jsonObject, path);
+        return true;
     }
 }
