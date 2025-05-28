@@ -20,8 +20,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
-import org.slf4j.Logger; // Importa un Logger
-import org.slf4j.LoggerFactory; // Importa un LoggerFactory
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,9 +27,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
-    // Logger para la clase
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
     // Constantes para estilos de fuente (DRY)
     private static final Font FONT_NORMAL = new Font("System", 13.0F);
@@ -128,25 +123,17 @@ public class MainController implements Initializable {
             // }
             // O guardar referencias específicas como se hizo con formController.
 
-            logger.info("Vista '{}' cargada en el centro.", fxmlPath);
             return loader;
         } catch (IOException e) {
-            logger.error("Error al cargar la vista FXML: " + fxmlPath, e);
             // Considera mostrar un diálogo de error al usuario aquí
             // throw new RuntimeException("Error al cargar la vista: " + fxmlPath, e); // O manejarlo más grácilmente
             return null;
         } catch (NullPointerException e) {
-            logger.error("Ruta FXML nula o recurso no encontrado: " + fxmlPath, e);
             return null;
         }
     }
 
-    /**
-     * Actualiza los estilos de fuente de los botones de navegación.
-     * El botón clickeado actualmente se resalta, y el anterior vuelve a la normalidad.
-     *
-     * @param clickedButton El botón que acaba de ser presionado.
-     */
+
     private void updateButtonStyles(Button clickedButton) {
         if (lastClickedButton != null) {
             lastClickedButton.setFont(FONT_NORMAL);
@@ -169,7 +156,6 @@ public class MainController implements Initializable {
      * Considera mover la creación de dependencias a una clase Factory o usar Inyección de Dependencias.
      */
     private void generateReport() {
-        logger.info("Iniciando generación de reporte...");
         try {
             // --- Inicio: Bloque candidato para Factory o Inyección de Dependencias ---
             ApiCommandInvoker apiCommandInvoker = new ApiCommandInvoker();
@@ -197,10 +183,8 @@ public class MainController implements Initializable {
 
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
             viewModel.generateReport(); // Asumo que esto puede ser una tarea larga, considera ejecutar en background
-            logger.info("Proceso de generación de reporte iniciado por ViewModel.");
 
         } catch (Exception e) {
-            logger.error("Error durante la generación del reporte.", e);
             // Mostrar error al usuario
         }
     }

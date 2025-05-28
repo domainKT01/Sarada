@@ -14,5 +14,4 @@ class ConfigPropertiesGeneratorTest {
         ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("config.properties", "Sarada");
         boolean bool = config.createPropertyFile();
     }
-
 }

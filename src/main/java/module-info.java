@@ -12,7 +12,7 @@ module com.solproe {
     requires dagger;
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
-    requires annotations;
+    requires org.jetbrains.annotations;
     requires org.apache.commons.io;
     requires org.apache.logging.log4j;
     requires quartz;

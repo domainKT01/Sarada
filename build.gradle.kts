@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.1.4"
+version = "2.1.7"
 
 javafx {
     version = "21"
@@ -73,11 +73,12 @@ dependencies {
     //service
     implementation("org.apache.poi:poi:5.3.0")
     implementation("org.apache.poi:poi-ooxml:5.3.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.24.3")
 
     //task manager
     implementation("org.quartz-scheduler:quartz:2.3.0")
 
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    implementation("org.jetbrains:annotations:24.0.0")
 }
 
 tasks.test {

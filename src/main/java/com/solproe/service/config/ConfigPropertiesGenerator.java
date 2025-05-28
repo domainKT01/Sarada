@@ -32,6 +32,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
         } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
             // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
             configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName); // O ".config", depende de tu preferencia
+            System.out.println("path: " + configDir);
         } else {
             // Fallback para otros OS, o si no se puede determinar
             configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName);

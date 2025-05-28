@@ -5,16 +5,17 @@ import com.google.gson.JsonObject;
 import com.solproe.business.repository.ConfigFileGenerator;
 
 import java.io.*;
+import java.nio.file.Path;
 
 public class JsonConfigFileGenerator implements ConfigFileGenerator {
 
 
     @Override
-    public void generate(JsonObject data, String path) {
+    public void generate(JsonObject data, Path path) {
         Gson gson = new Gson();
         JsonObject finalJson;
 
-        File file = new File(path);
+        File file = new File(path.toUri());
         if (file.exists()) {
             try (Reader reader = new FileReader(file)) {
                 JsonObject existing = gson.fromJson(reader, JsonObject.class);

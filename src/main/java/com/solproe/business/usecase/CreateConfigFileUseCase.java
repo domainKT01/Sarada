@@ -1,40 +1,34 @@
 package com.solproe.business.usecase;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.solproe.business.domain.ConfigFileThreshold;
 import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
-
+import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
+import com.solproe.util.ValidateLoad;
 import java.lang.reflect.Field;
-import java.util.Objects;
+import java.nio.file.Path;
 
 public class CreateConfigFileUseCase {
-    private final String type;
     private final ConfigFileGenerator configFileGenerator;
 
 
-    public CreateConfigFileUseCase(String type, ConfigFileGenerator configFileGenerator) {
-       this.type = type;
+    public CreateConfigFileUseCase(ConfigFileGenerator configFileGenerator) {
        this.configFileGenerator = configFileGenerator;
     }
 
 
-    public boolean createFileConfig(Object object) {
-        if (this.type.equals("threshold")) {
-            try {
-                ConfigFileThreshold configFileThreshold = (ConfigFileThreshold) object;
-                JsonObject jsonObject = this.createConfigFileThreshold(configFileThreshold);
-                String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
-                        this.type + ".json";
-                this.configFileGenerator.generate(jsonObject, path);
-                return true;
-            }
-            catch (Exception e) {
-                System.out.println("use case exception: " + e.getMessage());
-            }
+    public boolean createFileConfig(Object object, ConfigPropertiesGeneratorInterface config) {
+        try {
+            ConfigFileThreshold configFileThreshold = (ConfigFileThreshold) object;
+            JsonObject jsonObject = this.createConfigFileThreshold(configFileThreshold);
+            Path path = config.getAppConfigPath();
+            this.configFileGenerator.generate(jsonObject, path);
+            return true;
+        } catch (Exception e) {
+            System.out.println("use case exception: " + e.getMessage());
         }
         return false;
     }
@@ -63,11 +57,10 @@ public class CreateConfigFileUseCase {
     }
 
 
-    public boolean createConfigFileMonthly(MonthlyThresholdInputModel model) {
+    public boolean createConfigFileMonthly(MonthlyThresholdInputModel model, ConfigPropertiesGeneratorInterface config) {
         try {
             JsonObject jsonObject = this.createMonthlyConfigFileThreshold(model);
-            String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath()
-                    + this.type + ".json";
+            Path path = config.getAppConfigPath();
             this.configFileGenerator.generate(jsonObject, path);
             return true;
         } catch (Exception e) {
@@ -90,7 +83,6 @@ public class CreateConfigFileUseCase {
 
         for (MonthlyData data : model.getMonthlyData()) {
             String month = data.getMonth().toLowerCase();
-            JsonArray jsonArray = new JsonArray();
             jsonObject.addProperty(month + "DataGrade", data.getGrade());
             jsonObject.addProperty(month + "DataPercent", data.getPercent());
         }
@@ -98,7 +90,7 @@ public class CreateConfigFileUseCase {
     }
 
 
-    public boolean createConfigCodeList(ListCodeDTO listCodeDTO) {
+    public boolean createConfigCodeList(ListCodeDTO listCodeDTO, ConfigPropertiesGeneratorInterface config) {
         try {
             Class<?> dto = listCodeDTO.getClass();
             JsonObject jsonObject = new JsonObject();
@@ -107,13 +99,16 @@ public class CreateConfigFileUseCase {
                 field.setAccessible(true);
                 jsonObject.addProperty(field.getName(), (Integer) field.get(listCodeDTO));
             }
-            String path = Objects.requireNonNull(getClass().getResource("/configFiles/")).getPath() +
-                    this.type + ".json";
+            Path path = config.getAppConfigPath();
             this.configFileGenerator.generate(jsonObject, path);
             return true;
         }
         catch (IllegalAccessException e){
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean createConfigPropertiesFile(ConfigPropertiesGeneratorInterface config) {
+        return false;
     }
 }
