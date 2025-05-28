@@ -2,6 +2,7 @@ package com.solproe.business.usecase;
 
 import com.google.gson.JsonObject;
 import com.solproe.business.repository.ReadConfigFile;
+import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.service.config.ReadJsonConfigFile;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,8 @@ class ReadConfigFileUseCaseTest {
         ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
         ReadConfigFile readConfigFile = new ReadJsonConfigFile();
         readConfigFileUseCase.setReadInterface(readConfigFile);
-        JsonObject jsonObject = readConfigFileUseCase.readConfigFile("threshold");
+        JsonObject jsonObject = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("threshold.json", "Sarada")
+                .getAppConfigPath());
         System.out.println("test: " + jsonObject);
     }
 }

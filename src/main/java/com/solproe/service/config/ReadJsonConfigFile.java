@@ -3,12 +3,14 @@ package com.solproe.service.config;
 import com.solproe.business.repository.ReadConfigFile;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class ReadJsonConfigFile implements ReadConfigFile {
 
     @Override
-    public File readFile(String filePath) {
-        File fi = new File(filePath);
+    public File readFile(Path filePath) {
+        System.out.println(filePath);
+        File fi = new File(filePath.toUri());
         return fi;
     }
 }

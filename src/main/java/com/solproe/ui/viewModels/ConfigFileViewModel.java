@@ -15,7 +15,6 @@ import com.solproe.util.ValidateLoad;
 
 public class ConfigFileViewModel {
 
-
     public boolean createConfigFileThreshold(ThresholdInputModel input) {
         ConfigFileThreshold config = new ConfigFileThreshold();
         config.setForestFireThresholdOrange(input.getForestFireThresholdOrange());

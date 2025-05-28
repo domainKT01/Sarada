@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class ValidateLoad {
-    private String appConfigDirName;
+    private final String appConfigDirName;
     private String fileName;
 
 

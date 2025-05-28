@@ -6,6 +6,7 @@ import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.business.repository.ReadConfigFile;
+import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.OsInfo;
 import okhttp3.Response;
 
@@ -51,8 +52,10 @@ public class GenerateReportUseCase implements RequestInterface {
             OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
             ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
-            this.configFileJson = readConfigFileUseCase.readConfigFile("threshold");
-            this.monthlyConfigFile = readConfigFileUseCase.readConfigFile("monthlyThreshold");
+            this.configFileJson = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("threshold.json",
+                    "Sarada").getAppConfigPath());
+            this.monthlyConfigFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("monthlyThreshold.json", "Sarada")
+                    .getAppConfigPath());
 
             OsInfo osInfo = new OsInfo();
             if (osInfo.getOsName().equalsIgnoreCase("windows")) {
@@ -64,7 +67,8 @@ public class GenerateReportUseCase implements RequestInterface {
             if (!folder.exists()) {
                 folder.mkdir();
             }
-            this.listCodeFile = readConfigFileUseCase.readConfigFile("listCode");
+            this.listCodeFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("listCode.json", "Sarada")
+                    .getAppConfigPath());
             String path = this.path + openMeteoForecastList.getNodeList().getFirst().getDate() + "(";
             this.excelFileGenerator.setConfigFile(this.configFileJson, this.monthlyConfigFile, this.listCodeFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);

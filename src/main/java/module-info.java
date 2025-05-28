@@ -13,10 +13,10 @@ module com.solproe {
     requires org.apache.poi.poi;
     requires org.apache.poi.ooxml;
     requires org.jetbrains.annotations;
-    requires org.apache.commons.io;
     requires org.apache.logging.log4j;
     requires quartz;
     requires slf4j.api;
+    requires mchange.commons.java;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;

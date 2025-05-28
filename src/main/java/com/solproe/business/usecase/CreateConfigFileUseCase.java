@@ -7,7 +7,7 @@ import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
-import com.solproe.util.ValidateLoad;
+
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 
@@ -103,12 +103,12 @@ public class CreateConfigFileUseCase {
             this.configFileGenerator.generate(jsonObject, path);
             return true;
         }
-        catch (IllegalAccessException e){
+        catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
     }
 
     public boolean createConfigPropertiesFile(ConfigPropertiesGeneratorInterface config) {
-        return false;
+        return config.createPropertyFile();
     }
 }
