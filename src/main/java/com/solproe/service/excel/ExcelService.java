@@ -2,14 +2,13 @@ package com.solproe.service.excel;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Path;
 
 public class ExcelService {
-    private String path;
+    private Path path;
 
-    public void setPath(String path) {
+    public void setPath(Path path) {
         this.path = path;
     }
 
@@ -20,7 +19,9 @@ public class ExcelService {
 
     public void saveWorkbook(Workbook workbook, String name) {
         System.out.println("path: " + this.path);
-        try (OutputStream outputStream = new FileOutputStream(this.path + name)) {
+        try {
+            File fileWriter = new File(this.path.toUri().getPath() + name);
+            OutputStream outputStream = new FileOutputStream(fileWriter);
             workbook.write(outputStream);
             workbook.close();
             System.out.println("generated file");

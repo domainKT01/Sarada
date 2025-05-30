@@ -12,4 +12,8 @@ public interface ConfigPropertiesGeneratorInterface {
 
     // Similarmente para addProperties...
     boolean addProperties(String[][] properties);
+
+    void setFilename(String filename);
+
+    void setDirName(String dirName);
 }

@@ -7,6 +7,7 @@ import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.service.APIs.ApiCommandInvoker;
 import com.solproe.service.APIs.ApiService;
 import com.solproe.service.APIs.GetRequestApi;
+import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.service.config.ReadJsonConfigFile;
 import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
@@ -178,11 +179,18 @@ public class MainController implements Initializable {
             ReadConfigFile readConfigFile = new ReadJsonConfigFile();
             useCase.setReadConfigFile(readConfigFile);
 
+
             ThreadUtil threadUtil = new ThreadUtil();
             // --- Fin: Bloque candidato para Factory o Inyección de Dependencias ---
 
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
-            viewModel.generateReport(); // Asumo que esto puede ser una tarea larga, considera ejecutar en background
+            boolean bool = viewModel.generateReport(); // Asumo que esto puede ser una tarea larga, considera ejecutar en background
+            if (bool) {
+                System.out.println("true");
+            }
+            else {
+                System.out.println("false");
+            }
 
         } catch (Exception e) {
             // Mostrar error al usuario

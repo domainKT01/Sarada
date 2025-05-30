@@ -8,8 +8,8 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInterface {
-    private final String fileName;
-    private final String appConfigDirName; // Nombre del subdirectorio de tu app
+    private String fileName;
+    private String appConfigDirName; // Nombre del subdirectorio de tu app
 
     public ConfigPropertiesGenerator(String fileName, String appConfigDirName) {
         this.fileName = fileName;
@@ -17,10 +17,20 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
     }
 
     @Override
+    public void setFilename(String filename) {
+        this.fileName = filename;
+    }
+
+    @Override
+    public void setDirName(String dirName) {
+        this.appConfigDirName = dirName;
+    }
+
+    @Override
     public Path getAppConfigPath() {
-        String os = System.getProperty("os.name").toLowerCase();
         Path configDir;
 
+        String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("win")) {
             // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
             String appData = System.getenv("APPDATA");

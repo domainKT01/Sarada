@@ -17,6 +17,8 @@ module com.solproe {
     requires quartz;
     requires slf4j.api;
     requires mchange.commons.java;
+    requires kotlin.stdlib;
+    requires org.apache.commons.io;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;

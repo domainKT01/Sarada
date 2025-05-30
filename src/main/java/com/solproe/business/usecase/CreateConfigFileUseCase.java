@@ -38,7 +38,6 @@ public class CreateConfigFileUseCase {
         try {
             JsonObject jsonObject = buildMonthlyConfigFile(model);
             return generateFile(jsonObject, config.getAppConfigPath());
-
         } catch (Exception e) {
             System.err.println("CreateConfigFileUseCase#createMonthlyConfigFile: " + e.getMessage());
             return false;

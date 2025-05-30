@@ -7,13 +7,15 @@ import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.service.excel.sheets.GenericSheetTemplate;
 import org.apache.poi.ss.usermodel.Workbook;
+
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReportExcelGenerator implements ExcelFileGenerator {
     private final ExcelService excelService;
     private List<SheetDataModel> dataModelList;
-    private String path;
+    private Path path;
     private JsonObject[] configFileThreshold;
 
 
@@ -26,11 +28,11 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
         ExcelSheetGenerator sheetGenerator = new ExcelSheetGenerator(new GenericSheetTemplate());
         sheetGenerator.generateSheets(workbook, this.dataModelList);
         this.excelService.setPath(this.path);
-        this.excelService.saveWorkbook(workbook, "reporte).xlsx");
+        this.excelService.saveWorkbook(workbook, ".xlsx");
     }
 
     @Override
-    public void generate(String filePath, OpenMeteoForecastList forecastList) {
+    public void generate(Path filePath, OpenMeteoForecastList forecastList) {
         this.path = filePath;
         try {
             SheetDataModel forestFireDataModel = new SheetDataModel(

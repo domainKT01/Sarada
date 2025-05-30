@@ -3,7 +3,6 @@ package com.solproe.ui.controllers;
 import com.solproe.business.gateway.ApiCommandInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.business.repository.ReadConfigFile;
-import com.solproe.business.repository.ReportState;
 import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.service.APIs.ApiCommandInvoker;
 import com.solproe.service.APIs.ApiService;
@@ -47,7 +46,11 @@ public class ReportController implements Initializable {
 
             // Inyectar al ViewModel
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
-            viewModel.generateReport();
+            try {
+                boolean bool = viewModel.generateReport();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 }
