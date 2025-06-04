@@ -15,7 +15,7 @@ module com.solproe {
     requires org.jetbrains.annotations;
     requires org.apache.logging.log4j;
     requires quartz;
-    requires slf4j.api;
+    requires org.slf4j;
     requires mchange.commons.java;
     requires kotlin.stdlib;
     requires org.apache.commons.io;

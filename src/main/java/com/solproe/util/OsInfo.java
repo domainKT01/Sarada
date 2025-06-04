@@ -13,4 +13,8 @@ public class OsInfo {
     public String getUserName() {
         return System.getProperty("user.name");
     }
+
+    public String getUserHome() {
+        return System.getProperty("user.home");
+    }
 }

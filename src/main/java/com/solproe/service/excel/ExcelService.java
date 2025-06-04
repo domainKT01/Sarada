@@ -1,5 +1,6 @@
 package com.solproe.service.excel;
 
+import com.solproe.util.logging.ErrorLogger;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.*;
@@ -28,6 +29,7 @@ public class ExcelService {
         }
         catch (IOException e) {
             System.out.println("exc: " + e.getMessage());
+            ErrorLogger.log(e);
         }
     }
 }

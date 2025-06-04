@@ -3,6 +3,7 @@ package com.solproe.service.APIs;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.solproe.business.gateway.RequestInterface;
+import com.solproe.util.logging.ErrorLogger;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -35,6 +36,7 @@ public class RequestApi {
         }
         catch (ConnectException e) {
             System.out.println(e.getMessage() + " api request exception");
+            ErrorLogger.log("request api exc: ", e);
             throw new IOException();
         }
     }

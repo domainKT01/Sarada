@@ -4,8 +4,13 @@ import com.google.gson.JsonObject;
 import com.solproe.business.gateway.ApiCommandInterface;
 import com.solproe.business.gateway.RequestInterface;
 import javax.inject.Inject;
+
+import com.solproe.util.logging.ErrorLogger;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -35,20 +40,22 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
         catch (IOException e) {
             if (this.count < 3) {
                 try {
-                    Thread.sleep(2000);
-                    execute();
                     ++this.count;
+                    Thread.sleep(2000);
+                    System.out.println("try #" + this.count);
+                    execute();
                 } catch (InterruptedException ex) {
                     throw new RuntimeException(ex);
                 }
             }
-            System.out.println(e.getMessage() + " get request exception");
-            throw new RuntimeException();
+            else {
+                ErrorLogger.log("get request exception: ", e);
+            }
         }
     }
 
     @Override
-    public void setAnyParameter(Object parameter) {
+    public void setAnyParameter(@NotNull Object parameter) {
         this.baseUrl = parameter.toString();
         this.request = new Request.Builder()
                 .url(this.baseUrl)

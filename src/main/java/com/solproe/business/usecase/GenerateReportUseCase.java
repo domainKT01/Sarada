@@ -4,25 +4,18 @@ import com.google.gson.JsonObject;
 import com.solproe.business.adapters.OpenMeteoAdapterJson;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
-import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.GeneratePaths;
 import okhttp3.Response;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class GenerateReportUseCase implements RequestInterface {
     private RequestInterface requestInterface;
     private ExcelFileGenerator excelFileGenerator;
-    private JsonObject configFileJson;
-    private JsonObject monthlyConfigFile;
-    private JsonObject listCodeFile;
     private ReadConfigFile readConfigFile;
-    private Path path;
     private final GeneratePaths generatePaths = new GeneratePaths();
 
 
@@ -55,11 +48,11 @@ public class GenerateReportUseCase implements RequestInterface {
             OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
             ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
-            this.configFileJson = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("threshold.json",
+            JsonObject configFileJson = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("threshold.json",
                     "Sarada").getAppConfigPath());
-            this.monthlyConfigFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("monthlyThreshold.json", "Sarada")
+            JsonObject monthlyConfigFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("monthlyThreshold.json", "Sarada")
                     .getAppConfigPath());
-            this.listCodeFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("listCode.json", "Sarada")
+            JsonObject listCodeFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("listCode.json", "Sarada")
                     .getAppConfigPath());
             LocalDate localDate = LocalDate.now();
             int year = localDate.getYear();
@@ -67,9 +60,9 @@ public class GenerateReportUseCase implements RequestInterface {
             int day = localDate.getDayOfMonth();
             this.generatePaths.setDirName("Sarada");
             this.generatePaths.setFileName("report" + "-" + year + "-" + month + "-" + day);
-            this.path = this.generatePaths.generateNewPath();
-            this.excelFileGenerator.setConfigFile(this.configFileJson, this.monthlyConfigFile, this.listCodeFile);
-            this.excelFileGenerator.generate(this.path, openMeteoForecastList);
+            Path path = this.generatePaths.generateNewPath();
+            this.excelFileGenerator.setConfigFile(configFileJson, monthlyConfigFile, listCodeFile);
+            this.excelFileGenerator.generate(path, openMeteoForecastList);
         }
         catch (Exception e) {
             System.out.println("use case exception: " + e.getMessage());

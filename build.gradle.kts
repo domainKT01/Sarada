@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.2.5"
+version = "2.2.6"
 
 javafx {
     version = "21"
@@ -77,9 +77,11 @@ dependencies {
     //service
     implementation("org.apache.poi:poi:5.3.0")
     implementation("org.apache.poi:poi-ooxml:5.3.0")
-    // Forzar una versión de log4j
-    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
-    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    implementation("org.slf4j:slf4j-api:2.0.17")
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    implementation("ch.qos.logback:logback-classic:1.5.18")
 
     //task manager
     implementation("org.quartz-scheduler:quartz:2.3.0")
