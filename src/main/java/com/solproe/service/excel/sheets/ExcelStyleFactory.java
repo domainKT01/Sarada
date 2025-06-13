@@ -1,12 +1,24 @@
 package com.solproe.service.excel.sheets;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 public class ExcelStyleFactory {
     private final Workbook workbook;
+    private final Sheet sheet;
 
-    public ExcelStyleFactory(Workbook workbook) {
+    public ExcelStyleFactory(Workbook workbook, Sheet sheet) {
         this.workbook = workbook;
+        this.sheet = sheet;
     }
 
     public CellStyle createHeaderTitleStyle(short size) {
@@ -19,7 +31,8 @@ public class ExcelStyleFactory {
         return style;
     }
 
-    public CellStyle createBorderedStyle(boolean bold, boolean center, String... colorBackground) {
+    public CellStyle createBorderedStyle(boolean bold, boolean center, boolean top, boolean bottom,
+                                         boolean left, boolean right, String... colorBackground) {
         CellStyle style = workbook.createCellStyle();
         if (bold) {
             Font font = workbook.createFont();
@@ -44,21 +57,63 @@ public class ExcelStyleFactory {
             }
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
-        style.setBorderTop(BorderStyle.MEDIUM);
-        style.setBorderBottom(BorderStyle.MEDIUM);
-        style.setBorderLeft(BorderStyle.MEDIUM);
-        style.setBorderRight(BorderStyle.MEDIUM);
+
+        if (top) {
+            style.setBorderTop(BorderStyle.MEDIUM);
+        }
+
+        if (bottom) {
+            style.setBorderBottom(BorderStyle.MEDIUM);
+        }
+
+        if (left) {
+            style.setBorderLeft(BorderStyle.MEDIUM);
+        }
+
+        if (right) {
+            style.setBorderRight(BorderStyle.MEDIUM);
+        }
         return style;
     }
 
-    public CellStyle createCenterAlignedStyle() {
-        CellStyle style = workbook.createCellStyle();
-        return style;
-    }
+    public void applyStyleBorder(boolean start, boolean end, int numberCells, Cell startCell, boolean bold, boolean center) {
+        int countCell = startCell.getColumnIndex();
+        Row row = this.sheet.getRow(startCell.getRow().getRowNum());
+        for (int i = 0; i < numberCells; i++) {
+            if (i == 0 && start) {
+                try {
+                    row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
+                            true, start, false));
+                    countCell++;
+                    continue;
+                }
+                catch (Exception e) {
+                    throw new RuntimeException("error apply style start", e);
+                }
+            }
 
-    public CellStyle createRightAlignedStyle() {
-        CellStyle style = workbook.createCellStyle();
-        style.setAlignment(HorizontalAlignment.RIGHT);
-        return style;
+            if (i == (numberCells - 1) && end) {
+                try {
+                    row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
+                            true, false, end));
+                    countCell++;
+                    continue;
+                }
+                catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    throw new RuntimeException("error apply style end", e);
+                }
+            }
+
+            try {
+                row.getCell(countCell).setCellStyle(createBorderedStyle(false, true, true,
+                        true, false, false));
+                countCell++;
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException("error apply style middle", e);
+            }
+        }
     }
 }

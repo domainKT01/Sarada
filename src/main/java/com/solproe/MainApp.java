@@ -17,7 +17,10 @@ public class MainApp extends Application {
     public void start(Stage stage) throws IOException {
         ValidateLoad validateLoad = new ValidateLoad("config.properties", "Sarada");
         if (!validateLoad.validateFirstRun()) {
-            ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("config.properties", "Sarada");
+            String[] dirName = {
+                    "Sarada"
+            };
+            ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("config.properties", dirName);
             boolean bool = config.createPropertyFile();
         }
 

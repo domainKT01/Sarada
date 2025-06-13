@@ -7,7 +7,6 @@ import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
-
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 
@@ -63,23 +62,29 @@ public class CreateConfigFileUseCase {
 
     private JsonObject buildConfigFileThreshold(ConfigFileThreshold data) {
         JsonObject json = new JsonObject();
-        json.addProperty("forestFireThresholdOrange", data.getForestFireThresholdOrange());
-        json.addProperty("forestFireThresholdRed", data.getForestFireThresholdRed());
-        json.addProperty("precipitationThresholdOrange", data.getPrecipitationThresholdOrange());
-        json.addProperty("precipitationThresholdRed", data.getPrecipitationThresholdRed());
-        json.addProperty("windThresholdOrange", data.getWindThresholdOrange());
-        json.addProperty("windThresholdRed", data.getWindThresholdRed());
-        json.addProperty("precipitationRainPercentOrange", data.getPrecipitationRainPercentOrange());
-        json.addProperty("precipitationRainPercentRed", data.getPrecipitationRainPercentRed());
-        json.addProperty("ceraunicosThresholdRed", data.getCeraunicosThresholdRed());
-        json.addProperty("projectName", data.getIdProject());
-        json.addProperty("stateName", data.getStateName());
-        json.addProperty("cityName", data.getCityName());
-        json.addProperty("idProject", data.getIdProject());
-        json.addProperty("sciBoss", data.getSciBoss());
-        json.addProperty("sciBossContact", data.getSciBossContact());
-        json.addProperty("auxiliarSciBoss", data.getAuxiliarSciBoss());
-        json.addProperty("auxiliarSciBossContact", data.getAuxiliarSciBossContact());
+        try {
+            json.addProperty("forestFireThresholdOrange", data.getForestFireThresholdOrange());
+            json.addProperty("forestFireThresholdRed", data.getForestFireThresholdRed());
+            json.addProperty("precipitationThresholdOrange", data.getPrecipitationThresholdOrange());
+            json.addProperty("precipitationThresholdRed", data.getPrecipitationThresholdRed());
+            json.addProperty("windThresholdOrange", data.getWindThresholdOrange());
+            json.addProperty("windThresholdRed", data.getWindThresholdRed());
+            json.addProperty("precipitationRainPercentOrange", data.getPrecipitationRainPercentOrange());
+            json.addProperty("precipitationRainPercentRed", data.getPrecipitationRainPercentRed());
+            json.addProperty("ceraunicosThresholdRed", data.getCeraunicosThresholdRed());
+            json.addProperty("projectName", data.getIdProject());
+            json.addProperty("stateName", data.getStateName());
+            json.addProperty("cityName", data.getCityName());
+            json.addProperty("idProject", data.getIdProject());
+            json.addProperty("sciBoss", data.getSciBoss());
+            json.addProperty("sciBossContact", data.getSciBossContact());
+            json.addProperty("auxiliarSciBoss", data.getAuxiliarSciBoss());
+            json.addProperty("auxiliarSciBossContact", data.getAuxiliarSciBossContact());
+        }
+        catch (Exception e) {
+            System.out.println("build config threshold exc: " + e.getMessage());
+        }
+
         return json;
     }
 
@@ -112,7 +117,13 @@ public class CreateConfigFileUseCase {
     }
 
     private boolean generateFile(JsonObject jsonObject, Path path) {
-        this.configFileGenerator.generate(jsonObject, path);
-        return true;
+        try {
+            this.configFileGenerator.generate(jsonObject, path);
+            return true;
+        }
+        catch (Exception e) {
+            System.out.println("generate file exc: " + e.getMessage());
+            return false;
+        }
     }
 }

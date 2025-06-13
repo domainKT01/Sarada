@@ -10,11 +10,29 @@ import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
 import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.ValidateLoad;
+import org.jetbrains.annotations.NotNull;
 
 
 public class ConfigFileViewModel {
 
     public boolean createConfigFileThreshold(ThresholdInputModel input) {
+        ConfigFileThreshold config = getConfigFileThreshold(input);
+        ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
+        CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
+        String[] dirName = {
+                "Sarada"
+        };
+        ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", dirName);
+        ValidateLoad validateLoad = new ValidateLoad("threshold.json", "Sarada");
+        if (validateLoad.validateFirstRun()) {
+            return useCase.createConfigFile(config, configProperties);
+        }
+        else {
+            return useCase.createConfigFile(config, configProperties);
+        }
+    }
+
+    private static @NotNull ConfigFileThreshold getConfigFileThreshold(ThresholdInputModel input) {
         ConfigFileThreshold config = new ConfigFileThreshold();
         config.setForestFireThresholdOrange(input.getForestFireThresholdOrange());
         config.setForestFireThresholdRed(input.getForestFireThresholdRed());
@@ -33,27 +51,17 @@ public class ConfigFileViewModel {
         config.setSciBossContact(input.getSciBossContact());
         config.setAuxiliarSciBoss(input.getAuxiliarSciBoss());
         config.setAuxiliarSciBossContact(input.getAuxiliarSciBossContact());
-        ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
-        CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
-        ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", "Sarada");
-        ValidateLoad validateLoad = new ValidateLoad("threshold.json", "Sarada");
-        if (validateLoad.validateFirstRun()) {
-            return useCase.createConfigFile(config, configProperties);
-        }
-        else {
-            boolean bool = useCase.createPropertiesFile(configProperties);
-            if (bool) {
-                return useCase.createPropertiesFile(configProperties);
-            }
-            return false;
-        }
+        return config;
     }
 
 
     public boolean createConfigFileMonthly(MonthlyThresholdInputModel model) {
         ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase(configFileGenerator);
-        ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("monthlyThreshold.json", "Sarada");
+        String[] dirName = {
+                "Sarada"
+        };
+        ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("monthlyThreshold.json", dirName);
         return createConfigFileUseCase.createMonthlyConfigFile(model, config);
     }
 
@@ -62,7 +70,10 @@ public class ConfigFileViewModel {
         try {
             ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
             CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
-            ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("listCode.json", "Sarada");
+            String[] dirName = {
+                    "Sarada"
+            };
+            ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("listCode.json", dirName);
             bool = useCase.createCodeListConfig(listCodeDTO, config);
             return bool;
         } catch (Exception e) {

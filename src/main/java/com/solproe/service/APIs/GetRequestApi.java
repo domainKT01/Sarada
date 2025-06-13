@@ -11,6 +11,8 @@ import okhttp3.Response;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -32,24 +34,17 @@ public class GetRequestApi implements ApiCommandInterface, RequestInterface {
     @Override
     public void execute() {
         try {
-            this.request = new Request.Builder()
-                    .url(baseUrl)
-                    .build();
             this.requestApi.sendRequest(this.request);
         }
         catch (IOException e) {
             if (this.count < 3) {
-                try {
-                    ++this.count;
-                    Thread.sleep(2000);
-                    System.out.println("try #" + this.count);
-                    execute();
-                } catch (InterruptedException ex) {
-                    throw new RuntimeException(ex);
-                }
+                ++this.count;
+                System.out.println("try #" + this.count);
+                execute();
             }
             else {
                 ErrorLogger.log("get request exception: ", e);
+                throw new RuntimeException(e);
             }
         }
     }

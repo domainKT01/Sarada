@@ -11,7 +11,10 @@ class ConfigPropertiesGeneratorTest {
 
     @Test
     public void createPropertyFile() {
-        ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("config.properties", "Sarada");
+        String[] dirName = {
+                "Sarada"
+        };
+        ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("config.properties", dirName);
         boolean bool = config.createPropertyFile();
     }
 }

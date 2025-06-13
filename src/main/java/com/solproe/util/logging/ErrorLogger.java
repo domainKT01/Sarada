@@ -1,21 +1,63 @@
 package com.solproe.util.logging;
 
+import com.solproe.service.config.ConfigPropertiesGenerator;
+import com.solproe.util.OsInfo;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ErrorLogger {
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ErrorLogger.class);
+    private static final Logger logger = LoggerFactory.getLogger(ErrorLogger.class);
 
     public static void log(Throwable t) {
-        logger.error("Error no controlado: ", t);
+        try {
+            ErrorLogger.create(t);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(t.getMessage());
     }
 
     public static void log(String message, Throwable t) {
-        logger.error(message, t);
+        try {
+            ErrorLogger.create(t);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(t.getMessage());
     }
 
     public static void logInfo(String message) {
-        logger.info(message);
+
+    }
+
+    private static void create(Throwable t) {
+        Path path = new ConfigPropertiesGenerator("app.log", "Sarada").getAppConfigPath();
+        File file = new File(path.toUri());
+        if (Files.exists(path)) {
+            try (FileWriter fileWriter = new FileWriter(file, true)) {
+                fileWriter.write(t.getMessage() + "\r\n");
+            }
+            catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        else {
+            try {
+                Files.createFile(path);
+                try (FileWriter fileWriter = new FileWriter(file, true)) {
+                    fileWriter.write(t.getMessage() + "\r\n");
+                }
+                catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 }

@@ -7,7 +7,6 @@ import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.service.APIs.ApiCommandInvoker;
 import com.solproe.service.APIs.ApiService;
 import com.solproe.service.APIs.GetRequestApi;
-import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.service.config.ReadJsonConfigFile;
 import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
@@ -18,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
@@ -184,13 +184,22 @@ public class MainController implements Initializable {
             // --- Fin: Bloque candidato para Factory o Inyección de Dependencias ---
 
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
-            boolean bool = viewModel.generateReport(); // Asumo que esto puede ser una tarea larga, considera ejecutar en background
-            if (bool) {
-                System.out.println("true");
-            }
-            else {
-                System.out.println("false");
-            }
+            viewModel.generateReportAsync(
+                    _ -> {
+                        // Éxito → actualizar la UI en el hilo de JavaFX
+                        System.out.println("view model callback success");
+                        javafx.application.Platform.runLater(() ->
+                                showAlert(Alert.AlertType.INFORMATION, "Reporte generado", "El reporte fue generado correctamente.")
+                        );
+                    },
+                    e -> {
+                        // Error → mostrar alerta
+                        System.out.println("view model callback failed");
+                        javafx.application.Platform.runLater(() ->
+                                showAlert(Alert.AlertType.ERROR, "Error", e.getCause().toString())
+                        );
+                    }
+            ); // Asumo que esto puede ser una tarea larga, considera ejecutar en background
 
         } catch (Exception e) {
             // Mostrar error al usuario
@@ -205,5 +214,13 @@ public class MainController implements Initializable {
      */
     public ConfigFileViewModel getConfigFileViewModel() {
         return configFileViewModel;
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

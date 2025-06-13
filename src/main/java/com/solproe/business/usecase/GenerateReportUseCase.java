@@ -7,16 +7,19 @@ import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.service.config.ConfigPropertiesGenerator;
-import com.solproe.util.GeneratePaths;
+import com.solproe.util.logging.ErrorLogger;
 import okhttp3.Response;
+
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 public class GenerateReportUseCase implements RequestInterface {
     private RequestInterface requestInterface;
     private ExcelFileGenerator excelFileGenerator;
     private ReadConfigFile readConfigFile;
-    private final GeneratePaths generatePaths = new GeneratePaths();
+    private final ConfigPropertiesGenerator generatePaths = new ConfigPropertiesGenerator();
 
 
     public void setRequestInterface(RequestInterface requestInterface) {
@@ -31,8 +34,14 @@ public class GenerateReportUseCase implements RequestInterface {
         this.readConfigFile = readConfigFile;
     }
 
-    public void generateRequestApi() {
-        this.requestInterface.doRequest("https://api.open-meteo.com/v1/forecast?latitude=6.7187&longitude=-75.9073&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean,precipitation_sum&forecast_days=14");
+    public boolean generateRequestApi() {
+        try {
+            this.requestInterface.doRequest("https://api.open-meteo.com/v1/forecast?latitude=6.7187&longitude=-75.9073&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean,precipitation_sum&forecast_days=14");
+            return true;
+        }
+        catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -48,24 +57,53 @@ public class GenerateReportUseCase implements RequestInterface {
             OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
             ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
-            JsonObject configFileJson = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("threshold.json",
-                    "Sarada").getAppConfigPath());
-            JsonObject monthlyConfigFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("monthlyThreshold.json", "Sarada")
-                    .getAppConfigPath());
-            JsonObject listCodeFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("listCode.json", "Sarada")
-                    .getAppConfigPath());
+            String[] dirName = {
+                    "Sarada"
+            };
+            JsonObject configFileJson = null;
+            JsonObject monthlyConfigFile = null;
+            JsonObject listCodeFile = null;
+            try {
+                ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator("threshold.json", "Sarada");
+                Path path = configPropertiesGenerator.getAppConfigPath();
+                System.out.println("threshold path: " + path);
+                configFileJson = readConfigFileUseCase.readConfigFile(path);
+            } catch (Exception e) {
+                System.out.println("threshold.json error");
+                throw new RuntimeException(e);
+            }
+
+            try {
+                monthlyConfigFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("monthlyThreshold.json", dirName)
+                        .getAppConfigPath());
+            } catch (Exception e) {
+                System.out.println("monthlyThreshold.json error");
+                throw new RuntimeException(e);
+            }
+
+            try {
+                listCodeFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("listCode.json", dirName)
+                        .getAppConfigPath());
+            }
+            catch (Exception e) {
+                System.out.println("listCode.json error");
+                throw new RuntimeException(e);
+            }
+
             LocalDate localDate = LocalDate.now();
             int year = localDate.getYear();
             int month = localDate.getMonthValue();
             int day = localDate.getDayOfMonth();
-            this.generatePaths.setDirName("Sarada");
-            this.generatePaths.setFileName("report" + "-" + year + "-" + month + "-" + day);
-            Path path = this.generatePaths.generateNewPath();
+            this.generatePaths.setDirName(dirName);
+            this.generatePaths.setFilename("report" + "-" + year + "-" + month + "-" + day + ".xlsx");
+            Path path = this.generatePaths.getAppConfigPath();
             this.excelFileGenerator.setConfigFile(configFileJson, monthlyConfigFile, listCodeFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);
         }
-        catch (Exception e) {
+        catch (RuntimeException e) {
             System.out.println("use case exception: " + e.getMessage());
+            ErrorLogger.log(e);
+            throw new RuntimeException(e);
         }
     }
 

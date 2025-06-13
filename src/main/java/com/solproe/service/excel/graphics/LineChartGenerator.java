@@ -58,7 +58,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 };
                 createGraphic(parameterSource, anchorTemp);
                 rowFinal = sheetDataModel.getStartRow() + height + 3;
-                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+//                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
                 rowFinal += space;
                 Row monthlyTitle = sheet.createRow(rowFinal);
                 this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
@@ -83,7 +83,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                         sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
                 rowFinal = sheetDataModel.getStartRow() + height + 2;
                 createGraphic(parameterSource1, xssfClientAnchor1);
-                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "%");
+//                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "%");
                 //second graphic
                 rowFinal += space;
                 Row row = sheet.createRow(rowFinal);
@@ -102,7 +102,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                         rowFinal, 9, rowFinal + height);
                 createGraphic(parameterSource2, xssfClientAnchor2);
                 rowFinal += height + 3;
-                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
+//                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel, "mm");
                 rowFinal += 3;
                 Row monthlyTitle = sheet.createRow(rowFinal);
                 this.generateSectionSheet.createCellsRow(sheet, 0, 8, monthlyTitle);
@@ -127,7 +127,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 };
                 createGraphic(parameterSource, anchorWind);
                 rowFinal += sheetDataModel.getStartRow() + height;
-                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+//                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
             } else if (sheetDataModel.getReportType() == TypeReportSheet.ceraunic) {
                 space += 2;
                 titleRow.getCell(0).setCellValue("MONITOREO DE ESTADO DEL CLIMA PARA 14 DÍAS DE PRONÓSTICO");
@@ -141,7 +141,7 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 };
                 createGraphic(parameterSource, anchorCeraunic);
                 rowFinal = sheetDataModel.getStartRow() + height + 3;
-                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
+//                rowFinal = this.generateSectionSheet.createFooterThresholdDaily(sheet, rowFinal, sheetDataModel);
                 rowFinal += 3;
             }
         } catch (Exception e) {

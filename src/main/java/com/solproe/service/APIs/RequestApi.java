@@ -2,12 +2,16 @@ package com.solproe.service.APIs;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.solproe.business.gateway.RequestApiService;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.util.logging.ErrorLogger;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+
 import java.io.IOException;
 import java.net.ConnectException;
 
@@ -22,11 +26,11 @@ public class RequestApi {
 
 
     void sendRequest(Request request) throws IOException {
+
         try (Response response = this.okHttpClient.newCall(request).execute()) {
-            if (response.isSuccessful()) {
+            if (response.isSuccessful() && response.body() != null) {
                 ResponseBody responseBody = response.body();
                 Gson gson = new Gson();
-                assert responseBody != null;
                 JsonObject jsonObject = gson.fromJson(responseBody.string(), JsonObject.class);
                 this.onResponse(jsonObject);
             }

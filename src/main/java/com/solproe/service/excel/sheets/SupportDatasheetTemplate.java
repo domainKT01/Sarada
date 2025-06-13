@@ -2,6 +2,7 @@ package com.solproe.service.excel.sheets;
 
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.ExcelSheetTemplate;
+import com.solproe.util.logging.ErrorLogger;
 import org.apache.poi.ss.usermodel.*;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             createCodeChart(79, 1, parametersCeraunic, this.dataModel.get(1));
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ErrorLogger.log(e);
             System.out.println("support data exc: " + e.getMessage());
         }
     }
@@ -137,7 +138,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ErrorLogger.log(e);
             System.out.println("chart exc: " + e.getMessage());
         }
     }
@@ -262,7 +263,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            ErrorLogger.log(e);
         }
     }
 
@@ -299,7 +300,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
+            ErrorLogger.log(e);
         }
     }
 }

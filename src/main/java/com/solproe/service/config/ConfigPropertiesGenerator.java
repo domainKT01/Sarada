@@ -9,12 +9,14 @@ import java.util.Properties;
 
 public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInterface {
     private String fileName;
-    private String appConfigDirName; // Nombre del subdirectorio de tu app
+    private String[] appConfigDirName; // Nombre del subdirectorio de tu app
 
-    public ConfigPropertiesGenerator(String fileName, String appConfigDirName) {
+    public ConfigPropertiesGenerator(String fileName, String... appConfigDirName) {
         this.fileName = fileName;
         this.appConfigDirName = appConfigDirName;
     }
+
+    public ConfigPropertiesGenerator() {}
 
     @Override
     public void setFilename(String filename) {
@@ -22,39 +24,37 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
     }
 
     @Override
-    public void setDirName(String dirName) {
+    public void setDirName(String[] dirName) {
         this.appConfigDirName = dirName;
     }
 
     @Override
     public Path getAppConfigPath() {
-        Path configDir;
-
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("win")) {
-            // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
-            String appData = System.getenv("APPDATA");
-            if (appData == null) { // Fallback si APPDATA no está configurado (raro)
-                configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName);
-            } else {
-                configDir = Paths.get(appData, this.appConfigDirName);
-            }
-        } else if (os.contains("nix") || os.contains("nux") || os.contains("mac")) {
-            // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
-            configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName); // O ".config", depende de tu preferencia
-            System.out.println("path: " + configDir);
-        } else {
-            // Fallback para otros OS, o si no se puede determinar
-            configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName);
-        }
-
+        Path configDir = null;
         try {
-            Files.createDirectories(configDir); // Asegurarse de que el directorio existe
-        } catch (IOException e) {
-            System.err.println("Error creating config directory: " + e.getMessage());
-            // Puedes lanzar una excepción o manejarlo según tu política de errores
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                System.out.println("so: " + os);
+                // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
+                String appData = System.getenv("APPDATA");
+                if (appData == null) { // Fallback si APPDATA no está configurado (raro)
+                    configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming",  "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+                } else {
+                    configDir = Paths.get(appData, "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+                }
+            } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+                // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
+                configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
+            } else {
+                // Fallback para otros OS, o si no se puede determinar
+                configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+            }
         }
-        return configDir.resolve(fileName); // Resuelve la ruta completa del archivo
+        catch (Exception e) {
+            System.out.println("error");
+        }
+        assert configDir != null;
+        return configDir.resolve(this.fileName); // Resuelve la ruta completa del archivo
     }
 
     // Tus métodos createPropertyFile y addProperties usarían getAppConfigPath()

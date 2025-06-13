@@ -14,14 +14,12 @@ public class ExcelService {
     }
 
     public Workbook createWorkbook() {
-        Workbook workbook = new XSSFWorkbook();
-        return workbook;
+        return new XSSFWorkbook();
     }
 
-    public void saveWorkbook(Workbook workbook, String name) {
-        System.out.println("path: " + this.path);
+    public void saveWorkbook(Workbook workbook) {
         try {
-            File fileWriter = new File(this.path.toUri().getPath() + name);
+            File fileWriter = new File(this.path.toUri().getPath());
             OutputStream outputStream = new FileOutputStream(fileWriter);
             workbook.write(outputStream);
             workbook.close();
@@ -30,6 +28,7 @@ public class ExcelService {
         catch (IOException e) {
             System.out.println("exc: " + e.getMessage());
             ErrorLogger.log(e);
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.solproe.ui.viewModels;
 
+import com.solproe.business.repository.ErrorCallback;
+import com.solproe.business.repository.SuccessCallback;
 import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.util.ThreadUtil;
 import javafx.concurrent.Task;
 
-public class GenerateReportViewModel {
+public class GenerateReportViewModel<T> {
     private final GenerateReportUseCase useCase;
     private boolean res;
 
@@ -12,34 +14,26 @@ public class GenerateReportViewModel {
         this.useCase = useCase;
     }
 
-    public boolean generateReport() throws InterruptedException {
-        Task<Void> task = new Task<>() {
+    public void generateReportAsync(SuccessCallback<Boolean> onSuccess, ErrorCallback onFailure) {
+        Task<Boolean> task = new Task<Boolean>() {
             @Override
-            protected Void call() throws Exception {
-                useCase.generateRequestApi(); // Toda la lógica pesada está delegada
-                return null;
+            protected Boolean call() {
+                var res = useCase.generateRequestApi();
+                return res;
             }
         };
 
-        task.setOnFailed(e -> {
-            Throwable error = task.getException();
-            if (error != null) {
-                error.printStackTrace();
-                System.out.println("Error al generar el reporte: " + error.getMessage());
-                setRes(false);
-            }
+        task.setOnSucceeded(_ -> {
+            Boolean res = task.getValue();
+            onSuccess.onSuccess(res);
         });
 
-        task.setOnSucceeded( e -> {
-            setRes(true);
+        task.setOnFailed(_ -> {
+            Throwable error = task.getException();
+            System.out.println("Error al generar el reporte: " + (error != null ? error.getMessage() : "Error desconocido"));
+            onFailure.onError(error);
         });
 
         ThreadUtil.runAsync(task);
-        Thread.sleep(6000);
-        return true;
-    }
-
-    public void setRes(boolean res) {
-        this.res = res;
     }
 }

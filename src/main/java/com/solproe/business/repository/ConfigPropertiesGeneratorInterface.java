@@ -15,5 +15,5 @@ public interface ConfigPropertiesGeneratorInterface {
 
     void setFilename(String filename);
 
-    void setDirName(String dirName);
+    void setDirName(String[] dirName);
 }

@@ -6,6 +6,7 @@ import com.solproe.business.domain.WeatherNode;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.service.excel.sheets.GenericSheetTemplate;
+import com.solproe.util.logging.ErrorLogger;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.nio.file.Path;
@@ -20,15 +21,23 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
 
 
     public ReportExcelGenerator(ExcelService excelService) {
-        this.excelService = excelService;
+        try {
+            this.excelService = excelService;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void generateExcelFile() {
-        Workbook workbook = excelService.createWorkbook();
-        ExcelSheetGenerator sheetGenerator = new ExcelSheetGenerator(new GenericSheetTemplate());
-        sheetGenerator.generateSheets(workbook, this.dataModelList);
-        this.excelService.setPath(this.path);
-        this.excelService.saveWorkbook(workbook, ".xlsx");
+        try {
+            Workbook workbook = excelService.createWorkbook();
+            ExcelSheetGenerator sheetGenerator = new ExcelSheetGenerator(new GenericSheetTemplate());
+            sheetGenerator.generateSheets(workbook, this.dataModelList);
+            this.excelService.setPath(this.path);
+            this.excelService.saveWorkbook(workbook);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -110,8 +119,9 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
             this.generateExcelFile();
         }
         catch (Exception e) {
-            e.printStackTrace();
+            ErrorLogger.log(e);
             System.out.println("report generator exception: " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
     }

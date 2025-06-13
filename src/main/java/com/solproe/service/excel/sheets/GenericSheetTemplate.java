@@ -5,6 +5,7 @@ import com.solproe.service.excel.ExcelSheetTemplate;
 import com.solproe.service.excel.TypeReportSheet;
 import com.solproe.service.excel.graphics.ExcelGenerateGraphics;
 import com.solproe.service.excel.graphics.LineChartGenerator;
+import com.solproe.util.logging.ErrorLogger;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFDrawing;
@@ -22,7 +23,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         this.sheet = workbook.createSheet(model.getSheetName());
 
         this.sectionBuilder = new GenerateSectionSheet(this, this.workbook);
-        this.styleFactory = new ExcelStyleFactory(workbook);
+        this.styleFactory = new ExcelStyleFactory(workbook, this.sheet);
         this.chartGenerator = new LineChartGenerator(this.sectionBuilder, this.styleFactory);
         int row = 0;
 
@@ -33,7 +34,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
             try {
                 row = this.sectionBuilder.createHeader(sheet, row, model);
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorLogger.log(e);
                 throw new RuntimeException(e);
             }
         }
@@ -47,6 +48,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
                 model.setStartRow(row);
                 row = this.chartGenerator.createChart(sheet, drawing, workbook, model);
             } catch (Exception e) {
+                ErrorLogger.log(e);
                 throw new RuntimeException(e);
             }
         }
@@ -56,9 +58,9 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         //===============
         {
             try {
-                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
+//                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
             } catch (Exception e) {
-                e.printStackTrace();
+                ErrorLogger.log(e);
                 throw new RuntimeException(e);
             }
         }
@@ -69,9 +71,10 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         {
             row += 3;
             try {
-                row = this.sectionBuilder.createNotificationChart(sheet, row, model);
+//                row = this.sectionBuilder.createNotificationChart(sheet, row, model);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+                ErrorLogger.log(e);
                 throw new RuntimeException(e);
             }
         }

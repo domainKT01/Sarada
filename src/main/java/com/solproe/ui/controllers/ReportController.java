@@ -46,11 +46,6 @@ public class ReportController implements Initializable {
 
             // Inyectar al ViewModel
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
-            try {
-                boolean bool = viewModel.generateReport();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         });
     }
 }

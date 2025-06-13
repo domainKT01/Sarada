@@ -3,7 +3,6 @@ package com.solproe.service.config;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.solproe.business.repository.ConfigFileGenerator;
-
 import java.io.*;
 import java.nio.file.Path;
 
@@ -15,6 +14,7 @@ public class JsonConfigFileGenerator implements ConfigFileGenerator {
         Gson gson = new Gson();
         JsonObject finalJson;
 
+        assert path != null;
         File file = new File(path.toUri());
         if (file.exists()) {
             try (Reader reader = new FileReader(file)) {
@@ -26,6 +26,8 @@ public class JsonConfigFileGenerator implements ConfigFileGenerator {
         } else {
             finalJson = data;
         }
+
+        System.out.println("file config json: " + finalJson);
 
         try (Writer writer = new FileWriter(file)) {
             gson.toJson(finalJson, writer);

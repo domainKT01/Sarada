@@ -9,7 +9,6 @@ public class ReadJsonConfigFile implements ReadConfigFile {
 
     @Override
     public File readFile(Path filePath) {
-        System.out.println(filePath);
         File fi = new File(filePath.toUri());
         return fi;
     }

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.2.6"
+version = "2.5.0"
 
 javafx {
     version = "21"
@@ -78,10 +78,12 @@ dependencies {
     implementation("org.apache.poi:poi:5.3.0")
     implementation("org.apache.poi:poi-ooxml:5.3.0")
 
-    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    // Logging
     implementation("org.slf4j:slf4j-api:2.0.17")
-    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    implementation("ch.qos.logback:logback-classic:1.5.18")
+    implementation("org.apache.logging.log4j:log4j-api:2.24.3")
+    implementation("org.apache.logging.log4j:log4j-core:2.24.3")
+    implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.24.3")
+
 
     //task manager
     implementation("org.quartz-scheduler:quartz:2.3.0")
@@ -102,7 +104,7 @@ java {
     registerFeature("feature") {
         usingSourceSet(sourceSets["main"])
     }
-    modularity.inferModulePath = true
+    modularity.inferModulePath.set(true)
 }
 
 tasks.register<Copy>("copyDependencies") {

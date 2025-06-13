@@ -2,6 +2,7 @@ package com.solproe.service.excel;
 
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.service.excel.sheets.SupportDatasheetTemplate;
+import com.solproe.util.logging.ErrorLogger;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class ExcelSheetGenerator {
         }
         catch (Exception e) {
             System.out.println("sleep exception...");
+            ErrorLogger.log(e);
         }
         for (SheetDataModel data : datasets) {
             this.sheetTemplate.generate(workbook, data);
