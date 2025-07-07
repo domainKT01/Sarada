@@ -46,13 +46,13 @@ public class ExcelStyleFactory {
         }
         if (colorBackground.length != 0) {
             switch (colorBackground[0]) {
-                case "ROJA" :
+                case "ROJA":
                     style.setFillForegroundColor(IndexedColors.RED.getIndex());
                     break;
-                case "NARANJA" :
+                case "NARANJA":
                     style.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
                     break;
-                case "AMARILLA" :
+                case "AMARILLA":
                     style.setFillForegroundColor(IndexedColors.YELLOW.getIndex());
             }
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -77,43 +77,44 @@ public class ExcelStyleFactory {
     }
 
     public void applyStyleBorder(boolean start, boolean end, int numberCells, Cell startCell, boolean bold, boolean center) {
-        int countCell = startCell.getColumnIndex();
-        Row row = this.sheet.getRow(startCell.getRow().getRowNum());
-        for (int i = 0; i < numberCells; i++) {
-            if (i == 0 && start) {
-                try {
-                    row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
-                            true, start, false));
-                    countCell++;
-                    continue;
-                }
-                catch (Exception e) {
-                    throw new RuntimeException("error apply style start", e);
-                }
-            }
+        try {
+            if (startCell != null) {
+                int countCell = startCell.getColumnIndex();
+                Row row = this.sheet.getRow(startCell.getRow().getRowNum());
+                for (int i = 0; i < numberCells; i++) {
+                    if (i == 0 && start) {
+                        row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
+                                true, start, false));
+                        countCell++;
+                        continue;
+                    }
 
-            if (i == (numberCells - 1) && end) {
-                try {
-                    row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
-                            true, false, end));
-                    countCell++;
-                    continue;
-                }
-                catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    throw new RuntimeException("error apply style end", e);
-                }
-            }
+                    if (i == (numberCells - 1) && end) {
+                        try {
+                            row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
+                                    true, false, end));
+                            countCell++;
+                            continue;
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                            throw new RuntimeException("error apply style end", e);
+                        }
+                    }
 
-            try {
-                row.getCell(countCell).setCellStyle(createBorderedStyle(false, true, true,
-                        true, false, false));
-                countCell++;
+                    try {
+                        row.getCell(countCell).setCellStyle(createBorderedStyle(false, true, true,
+                                true, false, false));
+                        countCell++;
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                        System.out.println("apply style border..");
+                        throw new RuntimeException("error apply style middle", e);
+                    }
+                }
             }
-            catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException("error apply style middle", e);
-            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("apply style");
+            throw new RuntimeException(e);
         }
     }
 }

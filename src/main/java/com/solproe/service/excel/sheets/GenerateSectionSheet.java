@@ -531,9 +531,9 @@ public class GenerateSectionSheet {
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();
                                 row1.getCell(3).setCellValue(month);
-                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
                                 row1.getCell(4).setCellValue(titles[0]);
-                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true, "ROJA"));
                                 sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                                 outRange += 1;
                             }
@@ -544,9 +544,9 @@ public class GenerateSectionSheet {
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();
                                 row1.getCell(3).setCellValue(month);
-                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
                                 row1.getCell(4).setCellValue(titles[0]);
-                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "ROJA"));
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true, "ROJA"));
                                 sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                                 outRange += 1;
                             }
@@ -558,9 +558,9 @@ public class GenerateSectionSheet {
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();
                                 row1.getCell(3).setCellValue(month);
-                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
                                 row1.getCell(4).setCellValue(titles[1]);
-                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true, "NARANJA"));
                                 sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                                 outRange += 1;
                             }
@@ -570,9 +570,9 @@ public class GenerateSectionSheet {
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();
                                 row1.getCell(3).setCellValue(month);
-                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
                                 row1.getCell(4).setCellValue(titles[1]);
-                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true, "NARANJA"));
                                 sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                                 outRange += 1;
                             }
@@ -584,9 +584,9 @@ public class GenerateSectionSheet {
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();
                                 row1.getCell(3).setCellValue(month);
-                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
                                 row1.getCell(4).setCellValue(titles[2]);
-                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "AMARILLA"));
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true, "AMARILLA"));
                                 sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                                 outRange += 1;
                             }
@@ -596,9 +596,9 @@ public class GenerateSectionSheet {
                                 int index = data.indexOf("DataPercent");
                                 String month = data.substring(0, index).trim();
                                 row1.getCell(3).setCellValue(month);
-                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
+                                row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
                                 row1.getCell(4).setCellValue(titles[2]);
-                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, "NARANJA"));
+                                row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true, "NARANJA"));
                                 sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 4, 6));
                                 outRange += 1;
                             }
@@ -616,8 +616,15 @@ public class GenerateSectionSheet {
     }
 
     public void createCellsRow(Sheet sheet, int startCell, int endCell, Row row) {
-        for (int i = startCell; i <= endCell; i++) {
-            Cell cell = row.createCell(i);
+        try {
+            for (int i = startCell; i <= endCell; i++) {
+                Cell cell = row.createCell(i);
+            }
+        }
+        catch (Exception e) {
+            System.out.println("create cells row");
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -690,278 +697,278 @@ public class GenerateSectionSheet {
         return startRow + count.get();
     }
 
-//    public int createNotificationChart(Sheet sheet, int row, SheetDataModel model) {
-//        Row title = sheet.createRow(row);
-//        createCellsRow(sheet, 0, 8, title);
-//        title.getCell(0).setCellValue("MECANISMOS  DE NOTIFICACIÓN Y AVISO PREVIO ");
-//        title.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-//        sheet.addMergedRegion(new CellRangeAddress(title.getRowNum(), title.getRowNum(), 0, 8));
-//        row += 2;
-//        for (int i = 0; i<= 16; i++) {
-//            Row row1 = sheet.createRow(row + i);
-//            createCellsRow(sheet, 0, 8, row1);
-//        }
-//        {
-//            Row header = sheet.getRow(row);
-//            header.getCell(0).setCellValue("TIPO DE ALERTA");
-//            header.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-//            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 0, 2));
-//            header.setHeight((short) 1600);
-//            header.getCell(3).setCellValue("FECHA DE NOTIFICACIÓN (Un día antes y el día esperado de Ocurrencia)\n");
-//            header.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-//            header.getCell(4).setCellValue("NOTIFICACIÓN Y CADENA DE LLAMADO");
-//            header.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-//            header.getCell(5).setCellValue("CONTACTO RESPONSABLE");
-//            header.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-//            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 5, 6));
-//            header.getCell(7).setCellValue("MENSAJE");
-//            header.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(true, true));
-//            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 7, 8));
-//            row += 1;
-//        }
-//        String[] notification = new String[0];
-//        String[] message = new String[0];
-//        String[] alert = new String[0];
-//        if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
-//            notification = new String[] {
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja" +
-//                            " y activación de mecanismos de alarma",
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico:",
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área" +
-//                            " y/o Auxiliar del Comandante de Incidentes al número telefónico:",
-//            };
-//
-//            message = new String[] {
-//                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR INCENDIO FORESTAL",
-//                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS" +
-//                            " PARA REACCIÓN INMEDIATA) ALERTA ROJA POR INCENDIO FORESTAL",
-//                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A INCENDIOS FORESTALES",
-//                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
-//                            "REACCIÓN INMEDIATA) ALERTA ROJA POR INCENDIO FORESTAL",
-//            };
-//
-//            alert = new String[] {
-//                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
-//                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
-//                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
-//                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
-//            };
-//        }
-//        else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
-//            notification = new String[] {
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta" +
-//                            " Roja y activación de mecanismos de alarma",
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico:",
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
-//                            "Auxiliar del Comandante de Incidentes al número telefónico:",
-//            };
-//
-//            message = new String[] {
-//                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR MOVIMIENTOS EN MASA",
-//                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
-//                            "REACCIÓN INMEDIATA) ALERTA ROJA POR MOVIMIENTOS EN MASA",
-//                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A MOVIMIENTOS EN MASA",
-//                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
-//                            "REACCIÓN INMEDIATA) ALERTA ROJA POR MOVIMIENTOS EN MASA",
-//            };
-//
-//            alert = new String[] {
-//                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
-//                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
-//                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
-//                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
-//            };
-//        } else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
-//            notification = new String[] {
-//                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA"
-//            };
-//
-//            message = new String[] {
-//                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA) ALERTA ROJA POR FENÓMENOS CERÁUNICOS"
-//            };
-//
-//            alert = new String[] {
-//                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n"
-//            };
-//        } else if (model.getReportType() == TypeReportSheet.ceraunic) {
-//            notification = new String[] {
-//                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja y activación de mecanismos de alarma"
-//            };
-//
-//            message = new String[] {
-//                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA) ALERTA ROJA POR FENÓMENOS CERÁUNICOS"
-//            };
-//
-//            alert = new String[] {
-//                   "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA"
-//            };
-//        }
-//        row = generateChartNotification(sheet, row, model, notification, message, alert);
-//        return  row + 3;
-//    }
+    public int createNotificationChart(Sheet sheet, int row, SheetDataModel model) {
+        Row title = sheet.createRow(row);
+        createCellsRow(sheet, 0, 8, title);
+        title.getCell(0).setCellValue("MECANISMOS  DE NOTIFICACIÓN Y AVISO PREVIO ");
+        title.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
+        sheet.addMergedRegion(new CellRangeAddress(title.getRowNum(), title.getRowNum(), 0, 8));
+        row += 2;
+        for (int i = 0; i<= 16; i++) {
+            Row row1 = sheet.createRow(row + i);
+            createCellsRow(sheet, 0, 8, row1);
+        }
+        {
+            Row header = sheet.getRow(row);
+            header.getCell(0).setCellValue("TIPO DE ALERTA");
+            header.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 0, 2));
+            header.setHeight((short) 1600);
+            header.getCell(3).setCellValue("FECHA DE NOTIFICACIÓN (Un día antes y el día esperado de Ocurrencia)\n");
+            header.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
+            header.getCell(4).setCellValue("NOTIFICACIÓN Y CADENA DE LLAMADO");
+            header.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
+            header.getCell(5).setCellValue("CONTACTO RESPONSABLE");
+            header.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 5, 6));
+            header.getCell(7).setCellValue("MENSAJE");
+            header.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(true, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(header.getRowNum(), header.getRowNum(), 7, 8));
+            row += 1;
+        }
+        String[] notification = new String[0];
+        String[] message = new String[0];
+        String[] alert = new String[0];
+        if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja" +
+                            " y activación de mecanismos de alarma",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área" +
+                            " y/o Auxiliar del Comandante de Incidentes al número telefónico:",
+            };
 
-//    public int generateChartNotification(Sheet sheet, int row, SheetDataModel model, String[] notification, String[] message, String[] alert) {
-//        int rowsNum = 3;
-//        for (int i = 0; i < alert.length; i++) {
-//            Row row1 = sheet.getRow(row);
-//            createCellsRow(sheet, 0, 8, row1);
-//            row1.getCell(0).setCellValue(alert[i]);
-//            row1.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 0, 2));
-//            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 3, 3));
-//            row1.getCell(4).setCellValue(notification[i]);
-//            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 4, 4));
-//            row1.getCell(5).setCellValue("Jefe Sci");
-//            row1.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 5, 6));
-//            Row bossSciContact = sheet.createRow(row + 1);
-//            createCellsRow(sheet, 5, 6, bossSciContact);
-//            bossSciContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            bossSciContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("sciBossContact").getAsLong());
-//            sheet.addMergedRegion(new CellRangeAddress(bossSciContact.getRowNum(), bossSciContact.getRowNum(), 5, 6));
-//            Row auxiliarBoss = sheet.createRow(row + 2);
-//            createCellsRow(sheet, 5, 6, auxiliarBoss);
-//            auxiliarBoss.getCell(5).setCellValue("Auxiliar Jefe SCI");
-//            auxiliarBoss.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(auxiliarBoss.getRowNum(), auxiliarBoss.getRowNum(), 5, 6));
-//            Row auxiliarBossContact = sheet.createRow(row + 3);
-//            createCellsRow(sheet, 5, 6, auxiliarBossContact);
-//            auxiliarBossContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("auxiliarSciBossContact").getAsLong());
-//            auxiliarBossContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(auxiliarBossContact.getRowNum(), auxiliarBossContact.getRowNum(), 5, 6));
-//            row1.getCell(7).setCellValue(message[i]);
-//            row1.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(false, true));
-//            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 7, 8));
-//            List<Double> valuesDaily;
-//            List<Double> valuesMonthly = new ArrayList<>();
-//            if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
-//                valuesDaily = model.getArrTemperature();
-//                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
-//                List<String> months = new ArrayList<>();
-//                int count = 0;
-//                for (String key : map.keySet()) {
-//                    if (count < 5) {
-//                        count += 1;
-//                        continue;
-//                    }
-//                    if (key.contains("DataGrade")) {
-//                        valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
-//                        int index = key.indexOf("DataGrade");
-//                        String month = key.substring(0, index).trim();
-//                        months.add(month);
-//                    }
-//                }
-//
-//                switch (i) {
-//                    case 0 :
-//                        Double thresholdOrange = model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble();
-//                        Double thresholdRed = model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble();
-//                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
-//                        break;
-//                    case 1 :
-//                        Double threshold2 = model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble();
-//                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
-//                        break;
-//                    case 2 :
-//                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdTemperature").getAsDouble();
-//                        Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble();
-//                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
-//                        break;
-//                    case 3 :
-//                        Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble();
-//                        setFieldThresholdChart(0.0, threshold4, valuesMonthly, row1, months, "months", "red");
-//                        break;
-//                }
-//            }
-//            else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
-//                valuesDaily = model.getArrPrecipitationPercent();
-//                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
-//                List<String> months = new ArrayList<>();
-//                int count = 0;
-//                for (String key : map.keySet()) {
-//                    if (count < 5) {
-//                        count += 1;
-//                        continue;
-//                    }
-//                    if (key.contains("DataPercent")) {
-//                        valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
-//                        int index = key.indexOf("DataPercent");
-//                        String month = key.substring(0, index).trim();
-//                        months.add(month);
-//                    }
-//                }
-//
-//                switch (i) {
-//                    case 0 :
-//                        Double thresholdOrange = model.getThresholdDailyJson().get("precipitationRainPercentOrange").getAsDouble();
-//                        Double thresholdRed = model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble();
-//                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
-//                        break;
-//                    case 1 :
-//                        Double threshold2 = model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble();
-//                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
-//                        break;
-//                    case 2 :
-//                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble();
-//                        Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
-//                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
-//                        break;
-//                    case 3 :
-//                        Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
-//                        setFieldThresholdChart(0.0, threshold4, valuesMonthly, row1, months, "months", "red");
-//                        break;
-//                }
-//            }
-//            else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
-//                valuesDaily = model.getArrWindSpeed();
-//                switch (i) {
-//                    case 0 :
-//                        Double thresholdOrange = model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble();
-//                        Double thresholdRed = model.getThresholdDailyJson().get("windThresholdRed").getAsDouble();
-//                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
-//                        break;
-//                    case 1 :
-//                        Double threshold2 = model.getThresholdDailyJson().get("windThresholdRed").getAsDouble();
-//                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
-//                        break;
-//                }
-//            }
-//            row += rowsNum + 1;
-//        }
-//        return row;
-//    }
+            message = new String[] {
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR INCENDIO FORESTAL",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS" +
+                            " PARA REACCIÓN INMEDIATA) ALERTA ROJA POR INCENDIO FORESTAL",
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A INCENDIOS FORESTALES",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR INCENDIO FORESTAL",
+            };
 
-//    public void setFieldThresholdChart(Double thresholdOrange, Double thresholdRed, List<Double> values, Row row, List<String> dates, String... type) {
-//        StringBuilder date = new StringBuilder();
-//        for (int i = 0; i < values.size(); i++) {
-//            if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("days")) {
-//                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
-//                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
-//                }
-//            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("days")) {
-//                if (values.get(i) >= thresholdRed) {
-//                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
-//                }
-//            } else if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("months")) {
-//                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
-//                    date.append("(").append(dates.get(i)).append(")");
-//                }
-//            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("months")) {
-//                if (values.get(i) >= thresholdRed) {
-//                    date.append("(").append(dates.get(i)).append(")");
-//                }
-//            }
-//        }
-//        row.getCell(3).setCellValue(date.toString());
-//    }
+            alert = new String[] {
+                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
+                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+            };
+        }
+        else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Naranja",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta" +
+                            " Roja y activación de mecanismos de alarma",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o " +
+                            "Auxiliar del Comandante de Incidentes al número telefónico:",
+            };
+
+            message = new String[] {
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA DE ALERTA POR MOVIMIENTOS EN MASA",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR MOVIMIENTOS EN MASA",
+                    "ACTIVACIÓN DE BRIGADAS DE EMERGENCIA POR ALERTA NARANJA FRENTE A MOVIMIENTOS EN MASA",
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA " +
+                            "REACCIÓN INMEDIATA) ALERTA ROJA POR MOVIMIENTOS EN MASA",
+            };
+
+            alert = new String[] {
+                    "ALERTA POR POR IDENTIFICACION DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA NARANJA \n",
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n",
+                    "ALERTA NARANJA POR IDENTIFICACION DE MES PREVISTO DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+                    "ALERTA ROJA POR IDENTIFICACION DE MES PREVISTOS DE AUMENTO ANÓMALO EN EL VALOR PROMEDIO DE LAS LECTURAS DE TEMPERATURA EN MONITOREO MENSUAL\n",
+            };
+        } else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            notification = new String[] {
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA"
+            };
+
+            message = new String[] {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA) ALERTA ROJA POR FENÓMENOS CERÁUNICOS"
+            };
+
+            alert = new String[] {
+                    "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA\n"
+            };
+        } else if (model.getReportType() == TypeReportSheet.ceraunic) {
+            notification = new String[] {
+                    "Comunicar de manera inmediata al jefe del sistema de comando de incidentes y al Jefe de Área y/o Auxiliar del Comandante de Incidentes al número telefónico indicando nivel de alerta Roja y activación de mecanismos de alarma"
+            };
+
+            message = new String[] {
+                    "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA) ALERTA ROJA POR FENÓMENOS CERÁUNICOS"
+            };
+
+            alert = new String[] {
+                   "ALERTA POR IDENTIFICACIÓN DE LECTURAS ANÓMALAS EN MONITOREO DIARIO PARA NIVEL DE ALERTA ROJA"
+            };
+        }
+        row = generateChartNotification(sheet, row, model, notification, message, alert);
+        return  row + 3;
+    }
+
+    public int generateChartNotification(Sheet sheet, int row, SheetDataModel model, String[] notification, String[] message, String[] alert) {
+        int rowsNum = 3;
+        for (int i = 0; i < alert.length; i++) {
+            Row row1 = sheet.getRow(row);
+            createCellsRow(sheet, 0, 8, row1);
+            row1.getCell(0).setCellValue(alert[i]);
+            row1.getCell(0).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 0, 2));
+            row1.getCell(3).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 3, 3));
+            row1.getCell(4).setCellValue(notification[i]);
+            row1.getCell(4).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 4, 4));
+            row1.getCell(5).setCellValue("Jefe Sci");
+            row1.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum(), 5, 6));
+            Row bossSciContact = sheet.createRow(row + 1);
+            createCellsRow(sheet, 5, 6, bossSciContact);
+            bossSciContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            bossSciContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("sciBossContact").getAsLong());
+            sheet.addMergedRegion(new CellRangeAddress(bossSciContact.getRowNum(), bossSciContact.getRowNum(), 5, 6));
+            Row auxiliarBoss = sheet.createRow(row + 2);
+            createCellsRow(sheet, 5, 6, auxiliarBoss);
+            auxiliarBoss.getCell(5).setCellValue("Auxiliar Jefe SCI");
+            auxiliarBoss.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(auxiliarBoss.getRowNum(), auxiliarBoss.getRowNum(), 5, 6));
+            Row auxiliarBossContact = sheet.createRow(row + 3);
+            createCellsRow(sheet, 5, 6, auxiliarBossContact);
+            auxiliarBossContact.getCell(5).setCellValue(model.getThresholdDailyJson().get("auxiliarSciBossContact").getAsLong());
+            auxiliarBossContact.getCell(5).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(auxiliarBossContact.getRowNum(), auxiliarBossContact.getRowNum(), 5, 6));
+            row1.getCell(7).setCellValue(message[i]);
+            row1.getCell(7).setCellStyle(this.styleFactory.createBorderedStyle(false, true, true, true, true, true));
+            sheet.addMergedRegion(new CellRangeAddress(row1.getRowNum(), row1.getRowNum() + rowsNum, 7, 8));
+            List<Double> valuesDaily;
+            List<Double> valuesMonthly = new ArrayList<>();
+            if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+                valuesDaily = model.getArrTemperature();
+                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
+                List<String> months = new ArrayList<>();
+                int count = 0;
+                for (String key : map.keySet()) {
+                    if (count < 5) {
+                        count += 1;
+                        continue;
+                    }
+                    if (key.contains("DataGrade")) {
+                        valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
+                        int index = key.indexOf("DataGrade");
+                        String month = key.substring(0, index).trim();
+                        months.add(month);
+                    }
+                }
+
+                switch (i) {
+                    case 0 :
+                        Double thresholdOrange = model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble();
+                        Double thresholdRed = model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
+                        break;
+                    case 1 :
+                        Double threshold2 = model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
+                        break;
+                    case 2 :
+                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdTemperature").getAsDouble();
+                        Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
+                        break;
+                    case 3 :
+                        Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdTemperature").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold4, valuesMonthly, row1, months, "months", "red");
+                        break;
+                }
+            }
+            else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+                valuesDaily = model.getArrPrecipitationPercent();
+                Map<String, Object> map = JsonObjectToMap.convertJsonObjectToMap(model.getThresholdMonthlyJson());
+                List<String> months = new ArrayList<>();
+                int count = 0;
+                for (String key : map.keySet()) {
+                    if (count < 5) {
+                        count += 1;
+                        continue;
+                    }
+                    if (key.contains("DataPercent")) {
+                        valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
+                        int index = key.indexOf("DataPercent");
+                        String month = key.substring(0, index).trim();
+                        months.add(month);
+                    }
+                }
+
+                switch (i) {
+                    case 0 :
+                        Double thresholdOrange = model.getThresholdDailyJson().get("precipitationRainPercentOrange").getAsDouble();
+                        Double thresholdRed = model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
+                        break;
+                    case 1 :
+                        Double threshold2 = model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
+                        break;
+                    case 2 :
+                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble();
+                        Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
+                        break;
+                    case 3 :
+                        Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold4, valuesMonthly, row1, months, "months", "red");
+                        break;
+                }
+            }
+            else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+                valuesDaily = model.getArrWindSpeed();
+                switch (i) {
+                    case 0 :
+                        Double thresholdOrange = model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble();
+                        Double thresholdRed = model.getThresholdDailyJson().get("windThresholdRed").getAsDouble();
+                        setFieldThresholdChart(thresholdOrange, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "orange");
+                        break;
+                    case 1 :
+                        Double threshold2 = model.getThresholdDailyJson().get("windThresholdRed").getAsDouble();
+                        setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
+                        break;
+                }
+            }
+            row += rowsNum + 1;
+        }
+        return row;
+    }
+
+    public void setFieldThresholdChart(Double thresholdOrange, Double thresholdRed, List<Double> values, Row row, List<String> dates, String... type) {
+        StringBuilder date = new StringBuilder();
+        for (int i = 0; i < values.size(); i++) {
+            if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("days")) {
+                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
+                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
+                }
+            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("days")) {
+                if (values.get(i) >= thresholdRed) {
+                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
+                }
+            } else if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("months")) {
+                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
+                    date.append("(").append(dates.get(i)).append(")");
+                }
+            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("months")) {
+                if (values.get(i) >= thresholdRed) {
+                    date.append("(").append(dates.get(i)).append(")");
+                }
+            }
+        }
+        row.getCell(3).setCellValue(date.toString());
+    }
 }

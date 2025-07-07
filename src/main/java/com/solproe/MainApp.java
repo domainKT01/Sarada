@@ -2,6 +2,9 @@ package com.solproe;
 
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
 import com.solproe.service.config.ConfigPropertiesGenerator;
+import com.solproe.taskmanager.ConfigTask;
+import com.solproe.taskmanager.TaskManager;
+import com.solproe.util.OsInfo;
 import com.solproe.util.ValidateLoad;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +19,26 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ValidateLoad validateLoad = new ValidateLoad("config.properties", "Sarada");
+        String path;
+        String directory;
+        if (new OsInfo().getOsName().toLowerCase().contains("win")) {
+            path = "C:\\Program Files\\Sarada\\sarada.exe";
+            directory = "C:\\Program Files\\Sarada";
+        }
+        else {
+            path = "/opt/saradaapp/bin/SaradaApp";
+            directory = "/opt/saraapp";
+        }
         if (!validateLoad.validateFirstRun()) {
+            TaskManager taskManager = new TaskManager();
+            taskManager.programTask(new ConfigTask(
+                    "automatic task",
+                    path,
+                    "--auto",
+                    "09:30",
+                    "DAILY",
+                    directory
+            ));
             String[] dirName = {
                     "Sarada"
             };

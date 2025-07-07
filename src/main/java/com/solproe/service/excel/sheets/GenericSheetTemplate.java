@@ -58,7 +58,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         //===============
         {
             try {
-//                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
+                row = this.sectionBuilder.createAlertSystem(sheet, row, model);
             } catch (Exception e) {
                 ErrorLogger.log(e);
                 throw new RuntimeException(e);
@@ -71,7 +71,7 @@ public class GenericSheetTemplate implements ExcelSheetTemplate {
         {
             row += 3;
             try {
-//                row = this.sectionBuilder.createNotificationChart(sheet, row, model);
+                row = this.sectionBuilder.createNotificationChart(sheet, row, model);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 ErrorLogger.log(e);
