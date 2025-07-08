@@ -5,7 +5,7 @@ import java.io.*;
 public class LinuxTaskScheduler implements TaskScheduler {
 
     @Override
-    public void scheduleTask(String taskName, String command, String schedule, String time) throws Exception {
+    public void scheduleTask(String taskName, String folder, String schedule, String time, String... command) throws Exception {
         System.out.println("DEBUG: Scheduling task '" + taskName + "' on Linux (using cron)...");
         // Ejemplo de comando cron: "0 9 * * * /usr/bin/java -jar /path/to/app.jar"
         // 'schedule' aquí podría ser una expresión cron completa, o procesarse a partir de 'time'

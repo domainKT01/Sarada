@@ -27,18 +27,18 @@ public class TaskSchedulerFactory {
             String scheduleTime = "09:00"; // HH:MM
 
             // Ajusta el comando según el sistema operativo esperado
+            // En cron, esto se maneja con la expresión: "0 9 * * *"
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 commandToExecute = "C:\\Program Files\\Sarada\\Sarada.exe --auto";
-                scheduleFrequency = "DAILY"; // Para Windows: DAILY, HOURLY, WEEKLY, etc.
             } else {
                 commandToExecute = "/usr/bin/java -jar /ruta/a/tu/MiAplicacionJava.jar";
                 // Para Linux (cron), el 'schedule' podría ser una expresión cron completa o solo la hora
-                scheduleFrequency = "DAILY"; // En cron, esto se maneja con la expresión: "0 9 * * *"
                 // Nota: El método scheduleTask de LinuxTaskScheduler simplifica esto a partir de time y el comando
             }
+            scheduleFrequency = "DAILY"; // Para Windows: DAILY, HOURLY, WEEKLY, etc.
 
             // Programar la tarea
-            scheduler.scheduleTask(taskName, commandToExecute, scheduleFrequency, scheduleTime);
+            //scheduler.scheduleTask(taskName, commandToExecute, scheduleFrequency, scheduleTime);
 
             System.out.println("\nTarea programada con éxito. Espera unos segundos para verificar...");
             // Puedes añadir aquí lógica para verificar si la tarea se creó correctamente
