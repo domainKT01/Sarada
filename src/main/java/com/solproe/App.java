@@ -10,10 +10,11 @@ public class App {
 
     public static void main(String[] args) {
         LogInitializer.init();
-        ValidateLoad validateLoad = new ValidateLoad("config.properties", "Sarada");
-        if (!validateLoad.validateFirstRun()) {
-            boolean bool = Arrays.stream(args).toList().contains("--auto");
-            if (bool) {
+
+        boolean bool = Arrays.stream(args).toList().contains("--auto");
+        if (bool) {
+            ValidateLoad validateLoad = new ValidateLoad("config.properties", "Sarada");
+            if (!validateLoad.validateFirstRun()) {
                 TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
                 String taskName = "autoGenerateExcelReport";
                 String[] commands = {
@@ -29,10 +30,10 @@ public class App {
                     throw new RuntimeException(e);
                 }
             }
-            else {
-                MainApp mainApp = new MainApp();
-                mainApp.exec();
-            }
+        }
+        else {
+            MainApp mainApp = new MainApp();
+            mainApp.exec();
         }
     }
 }
