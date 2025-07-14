@@ -58,21 +58,27 @@ public class ExcelStyleFactory {
             style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         }
 
-        if (top) {
-            style.setBorderTop(BorderStyle.MEDIUM);
+        try {
+            if (top) {
+                style.setBorderTop(BorderStyle.MEDIUM);
+            }
+
+            if (bottom) {
+                style.setBorderBottom(BorderStyle.MEDIUM);
+            }
+
+            if (left) {
+                style.setBorderLeft(BorderStyle.MEDIUM);
+            }
+
+            if (right) {
+                style.setBorderRight(BorderStyle.MEDIUM);
+            }
+        } catch (Exception e) {
+            System.out.println("create bordered style error: " + e.getMessage());
+            throw new RuntimeException(e);
         }
 
-        if (bottom) {
-            style.setBorderBottom(BorderStyle.MEDIUM);
-        }
-
-        if (left) {
-            style.setBorderLeft(BorderStyle.MEDIUM);
-        }
-
-        if (right) {
-            style.setBorderRight(BorderStyle.MEDIUM);
-        }
         return style;
     }
 
@@ -83,28 +89,37 @@ public class ExcelStyleFactory {
                 Row row = this.sheet.getRow(startCell.getRow().getRowNum());
                 for (int i = 0; i < numberCells; i++) {
                     if (i == 0 && start) {
-                        row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
-                                true, start, false));
-                        countCell++;
-                        continue;
+                        try {
+                            row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
+                                    true, start, false));
+                            countCell++;
+                            continue;
+                        } catch (Exception e) {
+                            System.out.println("start style error: " + e.getMessage());
+                            throw new RuntimeException(e);
+                        }
                     }
 
                     if (i == (numberCells - 1) && end) {
                         try {
-                            row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
-                                    true, false, end));
-                            countCell++;
-                            continue;
+                            if (row.getCell(countCell) != null) {
+                                row.getCell(countCell).setCellStyle(createBorderedStyle(bold, center, true,
+                                        true, false, end));
+                                countCell++;
+                                continue;
+                            }
                         } catch (Exception e) {
-                            System.out.println(e.getMessage());
+                            System.out.println("end style error: " + e.getMessage());
                             throw new RuntimeException("error apply style end", e);
                         }
                     }
 
                     try {
-                        row.getCell(countCell).setCellStyle(createBorderedStyle(false, true, true,
-                                true, false, false));
-                        countCell++;
+                        if (row.getCell(countCell) != null) {
+                            row.getCell(countCell).setCellStyle(createBorderedStyle(false, true, true,
+                                    true, true, true));
+                            countCell++;
+                        }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                         System.out.println("apply style border..");
