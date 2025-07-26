@@ -10,9 +10,7 @@ import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.logging.ErrorLogger;
 import okhttp3.Response;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 
 public class GenerateReportUseCase implements RequestInterface {

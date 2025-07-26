@@ -45,7 +45,6 @@ public class ReportController implements Initializable {
             ThreadUtil threadUtil = new ThreadUtil();
 
             // Inyectar al ViewModel
-            GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
         });
     }
 }

@@ -8,7 +8,6 @@ import javafx.concurrent.Task;
 
 public class GenerateReportViewModel<T> {
     private final GenerateReportUseCase useCase;
-    private boolean res;
 
     public GenerateReportViewModel(GenerateReportUseCase useCase, ThreadUtil threadUtil) {
         this.useCase = useCase;
