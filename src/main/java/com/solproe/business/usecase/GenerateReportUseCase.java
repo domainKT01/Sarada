@@ -4,12 +4,12 @@ import com.google.gson.JsonObject;
 import com.solproe.business.adapters.OpenMeteoAdapterJson;
 import com.solproe.business.dto.OpenMeteoForecastList;
 import com.solproe.business.gateway.RequestInterface;
+import com.solproe.business.gateway.WhatsappService;
 import com.solproe.business.repository.ExcelFileGenerator;
 import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.logging.ErrorLogger;
 import okhttp3.Response;
-
 import java.nio.file.Path;
 import java.time.LocalDate;
 
@@ -18,6 +18,7 @@ public class GenerateReportUseCase implements RequestInterface {
     private ExcelFileGenerator excelFileGenerator;
     private ReadConfigFile readConfigFile;
     private final ConfigPropertiesGenerator generatePaths = new ConfigPropertiesGenerator();
+    private WhatsappService whatsappService;
 
 
     public void setRequestInterface(RequestInterface requestInterface) {
@@ -30,6 +31,10 @@ public class GenerateReportUseCase implements RequestInterface {
 
     public void setReadConfigFile(ReadConfigFile readConfigFile) {
         this.readConfigFile = readConfigFile;
+    }
+
+    public void setWhatsappService(WhatsappService whatsappService){
+        this.whatsappService = whatsappService;
     }
 
     public boolean generateRequestApi() {
@@ -61,13 +66,14 @@ public class GenerateReportUseCase implements RequestInterface {
             JsonObject configFileJson = null;
             JsonObject monthlyConfigFile = null;
             JsonObject listCodeFile = null;
+            JsonObject record = null;
             try {
                 ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator("threshold.json", "Sarada");
                 Path path = configPropertiesGenerator.getAppConfigPath();
                 System.out.println("threshold path: " + path);
                 configFileJson = readConfigFileUseCase.readConfigFile(path);
             } catch (Exception e) {
-                System.out.println("threshold.json error");
+                System.out.println("threshold.json error: " + e.getMessage());
                 throw new RuntimeException(e);
             }
 
@@ -87,6 +93,17 @@ public class GenerateReportUseCase implements RequestInterface {
                 System.out.println("listCode.json error");
                 throw new RuntimeException(e);
             }
+
+            try {
+                record = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("recordThreshold.json", dirName)
+                        .getAppConfigPath());
+            } catch (Exception e) {
+                System.out.println("recordThreshold.json error");
+                throw new RuntimeException(e);
+            }
+
+            this.whatsappService.setJsonResource(configFileJson, record);
+            this.whatsappService.sendMessage();
 
             LocalDate localDate = LocalDate.now();
             int year = localDate.getYear();

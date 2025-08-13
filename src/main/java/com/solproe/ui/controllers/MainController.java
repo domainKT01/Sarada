@@ -7,6 +7,7 @@ import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.service.APIs.ApiCommandInvoker;
 import com.solproe.service.APIs.ApiService;
 import com.solproe.service.APIs.GetRequestApi;
+import com.solproe.service.APIs.whatsapp.WhatsappBusinessService;
 import com.solproe.service.config.ReadJsonConfigFile;
 import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
@@ -179,6 +180,8 @@ public class MainController implements Initializable {
             ReadConfigFile readConfigFile = new ReadJsonConfigFile();
             useCase.setReadConfigFile(readConfigFile);
 
+            //configuración del servicio de WhatsApp
+            useCase.setWhatsappService(new WhatsappBusinessService());
 
             ThreadUtil threadUtil = new ThreadUtil();
             // --- Fin: Bloque candidato para Factory o Inyección de Dependencias ---

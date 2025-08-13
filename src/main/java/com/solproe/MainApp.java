@@ -25,13 +25,12 @@ public class MainApp extends Application {
             TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
             String taskName = "autoGenerateExcelReport";
             String[] commands = {
-                    ".Sarada",
-                    "--auto",
+                    ".Sarada"
             };
 
             String scheduleTime = "09:00"; // HH:MM
             try {
-                taskScheduler.scheduleTask(taskName, "Sarada", "DAILY", scheduleTime, commands);
+                //taskScheduler.scheduleTask(taskName, "Sarada", "DAILY", scheduleTime, commands);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 throw new RuntimeException(e);

@@ -15,7 +15,7 @@ public class GenerateRecordThreshold {
     public void addRecord(JsonObject jsonObject) {
         RecordService recordService = new RecordService();
         ConfigPropertiesGenerator generatePath = new ConfigPropertiesGenerator();
-        generatePath.setDirName(new String[] {".Sarada"});
+        generatePath.setDirName(new String[] {"Sarada"});
         generatePath.setFilename("recordThreshold.json");
         Path path = generatePath.getAppConfigPath();
         recordService.setPath(path);

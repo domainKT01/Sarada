@@ -4,15 +4,14 @@ import com.google.gson.JsonObject;
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.excel.TypeReportSheet;
+import com.solproe.service.record.GenerateRecordThreshold;
 import com.solproe.util.DateUtil;
 import com.solproe.util.JsonObjectToMap;
 import com.solproe.util.logging.ErrorLogger;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -458,6 +457,7 @@ public class GenerateSectionSheet {
                 int count = 0;
                 int outRange = 0;
                 row += 1;
+
                 for (String data : map.keySet()) {
                     if (count < 5) {
                         count += 1;
@@ -627,12 +627,35 @@ public class GenerateSectionSheet {
     public int createFooterThresholdDaily(Sheet sheet, int startRow, SheetDataModel model, String... args) {
         AtomicInteger count = new AtomicInteger();
         count.set(0);
+        GenerateRecordThreshold recordThreshold = new GenerateRecordThreshold();
+        recordThreshold.setContact(model.getConfigFileThreshold()[0]);
 
         IntStream.range(0, model.getArrTemperature().size())
                 .filter(i ->
                         model.getReportType() == TypeReportSheet.forestFireDataModel &&
-                                model.getArrTemperature().get(i) >= model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble())
+                                model.getArrTemperature().get(i) >= model.getThresholdDailyJson().get("forestFireThresholdOrange").getAsDouble() &&
+                                model.getArrTemperature().get(i) < model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble()
+                        )
                 .forEach(i -> {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty(model.getArrDate().get(i), "forestFireThresholdOrange");
+                    recordThreshold.addRecord(jsonObject);
+                    Row row = sheet.createRow(startRow + count.get());
+                    createCellsRow(sheet, 0, 8, row);
+                    row.getCell(2).setCellValue(model.getArrDate().get(i));
+                    this.styleFactory.applyStyleBorder(true, true, 7, row.getCell(2), true, true);
+                    sheet.addMergedRegion(new CellRangeAddress(row.getRowNum(), row.getRowNum(), 2, 8));
+                    count.set(count.get() + 1);
+                });
+
+        IntStream.range(0, model.getArrTemperature().size())
+                .filter(i ->
+                        model.getReportType() == TypeReportSheet.forestFireDataModel &&
+                                model.getArrTemperature().get(i) >= model.getThresholdDailyJson().get("forestFireThresholdRed").getAsDouble())
+                .forEach(i -> {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty(model.getArrDate().get(i), "forestFireThresholdRed");
+                    recordThreshold.addRecord(jsonObject);
                     Row row = sheet.createRow(startRow + count.get());
                     createCellsRow(sheet, 0, 8, row);
                     row.getCell(2).setCellValue(model.getArrDate().get(i));
@@ -645,8 +668,12 @@ public class GenerateSectionSheet {
                 .filter(i ->
                         model.getReportType() == TypeReportSheet.massMovementDataModel &&
                                 model.getArrPrecipitationPercent().get(i) >= model.getThresholdDailyJson().get("precipitationRainPercentOrange").getAsDouble() &&
-                                args[0].equalsIgnoreCase("%"))
+                                args[0].equalsIgnoreCase("%") &&
+                                model.getArrPrecipitationPercent().get(i) < model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble())
                 .forEach(i -> {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty(model.getArrDate().get(i), "precipitationRainPercentOrange");
+                    recordThreshold.addRecord(jsonObject);
                     int data = (int) (double) model.getArrPrecipitationPercent().get(i);
                     Row row = sheet.createRow(startRow + count.get());
                     createCellsRow(sheet, 0, 8, row);
@@ -659,9 +686,12 @@ public class GenerateSectionSheet {
         IntStream.range(0, model.getArrPrecipitationMm().size())
                 .filter(i ->
                         model.getReportType() == TypeReportSheet.massMovementDataModel &&
-                                model.getArrPrecipitationMm().get(i) >= model.getThresholdDailyJson().get("precipitationThresholdOrange").getAsDouble() &&
-                                args[0].equalsIgnoreCase("mm"))
+                                model.getArrPrecipitationPercent().get(i) >= model.getThresholdDailyJson().get("precipitationRainPercentRed").getAsDouble() &&
+                                args[0].equalsIgnoreCase("%") )
                 .forEach(i -> {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty(model.getArrDate().get(i), "precipitationRainPercentRed");
+                    recordThreshold.addRecord(jsonObject);
                     int data = (int) (double) model.getArrPrecipitationPercent().get(i);
                     Row row = sheet.createRow(startRow + count.get());
                     createCellsRow(sheet, 0, 8, row);
@@ -676,6 +706,9 @@ public class GenerateSectionSheet {
                         model.getReportType() == TypeReportSheet.rainShowerDataModel &&
                                 model.getArrWindSpeed().get(i) >= model.getThresholdDailyJson().get("windThresholdOrange").getAsDouble())
                 .forEach(i -> {
+                    JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty(model.getArrDate().get(i), "windThresholdOrange");
+                    recordThreshold.addRecord(jsonObject);
                     int data = (int) (double) model.getArrPrecipitationPercent().get(i);
                     Row row = sheet.createRow(startRow + count.get());
                     createCellsRow(sheet, 0, 8, row);

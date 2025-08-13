@@ -8,6 +8,7 @@ import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.service.APIs.ApiCommandInvoker;
 import com.solproe.service.APIs.ApiService;
 import com.solproe.service.APIs.GetRequestApi;
+import com.solproe.service.APIs.whatsapp.WhatsappBusinessService;
 import com.solproe.service.config.ReadJsonConfigFile;
 import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
@@ -33,6 +34,7 @@ class GenerateReportUseCaseTest implements RequestInterface {
         generateReportUseCase.setExcelFileGenerator(excelFileGenerator);
         ReadConfigFile readConfigFile = new ReadJsonConfigFile();
         generateReportUseCase.setReadConfigFile(readConfigFile);
+        generateReportUseCase.setWhatsappService(new WhatsappBusinessService());
         generateReportUseCase.generateRequestApi();
     }
 

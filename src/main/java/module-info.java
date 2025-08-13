@@ -21,6 +21,7 @@ module com.solproe {
     requires org.apache.commons.io;
     requires retrofit2;
     requires retrofit2.converter.gson;
+    requires java.net.http;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;
