@@ -57,6 +57,34 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
         return configDir.resolve(this.fileName); // Resuelve la ruta completa del archivo
     }
 
+
+    public Path getAppDirPath() {
+        Path configDir = null;
+        try {
+            String os = System.getProperty("os.name").toLowerCase();
+            if (os.contains("win")) {
+                System.out.println("so: " + os);
+                // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
+                String appData = System.getenv("APPDATA");
+                if (appData == null) { // Fallback si APPDATA no está configurado (raro)
+                    configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming",  "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+                } else {
+                    configDir = Paths.get(appData, "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+                }
+            } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+                // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
+                configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
+            } else {
+                // Fallback para otros OS, o si no se puede determinar
+                configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+            }
+        }
+        catch (Exception e) {
+            System.out.println("error");
+        }
+        return configDir;
+    }
+
     // Tus métodos createPropertyFile y addProperties usarían getAppConfigPath()
     // en lugar de getFilePath() para obtener la ruta al archivo.
     // Ejemplo para createPropertyFile:

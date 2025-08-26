@@ -3,6 +3,7 @@ package com.solproe.business.usecase;
 import com.google.gson.JsonObject;
 import com.solproe.business.adapters.OpenMeteoAdapterJson;
 import com.solproe.business.dto.OpenMeteoForecastList;
+import com.solproe.business.dto.PathDto;
 import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.gateway.WhatsappService;
 import com.solproe.business.repository.ExcelFileGenerator;
@@ -11,6 +12,7 @@ import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.logging.ErrorLogger;
 import okhttp3.Response;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 public class GenerateReportUseCase implements RequestInterface {
@@ -102,16 +104,17 @@ public class GenerateReportUseCase implements RequestInterface {
                 throw new RuntimeException(e);
             }
 
-            this.whatsappService.setJsonResource(configFileJson, record);
-            this.whatsappService.sendMessage();
 
             LocalDate localDate = LocalDate.now();
             int year = localDate.getYear();
             int month = localDate.getMonthValue();
             int day = localDate.getDayOfMonth();
-            this.generatePaths.setDirName(dirName);
-            this.generatePaths.setFilename("report" + "-" + year + "-" + month + "-" + day + ".xlsx");
-            Path path = this.generatePaths.getAppConfigPath();
+            Path path = Paths.get(configFileJson.get("path").getAsString());
+            path = path.resolve("report" + "-" + year + "-" + month + "-" + day + ".xlsx");
+            PathDto.init(path);
+
+            this.whatsappService.setJsonResource(configFileJson, record);
+            this.whatsappService.sendMessage();
             this.excelFileGenerator.setConfigFile(configFileJson, monthlyConfigFile, listCodeFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);
         }

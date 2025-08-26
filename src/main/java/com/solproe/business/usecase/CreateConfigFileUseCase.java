@@ -7,6 +7,8 @@ import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
+import com.solproe.service.config.ConfigPropertiesGenerator;
+
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 
@@ -63,6 +65,9 @@ public class CreateConfigFileUseCase {
     private JsonObject buildConfigFileThreshold(ConfigFileThreshold data) {
         JsonObject json = new JsonObject();
         try {
+            ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator();
+            configPropertiesGenerator.setDirName(new String[] {"Sarada"});
+            json.addProperty("path", configPropertiesGenerator.getAppDirPath().toString());
             json.addProperty("forestFireThresholdOrange", data.getForestFireThresholdOrange());
             json.addProperty("forestFireThresholdRed", data.getForestFireThresholdRed());
             json.addProperty("precipitationThresholdOrange", data.getPrecipitationThresholdOrange());

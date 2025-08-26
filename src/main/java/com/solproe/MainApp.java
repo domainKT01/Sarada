@@ -1,6 +1,7 @@
 package com.solproe;
 
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
+import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.taskmanager.ConfigTask;
 import com.solproe.taskmanager.TaskManager;
@@ -21,19 +22,23 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         ValidateLoad validateLoad = new ValidateLoad("config.properties", ".Sarada");
-        if (!validateLoad.validateFirstRun()) {
-            TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
-            String taskName = "autoGenerateExcelReport";
-            String[] commands = {
-                    ".Sarada"
-            };
 
-            String scheduleTime = "09:00"; // HH:MM
-            try {
-                //taskScheduler.scheduleTask(taskName, "Sarada", "DAILY", scheduleTime, commands);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException(e);
+        if (!validateLoad.validateFirstRun()) {
+            if (!System.getProperty("os.name").contains("ux")) {
+                TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
+                String taskName = "autoGenerateExcelReport";
+                String[] commands = {
+                        "Sarada",
+                        "--auto"
+                };
+
+                String scheduleTime = "09:00"; // HH:MM
+                try {
+                    taskScheduler.scheduleTask(taskName, ".Sarada", "DAILY", scheduleTime, commands);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    throw new RuntimeException(e);
+                }
             }
         }
 
