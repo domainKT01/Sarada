@@ -11,6 +11,9 @@ import com.solproe.business.repository.ReadConfigFile;
 import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.logging.ErrorLogger;
 import okhttp3.Response;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -56,55 +59,48 @@ public class GenerateReportUseCase implements RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
+
+        OpenMeteoAdapterJson openMeteoAdapterJson = new OpenMeteoAdapterJson(jsonObject);
+        //generate linked list openMeteoAdapter
+        OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
+        JsonObject configFileJson = null;
+        JsonObject monthlyConfigFile = null;
+        JsonObject codeListFile = null;
+        JsonObject record = null;
+        String[] dirName;
         try {
-            //generate linked list openMeteoAdapter
-            OpenMeteoAdapterJson openMeteoAdapterJson = new OpenMeteoAdapterJson(jsonObject);
-            OpenMeteoForecastList openMeteoForecastList = openMeteoAdapterJson.setWeatherForecastDto();
+            //usecase to read config files
             ReadConfigFileUseCase readConfigFileUseCase = new ReadConfigFileUseCase();
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
-            String[] dirName = {
+
+            dirName = new String[] {
                     "Sarada"
             };
-            JsonObject configFileJson = null;
-            JsonObject monthlyConfigFile = null;
-            JsonObject listCodeFile = null;
-            JsonObject record = null;
-            try {
-                ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator("threshold.json", "Sarada");
-                Path path = configPropertiesGenerator.getAppConfigPath();
-                System.out.println("threshold path: " + path);
-                configFileJson = readConfigFileUseCase.readConfigFile(path);
-            } catch (Exception e) {
-                System.out.println("threshold.json error: " + e.getMessage());
-                throw new RuntimeException(e);
-            }
 
-            try {
-                monthlyConfigFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("monthlyThreshold.json", dirName)
-                        .getAppConfigPath());
-            } catch (Exception e) {
-                System.out.println("monthlyThreshold.json error");
-                throw new RuntimeException(e);
-            }
+            ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator();
+            configPropertiesGenerator.setDirName(dirName);
 
-            try {
-                listCodeFile = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("listCode.json", dirName)
-                        .getAppConfigPath());
-            }
-            catch (Exception e) {
-                System.out.println("listCode.json error");
-                throw new RuntimeException(e);
-            }
+            //threshold daily
+            configPropertiesGenerator.setFilename("threshold.json");
+            configFileJson = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
 
-            try {
-                record = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("recordThreshold.json", dirName)
-                        .getAppConfigPath());
-            } catch (Exception e) {
-                System.out.println("recordThreshold.json error");
-                throw new RuntimeException(e);
-            }
+            //threshold monthly
+            configPropertiesGenerator.setFilename("monthlyThreshold.json");
+            monthlyConfigFile = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
 
+            //code list
+            configPropertiesGenerator.setFilename("listCode.json");
+            codeListFile = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
 
+            //records
+            configPropertiesGenerator.setFilename("recordThreshold.json");
+            record = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
+        } catch (Exception e) {
+            ErrorLogger.log(e);
+            throw new RuntimeException(e);
+        }
+
+        try {
             LocalDate localDate = LocalDate.now();
             int year = localDate.getYear();
             int month = localDate.getMonthValue();
@@ -113,15 +109,20 @@ public class GenerateReportUseCase implements RequestInterface {
             path = path.resolve("report" + "-" + year + "-" + month + "-" + day + ".xlsx");
             PathDto.init(path);
 
-            this.whatsappService.setJsonResource(configFileJson, record);
-            this.whatsappService.sendMessage();
-            this.excelFileGenerator.setConfigFile(configFileJson, monthlyConfigFile, listCodeFile);
+            this.excelFileGenerator.setConfigFile(configFileJson, monthlyConfigFile, codeListFile);
             this.excelFileGenerator.generate(path, openMeteoForecastList);
         }
-        catch (RuntimeException e) {
-            System.out.println("use case exception: " + e.getMessage());
+        catch (Exception e) {
             ErrorLogger.log(e);
-            throw new RuntimeException(e);
+            throw  new RuntimeException(e);
+        }
+
+        try {
+            this.whatsappService.setJsonResource(configFileJson, record);
+            this.whatsappService.sendMessage();
+        }
+        catch (Exception e) {
+            ErrorLogger.log(e);
         }
     }
 

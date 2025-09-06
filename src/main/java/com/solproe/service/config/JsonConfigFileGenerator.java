@@ -16,6 +16,7 @@ public class JsonConfigFileGenerator implements ConfigFileGenerator {
 
         assert path != null;
         File file = new File(path.toUri());
+        System.out.println(file.toURI());
         if (file.exists()) {
             try (Reader reader = new FileReader(file)) {
                 JsonObject existing = gson.fromJson(reader, JsonObject.class);

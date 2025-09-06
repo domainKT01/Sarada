@@ -16,6 +16,7 @@ public class ErrorLogger {
         try {
             ErrorLogger.create(t);
         } catch (Exception e) {
+            System.out.println("problema al crear el log");
             throw new RuntimeException(e);
         }
         System.out.println(t.getMessage());
@@ -42,7 +43,7 @@ public class ErrorLogger {
                 fileWriter.write(t.getMessage() + "\r\n");
             }
             catch (IOException e) {
-                System.out.println(e.getMessage());
+                System.out.println(e.getMessage() + " método create ErrorLog");
             }
         }
         else {
@@ -58,6 +59,5 @@ public class ErrorLogger {
                 throw new RuntimeException(e);
             }
         }
-
     }
 }

@@ -1,5 +1,7 @@
 package com.solproe.util.logging;
 
+import com.google.gson.JsonObject;
+import com.solproe.service.config.JsonConfigFileGenerator;
 import com.solproe.util.OsInfo;
 import java.io.File;
 import java.io.IOException;
@@ -7,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@SuppressWarnings("LanguageDetectionInspection")
 public class LogInitializer {
 
     public static void init() {
@@ -14,15 +17,14 @@ public class LogInitializer {
         String os = new OsInfo().getOsName();
         if (os.toLowerCase().contains("win")) {
             String appdata = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Roaming";
-            logPath = Paths.get(appdata, ".Sarada", "logs");
-            System.out.println("path win: " + logPath);
+            logPath = Paths.get(appdata, ".Sarada");
         } else if (os.toLowerCase().contains("mac")) {
             String userHome = new OsInfo().getUserHome();
-            logPath = Paths.get(userHome, "Library", "Application Support", ".Sarada", "logs");
+            logPath = Paths.get(userHome, "Library", "Application Support", ".Sarada");
         } else if (os.toLowerCase().contains("nux") || os.toLowerCase().contains("nix") || os.toLowerCase().contains("aix")) {
             try {
                 String userHome = System.getProperty("user.home");
-                logPath = Paths.get(userHome, ".config", ".Sarada", "logs");
+                logPath = Paths.get(userHome, ".config", ".Sarada");
             }
             catch (Exception e) {
                 ErrorLogger.log(e);
@@ -42,9 +44,13 @@ public class LogInitializer {
                 try {
                     Files.createDirectories(logPath);
                     System.out.println("Directorio de logs creado: " + logPath);
+                    Path record = Paths.get(logPath.toUri());
+                    record = record.resolve("recordThreshold.json");
                     logPath = logPath.resolve("app.log");
                     Files.createFile(logPath);
-                    System.out.println("file de logs ");
+                    JsonConfigFileGenerator jsonConfigFileGenerator = new JsonConfigFileGenerator();
+                    JsonObject jsonObject = new JsonObject();
+                    jsonConfigFileGenerator.generate(jsonObject, record);
                 }
                 catch (Exception e) {
                     System.out.println("error to create " + e.getMessage());
@@ -65,6 +71,6 @@ public class LogInitializer {
 
         // --- Establecer la propiedad del sistema ---
         // Ahora logPath está garantizado de no ser null si llegamos aquí
-        System.setProperty("log.path", logPath.toAbsolutePath().toString());
+
     }
 }

@@ -13,7 +13,9 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
 
     public ConfigPropertiesGenerator(String fileName, String... appConfigDirName) {
         this.fileName = fileName;
-        this.appConfigDirName = appConfigDirName;
+        if (appConfigDirName.length > 0) {
+            this.appConfigDirName = appConfigDirName;
+        }
     }
 
     public ConfigPropertiesGenerator() {}
