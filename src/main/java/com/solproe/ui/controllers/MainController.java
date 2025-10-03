@@ -29,11 +29,6 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-
-    // Constantes para estilos de fuente (DRY)
-    private static final Font FONT_NORMAL = new Font("System", 13.0F);
-    private static final Font FONT_SELECTED = new Font("Cursive", 18F); // Considera usar CSS para esto
-
     // FXML Injections
     @FXML public Button challengesButton;
     @FXML public Button reportButton;
@@ -41,9 +36,6 @@ public class MainController implements Initializable {
     @FXML public Button createConfig;
     @FXML public Button dashboardButton;
     @FXML public BorderPane borderPane;
-
-    private Button lastClickedButton;
-    // private Node currentCenterNode; // Reemplaza a borderPaneConf si solo guardas el nodo
 
     // Controladores de las vistas hijas (si necesitas interactuar con ellos)
     private FormController formController; // Ejemplo, si create-file-config.fxml usa FormController
@@ -96,7 +88,6 @@ public class MainController implements Initializable {
      */
     private FXMLLoader loadViewAndStyleButton(String fxmlPath, Button clickedButton) {
         FXMLLoader loader = loadViewIntoCenter(fxmlPath, clickedButton);
-        updateButtonStyles(clickedButton);
         return loader;
     }
 
@@ -108,15 +99,11 @@ public class MainController implements Initializable {
      */
     private FXMLLoader loadViewIntoCenter(String fxmlPath, Button initialButton) {
         try {
+            System.out.println("load view: " + fxmlPath);
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxmlPath), "No se pudo encontrar FXML: " + fxmlPath));
             Node view = loader.load();
             borderPane.setCenter(view);
             // currentCenterNode = view; // Si necesitas la referencia al nodo
-
-            // Si se proporciona un botón inicial (ej. carga del dashboard), estilízalo.
-            if (initialButton != null && lastClickedButton == null) {
-                updateButtonStyles(initialButton);
-            }
 
             // Aquí podrías obtener el controlador si es genérico y necesitas interactuar con él.
             // Object childController = loader.getController();
@@ -132,17 +119,6 @@ public class MainController implements Initializable {
             return null;
         } catch (NullPointerException e) {
             return null;
-        }
-    }
-
-
-    private void updateButtonStyles(Button clickedButton) {
-        if (lastClickedButton != null) {
-            lastClickedButton.setFont(FONT_NORMAL);
-        }
-        if (clickedButton != null) {
-            clickedButton.setFont(FONT_SELECTED);
-            lastClickedButton = clickedButton;
         }
     }
 
@@ -188,7 +164,7 @@ public class MainController implements Initializable {
 
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
             viewModel.generateReportAsync(
-                    _ -> {
+                    () -> {
                         // Éxito → actualizar la UI en el hilo de JavaFX
                         System.out.println("view model callback success");
                         javafx.application.Platform.runLater(() ->

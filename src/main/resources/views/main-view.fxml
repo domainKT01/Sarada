@@ -4,8 +4,9 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.skin.SplitPaneSkin.Content?>
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="com.solproe.ui.controllers.MainController" fx:id="borderPane">
+            fx:controller="com.solproe.ui.controllers.MainController" fx:id="borderPane">
     <left>
         <VBox styleClass="sidebar" stylesheets="@/sidebar.css">
             <VBox styleClass="menu-items">

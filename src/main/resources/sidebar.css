@@ -21,6 +21,16 @@
     -fx-cursor: hand; /* Cursor de mano al pasar por encima */
     -fx-max-width: Infinity;
     -fx-padding: 20;
+    -fx-font-weight: bold;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+}
+
+.menu-button:focused {
+    -fx-background-color: white;
+    -fx-text-fill: #0562ED;
 }
 
 .linea-separadora {
@@ -39,6 +49,13 @@
     -fx-padding: 20;
 }
 
+.report-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+}
+
+.report-button:focused {
+    -fx-border-color: white;
+}
 
 
 

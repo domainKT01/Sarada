@@ -3,7 +3,7 @@ package com.solproe.business.dto;
 import java.nio.file.Path;
 
 public class PathDto {
-    private static Path path;
+    private static Path path = null;
 
     private PathDto() {
 

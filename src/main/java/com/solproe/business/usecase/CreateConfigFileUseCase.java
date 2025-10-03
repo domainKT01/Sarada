@@ -5,33 +5,45 @@ import com.solproe.business.domain.ConfigFileThreshold;
 import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.business.dto.MonthlyData;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
+import com.solproe.business.gateway.RequestInterface;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
 import com.solproe.service.config.ConfigPropertiesGenerator;
-
+import com.solproe.util.logging.ErrorLogger;
+import okhttp3.Response;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 
-public class CreateConfigFileUseCase {
-
+public class CreateConfigFileUseCase implements RequestInterface {
     private final ConfigFileGenerator configFileGenerator;
+    private RequestInterface requestInterface;
+    private JsonObject data;
+    private ConfigPropertiesGeneratorInterface configPropertiesGeneratorInterface;
+
+
+    public void setRequestInterface(RequestInterface requestInterface) {
+        this.requestInterface = requestInterface;
+    }
 
     public CreateConfigFileUseCase(ConfigFileGenerator configFileGenerator) {
         this.configFileGenerator = configFileGenerator;
     }
 
-    public boolean createConfigFile(Object object, ConfigPropertiesGeneratorInterface config) {
+    public void createConfigFile(Object object, ConfigPropertiesGeneratorInterface config) {
         try {
             if (!(object instanceof ConfigFileThreshold configFileThreshold)) {
                 throw new IllegalArgumentException("Unsupported object type");
             }
+            this.configPropertiesGeneratorInterface = config;
+            this.data = buildConfigFileThreshold(configFileThreshold);
 
-            JsonObject jsonObject = buildConfigFileThreshold(configFileThreshold);
-            return generateFile(jsonObject, config.getAppConfigPath());
+            doRequest("https://maps.googleapis.com/maps/api/geocode/json?address=" + configFileThreshold.getCityName() +
+                    "," + configFileThreshold.getStateName() + ", Colombia&key=AIzaSyDBy8Ig_izRPz6DvyFfypdA7yOxarI2FYQ");
+
 
         } catch (Exception e) {
             System.err.println("CreateConfigFileUseCase#createConfigFile: " + e.getMessage());
-            return false;
+            ErrorLogger.log(e);
         }
     }
 
@@ -40,6 +52,7 @@ public class CreateConfigFileUseCase {
             JsonObject jsonObject = buildMonthlyConfigFile(model);
             return generateFile(jsonObject, config.getAppConfigPath());
         } catch (Exception e) {
+            ErrorLogger.log(e);
             System.err.println("CreateConfigFileUseCase#createMonthlyConfigFile: " + e.getMessage());
             return false;
         }
@@ -130,5 +143,22 @@ public class CreateConfigFileUseCase {
             System.out.println("generate file exc: " + e.getMessage());
             return false;
         }
+    }
+
+    @Override
+    public void doRequest(String baseUrl) {
+        this.requestInterface.doRequest(baseUrl);
+    }
+
+    @Override
+    public void failedResponse(Response response) {
+
+    }
+
+    @Override
+    public void successResponse(JsonObject jsonObject) {
+        this.data.add("location", jsonObject.get("results").getAsJsonArray().get(0).getAsJsonObject()
+                .get("geometry").getAsJsonObject().get("location"));
+        generateFile(this.data, this.configPropertiesGeneratorInterface.getAppConfigPath());
     }
 }

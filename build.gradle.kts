@@ -6,8 +6,8 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.5.8"
-
+version = "2.6.0"
+""
 javafx {
     version = "21"
     modules = listOf("javafx.controls", "javafx.fxml", "javafx.base", "javafx.swing",
@@ -50,7 +50,6 @@ tasks.named<Jar>("jar") {
 
 
 dependencies {
-
     // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
     implementation("org.jetbrains.kotlin:kotlin-stdlib:2.1.20-RC")
 

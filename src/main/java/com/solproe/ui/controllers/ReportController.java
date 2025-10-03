@@ -10,7 +10,6 @@ import com.solproe.service.APIs.GetRequestApi;
 import com.solproe.service.config.ReadJsonConfigFile;
 import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
-import com.solproe.ui.viewModels.GenerateReportViewModel;
 import com.solproe.util.ThreadUtil;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

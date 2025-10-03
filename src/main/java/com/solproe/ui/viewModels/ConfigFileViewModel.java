@@ -4,33 +4,61 @@ import com.solproe.business.domain.ConfigFileThreshold;
 import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.dto.ThresholdInputModel;
+import com.solproe.business.gateway.ApiCommandInterface;
 import com.solproe.business.repository.ConfigFileGenerator;
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
+import com.solproe.business.repository.ErrorCallback;
+import com.solproe.business.repository.SuccessCallback;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
+import com.solproe.service.APIs.ApiCommandInvoker;
+import com.solproe.service.APIs.ApiService;
+import com.solproe.service.APIs.GetRequestApi;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
 import com.solproe.service.config.ConfigPropertiesGenerator;
 import com.solproe.util.ValidateLoad;
 import org.jetbrains.annotations.NotNull;
+import java.io.FileNotFoundException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class ConfigFileViewModel {
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public boolean createConfigFileThreshold(ThresholdInputModel input) {
+    public void createConfigFileThresholdAsync(SuccessCallback successCallback, ErrorCallback onFailure, ThresholdInputModel input) {
         ConfigFileThreshold config = getConfigFileThreshold(input);
         ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
+        ApiCommandInvoker commandInvoker = new ApiCommandInvoker();
         CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
+
+        ApiService apiService = new ApiService(commandInvoker, useCase);
+        commandInvoker.setRequestInterface(apiService);
+        ApiCommandInterface apiCommandInterface = new GetRequestApi(apiService);
+        apiService.setApiCommandInterface(apiCommandInterface);
+        useCase.setRequestInterface(apiService);
         String[] dirName = {
                 "Sarada"
         };
         ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", dirName);
         ValidateLoad validateLoad = new ValidateLoad("threshold.json", "Sarada");
         if (validateLoad.validateFirstRun()) {
-            return useCase.createConfigFile(config, configProperties);
+            //new execution thread
+            this.executor.submit(() -> {
+                try {
+                    useCase.createConfigFile(config, configProperties);
+                    successCallback.onSuccess();
+                } catch (Exception e) {
+                    onFailure.onError(e);
+                }
+            });
         }
         else {
-            return useCase.createConfigFile(config, configProperties);
+            System.out.println("validateFirstRun = false, ejecutando onFailure...");
+            onFailure.onError(new FileNotFoundException("no existe el directorio de configuración."));
         }
     }
+
+
 
     private static @NotNull ConfigFileThreshold getConfigFileThreshold(ThresholdInputModel input) {
         ConfigFileThreshold config = new ConfigFileThreshold();

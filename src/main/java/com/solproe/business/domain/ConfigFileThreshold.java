@@ -18,6 +18,7 @@ public class ConfigFileThreshold {
     long sciBossContact;
     String auxiliarSciBoss;
     long auxiliarSciBossContact;
+    float[] coordinate;
 
 
     public double getForestFireThresholdOrange() {
@@ -154,6 +155,14 @@ public class ConfigFileThreshold {
 
     public void setAuxiliarSciBossContact(long auxiliarSciBossContact) {
         this.auxiliarSciBossContact = auxiliarSciBossContact;
+    }
+
+    public void setCoordinate(float[] coordinate) {
+        this.coordinate = coordinate;
+    }
+
+    public float[] getCoordinate() {
+        return this.coordinate;
     }
 }
 

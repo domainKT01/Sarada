@@ -1,13 +1,17 @@
 package com.solproe.ui.controllers;
 
 import com.solproe.business.dto.ThresholdInputModel;
+import com.solproe.business.repository.ErrorCallback;
+import com.solproe.business.repository.SuccessCallback;
 import com.solproe.ui.viewModels.ConfigFileViewModel;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -84,14 +88,22 @@ public class FormController implements Initializable {
             input.setCeraunicosThresholdRed(parseDouble(ceraunicosRed.getText()));
 
             // Llamada al ViewModel
-            boolean result = viewModel.createConfigFileThreshold(input);
+            SuccessCallback successCallback = () -> {
+                System.out.println("success funcionando #######");
+                Platform.runLater(() -> {
+                    showAlert(AlertType.INFORMATION, "Configuración guardada",
+                            "El archivo de configuración se ha guardado correctamente.");
+                });
+            };
 
-            // Mostrar mensaje según el resultado
-            if (result) {
-                showAlert(AlertType.INFORMATION, "Configuración guardada", "El archivo de configuración se ha guardado correctamente.");
-            } else {
-                showAlert(AlertType.ERROR, "Error", "Hubo un problema al guardar el archivo de configuración.");
-            }
+            ErrorCallback errorCallback = _ -> {
+                System.out.println("error funcionando #######");
+                Platform.runLater(() -> {
+                    showAlert(AlertType.ERROR, "Error",
+                            "Hubo un problema al guardar el archivo de configuración.");
+                });
+            };
+            viewModel.createConfigFileThresholdAsync(successCallback, errorCallback, input);
         } catch (Exception e) {
             showAlert(AlertType.ERROR, "Error", "Error al guardar configuración: " + e.getMessage());
         }

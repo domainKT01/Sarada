@@ -30,7 +30,7 @@ public class App {
 
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
             viewModel.generateReportAsync(
-                    _ -> {
+                    () -> {
                         // Éxito → actualizar la UI en el hilo de JavaFX
                         System.out.println("view model callback success");
                     },

@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
-    <Label text="perra!" />
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
+<BorderPane stylesheets="@/dashboard.css" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="com.solproe.ui.controllers.DashboardController">
+
+    <!-- Parte superior: datos ya guardados -->
+    <top>
+        <HBox styleClass="top-info">
+            <VBox style="-fx-padding: 50px;">
+                <Label text="Datos de sitio de investigación"/>
+                <Label text="Nombre del Proyecto: "/>
+                <Label text="data"/>
+                <Label text="Municipio: Medellín"/>
+            </VBox>
+            <VBox>
+                <Label text="Datos de sitio de investigación"/>
+                <Label text="Nombre del Proyecto: "/>
+                <Label text="data"/>
+                <Label text="Municipio: Medellín"/>
+            </VBox>
+        </HBox>
+    </top>
 </BorderPane>
