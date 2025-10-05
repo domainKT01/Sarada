@@ -40,21 +40,20 @@ public class ConfigFileViewModel {
                 "Sarada"
         };
         ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", dirName);
-        ValidateLoad validateLoad = new ValidateLoad("threshold.json", "Sarada");
+        ValidateLoad validateLoad = new ValidateLoad("threshold.json", ".Sarada");
         if (validateLoad.validateFirstRun()) {
             //new execution thread
             this.executor.submit(() -> {
                 try {
                     useCase.createConfigFile(config, configProperties);
                     successCallback.onSuccess();
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     onFailure.onError(e);
                 }
             });
         }
         else {
-            System.out.println("validateFirstRun = false, ejecutando onFailure...");
-            onFailure.onError(new FileNotFoundException("no existe el directorio de configuración."));
+            onFailure.onError(new FileNotFoundException("no existe el directorio de configuración: "));
         }
     }
 

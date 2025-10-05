@@ -4,6 +4,7 @@ import com.solproe.business.dto.ThresholdInputModel;
 import com.solproe.business.repository.ErrorCallback;
 import com.solproe.business.repository.SuccessCallback;
 import com.solproe.ui.viewModels.ConfigFileViewModel;
+import com.solproe.util.logging.ErrorLogger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -96,11 +97,12 @@ public class FormController implements Initializable {
                 });
             };
 
-            ErrorCallback errorCallback = _ -> {
+            ErrorCallback errorCallback = t -> {
+                ErrorLogger.log(t);
                 System.out.println("error funcionando #######");
                 Platform.runLater(() -> {
                     showAlert(AlertType.ERROR, "Error",
-                            "Hubo un problema al guardar el archivo de configuración.");
+                            "Hubo un problema al guardar el archivo de configuración: " + t.getMessage());
                 });
             };
             viewModel.createConfigFileThresholdAsync(successCallback, errorCallback, input);

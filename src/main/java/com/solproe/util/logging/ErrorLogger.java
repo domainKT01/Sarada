@@ -35,12 +35,16 @@ public class ErrorLogger {
 
     }
 
-    private static void create(Throwable t) {
+    private static void create(Throwable t, String... msg) {
         Path path = new ConfigPropertiesGenerator("app.log", "Sarada").getAppConfigPath();
         File file = new File(path.toUri());
         if (Files.exists(path)) {
             try (FileWriter fileWriter = new FileWriter(file, true)) {
-                fileWriter.write(t.getMessage() + "\r\n");
+                if (msg.length > 0) {
+                    fileWriter.write(t.getMessage() + msg[0] + "\r\n");
+                } else {
+                    fileWriter.write(t.getMessage() + "\r\n");
+                }
             }
             catch (IOException e) {
                 System.out.println(e.getMessage() + " método create ErrorLog");

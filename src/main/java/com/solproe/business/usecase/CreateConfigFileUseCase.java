@@ -42,8 +42,7 @@ public class CreateConfigFileUseCase implements RequestInterface {
 
 
         } catch (Exception e) {
-            System.err.println("CreateConfigFileUseCase#createConfigFile: " + e.getMessage());
-            ErrorLogger.log(e);
+            ErrorLogger.log("class CreateConfigFileUseCase", e);
         }
     }
 
@@ -157,8 +156,13 @@ public class CreateConfigFileUseCase implements RequestInterface {
 
     @Override
     public void successResponse(JsonObject jsonObject) {
-        this.data.add("location", jsonObject.get("results").getAsJsonArray().get(0).getAsJsonObject()
-                .get("geometry").getAsJsonObject().get("location"));
-        generateFile(this.data, this.configPropertiesGeneratorInterface.getAppConfigPath());
+        try {
+            this.data.add("location", jsonObject.get("results").getAsJsonArray().get(0).getAsJsonObject()
+                    .get("geometry").getAsJsonObject().get("location"));
+            generateFile(this.data, this.configPropertiesGeneratorInterface.getAppConfigPath());
+        }
+        catch (Exception e) {
+            ErrorLogger.log("on succes class CreateConfigFileUseCase", e);
+        }
     }
 }

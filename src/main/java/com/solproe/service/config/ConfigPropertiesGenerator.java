@@ -1,10 +1,13 @@
 package com.solproe.service.config;
 
 import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
+import com.solproe.util.logging.ErrorLogger;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInterface {
@@ -35,7 +38,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
         Path configDir = null;
         try {
             String os = System.getProperty("os.name").toLowerCase();
-            if (os.contains("win")) {
+            if (os.toLowerCase().contains("win")) {
                 System.out.println("so: " + os);
                 // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
                 String appData = System.getenv("APPDATA");
@@ -44,7 +47,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
                 } else {
                     configDir = Paths.get(appData, "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
                 }
-            } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+            } else if (os.toLowerCase().contains("nix") || os.toLowerCase().contains("nux") || os.toLowerCase().contains("aix")) {
                 // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
                 configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
             } else {
@@ -53,6 +56,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
             }
         }
         catch (Exception e) {
+            ErrorLogger.log("class ConfigPropertiesGenerator, directory: " + Arrays.toString(this.appConfigDirName), e);
             System.out.println("error");
         }
         assert configDir != null;
@@ -82,6 +86,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
             }
         }
         catch (Exception e) {
+            ErrorLogger.log(String.valueOf(configDir), e);
             System.out.println("error");
         }
         return configDir;
