@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Sarada:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Sarada_jar</output-path>
+    <root id="archive" name="Sarada.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+    </root>
+  </artifact>
+</component>

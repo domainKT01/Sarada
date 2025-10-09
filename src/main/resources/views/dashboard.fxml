@@ -9,19 +9,19 @@
 
     <!-- Parte superior: datos ya guardados -->
     <top>
-        <HBox styleClass="top-info">
-            <VBox style="-fx-padding: 50px;">
-                <Label text="Datos de sitio de investigación"/>
-                <Label text="Nombre del Proyecto: "/>
-                <Label text="data"/>
-                <Label text="Municipio: Medellín"/>
-            </VBox>
-            <VBox>
-                <Label text="Datos de sitio de investigación"/>
-                <Label text="Nombre del Proyecto: "/>
-                <Label text="data"/>
-                <Label text="Municipio: Medellín"/>
-            </VBox>
-        </HBox>
+<!--        <HBox styleClass="top-info">-->
+<!--            <VBox style="-fx-padding: 50px;">-->
+<!--                <Label text="Datos de sitio de investigación"/>-->
+<!--                <Label text="Nombre del Proyecto: "/>-->
+<!--                <Label text="data"/>-->
+<!--                <Label text="Municipio: Medellín"/>-->
+<!--            </VBox>-->
+<!--            <VBox>-->
+<!--                <Label text="Datos de sitio de investigación"/>-->
+<!--                <Label text="Nombre del Proyecto: "/>-->
+<!--                <Label text="data"/>-->
+<!--                <Label text="Municipio: Medellín"/>-->
+<!--            </VBox>-->
+<!--        </HBox>-->
     </top>
 </BorderPane>

@@ -19,16 +19,11 @@ public class ValidateLoad {
     public boolean validateFirstRun() {
         Path configDir;
         String osName = new OsInfo().getOsName();
-        if (osName.contains("win")) {
+        String appData = "";
+        if (osName.toLowerCase().contains("win")) {
             // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
-            String appData = System.getenv("APPDATA");
-            if (appData == null) { // Fallback si APPDATA no está configurado (raro)
-                configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName);
-            } else {
-                ErrorLogger.log("validate load: " + appData, new Throwable());
-                configDir = Paths.get(appData, this.appConfigDirName);
-            }
-        } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("mac")) {
+            configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName);
+        } else if (osName.toLowerCase().contains("nix") || osName.toLowerCase().contains("nux") || osName.toLowerCase().contains("mac")) {
             // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
             configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName); // O ".config", depende de tu preferencia
             ErrorLogger.log("linux path: " + configDir, new Throwable());
@@ -37,6 +32,8 @@ public class ValidateLoad {
             configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName);
             ErrorLogger.log("another path: " + configDir, new Throwable());
         }
+
+        System.out.println(Files.exists(configDir) + " dirPath: " + configDir);
 
         return Files.exists(configDir.resolve("app.log"));
     }
