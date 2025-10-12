@@ -12,6 +12,7 @@ import com.solproe.service.excel.ExcelService;
 import com.solproe.service.excel.ReportExcelGenerator;
 import com.solproe.ui.viewModels.GenerateReportViewModel;
 import com.solproe.util.ThreadUtil;
+import com.solproe.util.logging.ErrorLogger;
 import com.solproe.util.logging.LogInitializer;
 import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
@@ -23,6 +24,8 @@ public class App {
 
         boolean bool = Arrays.stream(args).toList().contains("--auto");
         if (bool) {
+            ErrorLogger.logInfo("--auto");
+            System.out.println("auto test---");
             GenerateReportUseCase useCase = getGenerateReportUseCase();
 
             ThreadUtil threadUtil = new ThreadUtil();
@@ -45,6 +48,8 @@ public class App {
             MainApp mainApp = new MainApp();
             mainApp.exec();
         }
+        System.out.println("---end---");
+        return;
     }
 
     private static @NotNull GenerateReportUseCase getGenerateReportUseCase() {

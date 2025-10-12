@@ -6,6 +6,8 @@ import com.solproe.business.usecase.GenerateReportUseCase;
 import com.solproe.util.ThreadUtil;
 import javafx.concurrent.Task;
 
+import java.util.concurrent.*;
+
 public class GenerateReportViewModel {
     private final GenerateReportUseCase useCase;
 
@@ -14,13 +16,32 @@ public class GenerateReportViewModel {
     }
 
     public void generateReportAsync(SuccessCallback onSuccess, ErrorCallback onFailure) {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        Callable<Boolean> tarea = () -> {
+            System.out.println("data--------");
+            var res = useCase.generateRequestApi();
+            return res;
+        };
+
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() {
+                System.out.println("data--------");
                 var res = useCase.generateRequestApi();
                 return res;
             }
         };
+
+        Future<Boolean> future = executorService.submit(tarea);
+
+        try {
+            Boolean res = future.get();
+            onSuccess.onSuccess();
+            executorService.shutdown();
+        } catch (ExecutionException | InterruptedException e) {
+            onFailure.onError(e);
+        }
 
         task.setOnSucceeded(_ -> {
             Boolean res = task.getValue();
@@ -33,6 +54,6 @@ public class GenerateReportViewModel {
             onFailure.onError(error);
         });
 
-        ThreadUtil.runAsync(task);
+        //ThreadUtil.runAsync(task);
     }
 }
