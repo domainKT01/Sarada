@@ -18,18 +18,12 @@ public class GenerateReportViewModel {
     public void generateReportAsync(SuccessCallback onSuccess, ErrorCallback onFailure) {
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        Callable<Boolean> tarea = () -> {
-            System.out.println("data--------");
-            var res = useCase.generateRequestApi();
-            return res;
-        };
+        Callable<Boolean> tarea = this.useCase::generateRequestApi;
 
         Task<Boolean> task = new Task<>() {
             @Override
             protected Boolean call() {
-                System.out.println("data--------");
-                var res = useCase.generateRequestApi();
-                return res;
+                return useCase.generateRequestApi();
             }
         };
 
@@ -38,11 +32,23 @@ public class GenerateReportViewModel {
         try {
             Boolean res = future.get();
             onSuccess.onSuccess();
+            if (res) {
+                onSuccess.onSuccess();
+            }
+            else {
+                onFailure.onError(new Throwable("falló al generar el reporte"));
+            }
             executorService.shutdown();
         } catch (ExecutionException | InterruptedException e) {
             onFailure.onError(e);
+            executorService.shutdown();
         }
 
+        if (!executorService.isShutdown()) {
+            executorService.shutdown();
+        }
+
+        /*
         task.setOnSucceeded(_ -> {
             Boolean res = task.getValue();
             onSuccess.onSuccess();
@@ -54,6 +60,7 @@ public class GenerateReportViewModel {
             onFailure.onError(error);
         });
 
-        //ThreadUtil.runAsync(task);
+        ThreadUtil.runAsync(task);
+        */
     }
 }
