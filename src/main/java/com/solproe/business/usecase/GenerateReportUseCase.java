@@ -76,6 +76,11 @@ public class GenerateReportUseCase implements RequestInterface {
             lat = this.confProject.get("location").getAsJsonObject().get("lat").getAsFloat();
             lon = this.confProject.get("location").getAsJsonObject().get("lng").getAsFloat();
 
+            //dashboard
+            configPropertiesGenerator.setFilename("dashboard.json");
+            JsonObject dashboard = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
+            this.whatsappService.setToken(dashboard.get("tokenWhatsapp").getAsString());
+
             this.requestInterface.doRequest("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean,precipitation_sum&forecast_days=14");
             return true;
         }

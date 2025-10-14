@@ -24,8 +24,6 @@ public class App {
 
         boolean bool = Arrays.stream(args).toList().contains("--auto");
         if (bool) {
-            ErrorLogger.logInfo("--auto");
-            System.out.println("auto test---");
             GenerateReportUseCase useCase = getGenerateReportUseCase();
 
             ThreadUtil threadUtil = new ThreadUtil();
@@ -48,8 +46,6 @@ public class App {
             MainApp mainApp = new MainApp();
             mainApp.exec();
         }
-        System.out.println("---end---");
-        return;
     }
 
     private static @NotNull GenerateReportUseCase getGenerateReportUseCase() {

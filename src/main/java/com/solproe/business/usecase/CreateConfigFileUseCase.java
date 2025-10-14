@@ -165,4 +165,8 @@ public class CreateConfigFileUseCase implements RequestInterface {
             ErrorLogger.log("on succes class CreateConfigFileUseCase", e);
         }
     }
+
+    public boolean createConfigDash(JsonObject object, ConfigPropertiesGeneratorInterface config) {
+        return generateFile(object, config.getAppConfigPath());
+    }
 }

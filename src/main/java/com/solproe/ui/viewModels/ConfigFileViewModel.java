@@ -1,6 +1,8 @@
 package com.solproe.ui.viewModels;
 
+import com.google.gson.JsonObject;
 import com.solproe.business.domain.ConfigFileThreshold;
+import com.solproe.business.dto.DashboardDto;
 import com.solproe.business.dto.ListCodeDTO;
 import com.solproe.business.dto.MonthlyThresholdInputModel;
 import com.solproe.business.dto.ThresholdInputModel;
@@ -108,4 +110,20 @@ public class ConfigFileViewModel {
         }
     }
 
+    public boolean createConfigDash(DashboardDto dto) {
+        try {
+            ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
+            CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
+            String[] dirName = {
+                    "Sarada"
+            };
+            ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("dashboard.json");
+            config.setDirName(dirName);
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("tokenWhatsapp", dto.token());
+            return useCase.createConfigDash(jsonObject, config);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

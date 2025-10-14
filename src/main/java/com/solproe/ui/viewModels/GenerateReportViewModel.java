@@ -3,6 +3,7 @@ package com.solproe.ui.viewModels;
 import com.solproe.business.repository.ErrorCallback;
 import com.solproe.business.repository.SuccessCallback;
 import com.solproe.business.usecase.GenerateReportUseCase;
+import com.solproe.service.APIs.whatsapp.WhatsappBusinessService;
 import com.solproe.util.ThreadUtil;
 import javafx.concurrent.Task;
 
@@ -19,6 +20,7 @@ public class GenerateReportViewModel {
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
         Callable<Boolean> tarea = this.useCase::generateRequestApi;
+        this.useCase.setWhatsappService(new WhatsappBusinessService());
 
         Task<Boolean> task = new Task<>() {
             @Override

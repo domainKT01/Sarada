@@ -12,8 +12,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 public class WhatsappBusinessService implements WhatsappService {
-
-    private String token = "EAARsQH7A6kIBPBPQ0ZBeqIhPLNsYGO7qB7zAouGGvWioXqDgM59KpB9mCPGyxgO6zdFS0bpxqapy4rZCgEkZCUHoGEz8MOfU6fbn2f3srfPTbWKbVO4FfqbBS8ag28MkYutpuVuOE1XxseJkxZBFAxkDNQGeK80jZCFEOHzc9FJ0HLZAZAZCpMzdkZCbVuyqKK3ZBtYAqtpZA64iujpoY8wZAwZDZD";
+    private String token;
     private String phoneNumberId = "105793722275227";
     private JsonObject jsonObject;
     private JsonObject record;
@@ -116,7 +115,6 @@ public class WhatsappBusinessService implements WhatsappService {
             else {
                 System.out.println("code: " + response.body());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error enviando mensaje a WhatsApp", e);
