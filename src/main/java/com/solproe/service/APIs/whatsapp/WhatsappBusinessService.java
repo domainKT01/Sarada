@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 
 public class WhatsappBusinessService implements WhatsappService {
 
-    private String token = "EAARsQH7A6kIBPBPQ0ZBeqIhPLNsYGO7qB7zAouGGvWioXqDgM59KpB9mCPGyxgO6zdFS0bpxqapy4rZCgEkZCUHoGEz8MOfU6fbn2f3srfPTbWKbVO4FfqbBS8ag28MkYutpuVuOE1XxseJkxZBFAxkDNQGeK80jZCFEOHzc9FJ0HLZAZAZCpMzdkZCbVuyqKK3ZBtYAqtpZA64iujpoY8wZAwZDZD";
+    private String token = "EAARsQH7A6kIBPruaBhUmglZBKLxvPCvOQfEBvM4Rn8d1Ki4tEqzcJYqFtQ6imkETOG5CUiMy72DDFg9r9tovlWQx5pCPHVDkuzRLJIc7C6BYq7Ip7pXJXUb3LjlXlfu6viqQ9ubXhythHlyX73WrRUdFPAIxNLRwz95asZBYL1ZCzaj7HVxQOP0CDxZAKhIhkJCaanyD1ZC3exS2TzZBs4tK4rRZAXl0CfsNuA8MCmsXNYPH7amq1wM8PZAM4eQxTwZDZD";
     private String phoneNumberId = "105793722275227";
     private JsonObject jsonObject;
     private JsonObject record;
