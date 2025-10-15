@@ -25,7 +25,7 @@ public class ValidateLoad {
             configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName);
         } else if (osName.toLowerCase().contains("nix") || osName.toLowerCase().contains("nux") || osName.toLowerCase().contains("mac")) {
             // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
-            configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName); // O ".config", depende de tu preferencia
+            configDir = Paths.get(System.getProperty("user.home"), ".config", this.appConfigDirName); // O ".config", depende de tu preferencia
             ErrorLogger.log("linux path: " + configDir, new Throwable());
         } else {
             // Fallback para otros OS, o si no se puede determinar

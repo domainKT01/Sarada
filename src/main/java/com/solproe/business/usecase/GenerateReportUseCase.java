@@ -52,7 +52,7 @@ public class GenerateReportUseCase implements RequestInterface {
             readConfigFileUseCase.setReadInterface(this.readConfigFile);
 
             dirName = new String[] {
-                    "Sarada"
+                    ".Sarada"
             };
 
             ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator();

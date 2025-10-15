@@ -39,7 +39,7 @@ public class ConfigFileViewModel {
         apiService.setApiCommandInterface(apiCommandInterface);
         useCase.setRequestInterface(apiService);
         String[] dirName = {
-                "Sarada"
+                ".Sarada"
         };
         ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", dirName);
         ValidateLoad validateLoad = new ValidateLoad("threshold.json", ".Sarada");
@@ -88,7 +88,7 @@ public class ConfigFileViewModel {
         ConfigFileGenerator configFileGenerator = ConfigFileGeneratorFactory.getGenerator("json");
         CreateConfigFileUseCase createConfigFileUseCase = new CreateConfigFileUseCase(configFileGenerator);
         String[] dirName = {
-                "Sarada"
+                ".Sarada"
         };
         ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("monthlyThreshold.json", dirName);
         return createConfigFileUseCase.createMonthlyConfigFile(model, config);
@@ -100,7 +100,7 @@ public class ConfigFileViewModel {
             ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
             CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
             String[] dirName = {
-                    "Sarada"
+                    ".Sarada"
             };
             ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("listCode.json", dirName);
             bool = useCase.createCodeListConfig(listCodeDTO, config);
@@ -115,7 +115,7 @@ public class ConfigFileViewModel {
             ConfigFileGenerator generator = ConfigFileGeneratorFactory.getGenerator("json");
             CreateConfigFileUseCase useCase = new CreateConfigFileUseCase(generator);
             String[] dirName = {
-                    "Sarada"
+                    ".Sarada"
             };
             ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("dashboard.json");
             config.setDirName(dirName);

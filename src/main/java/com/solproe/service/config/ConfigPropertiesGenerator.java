@@ -49,7 +49,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
                 }
             } else if (os.toLowerCase().contains("nix") || os.toLowerCase().contains("nux") || os.toLowerCase().contains("aix")) {
                 // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
-                configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
+                configDir = Paths.get(System.getProperty("user.home"), ".config", this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
             } else {
                 // Fallback para otros OS, o si no se puede determinar
                 configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
@@ -79,7 +79,7 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
                 }
             } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
                 // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
-                configDir = Paths.get(System.getProperty("user.home"), ".config", "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
+                configDir = Paths.get(System.getProperty("user.home"), ".config", this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : ""); // O ".config", depende de tu preferencia
             } else {
                 // Fallback para otros OS, o si no se puede determinar
                 configDir = Paths.get(System.getProperty("user.home"), this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");

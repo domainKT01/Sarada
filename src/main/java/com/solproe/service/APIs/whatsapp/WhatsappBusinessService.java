@@ -20,7 +20,7 @@ public class WhatsappBusinessService implements WhatsappService {
 
     @Override
     public void sendMessage() {
-        String contact = "57" + this.jsonObject.get("sciBossContact").getAsString();
+        String contact = "+57" + this.jsonObject.get("sciBossContact").getAsString();
         HttpClient client = HttpClient.newHttpClient();
         String header = "";
         String action = "";
@@ -109,14 +109,12 @@ public class WhatsappBusinessService implements WhatsappService {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200 && response.statusCode() != 201) {
-                throw new RuntimeException("Error enviando mensaje: código " + response.statusCode() +
-                        ", respuesta: " + response.body());
+                System.out.println("Error enviando mensaje: " + response.body());
             }
             else {
                 System.out.println("code: " + response.body());
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Error enviando mensaje a WhatsApp", e);
         }
     }
