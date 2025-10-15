@@ -78,7 +78,7 @@ public class CreateConfigFileUseCase implements RequestInterface {
         JsonObject json = new JsonObject();
         try {
             ConfigPropertiesGenerator configPropertiesGenerator = new ConfigPropertiesGenerator();
-            configPropertiesGenerator.setDirName(new String[] {"Sarada"});
+            configPropertiesGenerator.setDirName(new String[] {".Sarada"});
             json.addProperty("path", configPropertiesGenerator.getAppDirPath().toString());
             json.addProperty("forestFireThresholdOrange", data.getForestFireThresholdOrange());
             json.addProperty("forestFireThresholdRed", data.getForestFireThresholdRed());
@@ -164,5 +164,9 @@ public class CreateConfigFileUseCase implements RequestInterface {
         catch (Exception e) {
             ErrorLogger.log("on succes class CreateConfigFileUseCase", e);
         }
+    }
+
+    public boolean createConfigDash(JsonObject object, ConfigPropertiesGeneratorInterface config) {
+        return generateFile(object, config.getAppConfigPath());
     }
 }

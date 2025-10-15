@@ -28,11 +28,11 @@ public class MainApp extends Application {
                 TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
                 String taskName = "autoGenerateExcelReport";
                 String[] commands = {
-                        "Sarada",
+                        ".Sarada",
                         "--auto"
                 };
 
-                String scheduleTime = "09:00"; // HH:MM
+                String scheduleTime = "11:20"; // HH:MM
                 try {
                     taskScheduler.scheduleTask(taskName, ".Sarada", "DAILY", scheduleTime, commands);
                 } catch (Exception e) {

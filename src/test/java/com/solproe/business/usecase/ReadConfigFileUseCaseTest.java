@@ -17,7 +17,7 @@ class ReadConfigFileUseCaseTest {
         ReadConfigFile readConfigFile = new ReadJsonConfigFile();
         readConfigFileUseCase.setReadInterface(readConfigFile);
         String[] dirName = {
-                "Sarada"
+                ".Sarada"
         };
         JsonObject jsonObject = readConfigFileUseCase.readConfigFile(new ConfigPropertiesGenerator("threshold.json", dirName)
                 .getAppConfigPath());
