@@ -37,7 +37,7 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             String[] parametersMonths = {"orangeThresholdTemperature", "redThresholdTemperature", "Temperatura", "Precipitación"};
             createMonthValues(69, 1, parametersMonths, this.dataModel.get(2));
             String[] parametersCeraunic = {"ceraunicosThresholdRed", "ceraunic"};
-            createCodeChart(79, 1, parametersCeraunic, this.dataModel.get(1));
+            createCodeChart(85, 1, parametersCeraunic, this.dataModel.get(1));
         }
         catch (Exception e) {
             ErrorLogger.log(e);
@@ -238,28 +238,17 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             };
 
             for (int i = 11; i >= 0; i--) {
-                Row row = sheet.getRow(rowTable - i + 6);
-                if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
-                    if (row != null) {
-                        Cell cell = row.getCell(1);
-                        if (cell != null) {
-                            cell = row.createCell(1);
-                            cell.setCellValue(arrDate[i]);
-                            cell.setCellStyle(setStyle("date"));
-                        }
-                    }
-                    if (i == 6) {
-                        break;
+                Row row = sheet.getRow(rowTable - i);
+                if (row != null) {
+                    Cell cell = row.getCell(1);
+                    if (cell != null) {
+                        cell = row.createCell(1);
+                        cell.setCellValue(arrDate[i]);
+                        cell.setCellStyle(setStyle("date"));
                     }
                 }
-                else if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 2) {
-                    if (row != null) {
-                        Cell cell = row.getCell(1);
-                        if (cell == null) {
-                            cell = row.createCell(1);
-                        }
-                        cell.setCellValue(arrDate[i - 6]);
-                    }
+                if (i == 12) {
+                    break;
                 }
             }
         } catch (Exception e) {
