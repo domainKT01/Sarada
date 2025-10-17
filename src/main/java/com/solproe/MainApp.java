@@ -27,7 +27,7 @@ public class MainApp extends Application {
             if (!System.getProperty("os.name").contains("ux")) {
                 TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
                 String taskName = "autoGenerateExcelReport";
-
+                System.out.println("generating task...");
                 String[] commands = {
                         ".Sarada",
                         "--auto"
