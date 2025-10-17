@@ -12,12 +12,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 public class WhatsappBusinessService implements WhatsappService {
-<<<<<<< HEAD
-
-    private String token = "EAARsQH7A6kIBPruaBhUmglZBKLxvPCvOQfEBvM4Rn8d1Ki4tEqzcJYqFtQ6imkETOG5CUiMy72DDFg9r9tovlWQx5pCPHVDkuzRLJIc7C6BYq7Ip7pXJXUb3LjlXlfu6viqQ9ubXhythHlyX73WrRUdFPAIxNLRwz95asZBYL1ZCzaj7HVxQOP0CDxZAKhIhkJCaanyD1ZC3exS2TzZBs4tK4rRZAXl0CfsNuA8MCmsXNYPH7amq1wM8PZAM4eQxTwZDZD";
-=======
     private String token;
->>>>>>> a98e21d7f012c6a1fc902e7bf0826125cc971641
     private String phoneNumberId = "105793722275227";
     private JsonObject jsonObject;
     private JsonObject record;
