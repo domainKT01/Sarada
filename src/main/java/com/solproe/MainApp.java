@@ -29,7 +29,7 @@ public class MainApp extends Application {
                 String taskName = "autoGenerateExcelReport";
                 System.out.println("generating task...");
                 String[] commands = {
-                        ".Sarada",
+                        "Sarada",
                         "--auto"
                 };
 
