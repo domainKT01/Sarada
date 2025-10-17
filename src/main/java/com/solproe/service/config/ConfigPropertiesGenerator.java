@@ -43,9 +43,9 @@ public class ConfigPropertiesGenerator implements ConfigPropertiesGeneratorInter
                 // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
                 String appData = System.getenv("APPDATA");
                 if (appData == null) { // Fallback si APPDATA no está configurado (raro)
-                    configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming",  "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+                    configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
                 } else {
-                    configDir = Paths.get(appData, "." + this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
+                    configDir = Paths.get(appData, this.appConfigDirName[0], this.appConfigDirName.length > 1 ? this.appConfigDirName[1] : "");
                 }
             } else if (os.toLowerCase().contains("nix") || os.toLowerCase().contains("nux") || os.toLowerCase().contains("aix")) {
                 // Para Linux/macOS: /home/<Username>/.config/<YourApp> o /home/<Username>/.<YourApp>
