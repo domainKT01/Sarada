@@ -18,7 +18,7 @@ public class GenerateReportViewModel {
 
     public void generateReportAsync(SuccessCallback onSuccess, ErrorCallback onFailure) {
 
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
         Callable<Boolean> tarea = this.useCase::generateRequestApi;
         this.useCase.setWhatsappService(new WhatsappBusinessService());
 
@@ -33,7 +33,6 @@ public class GenerateReportViewModel {
 
         try {
             Boolean res = future.get();
-            onSuccess.onSuccess();
             if (res) {
                 onSuccess.onSuccess();
             }
@@ -51,7 +50,7 @@ public class GenerateReportViewModel {
         }
 
         /*
-        task.setOnSucceeded(_ -> {
+        *task.setOnSucceeded(_ -> {
             Boolean res = task.getValue();
             onSuccess.onSuccess();
         });

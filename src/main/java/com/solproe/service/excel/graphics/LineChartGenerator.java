@@ -223,24 +223,14 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             XSSFClientAnchor anchorTemp = this.drawing.createAnchor(0, 0, 0, 0, 0, sheetDataModel.getStartRow(), 9, sheetDataModel.getStartRow() +20);
             int[][] parameters = new int[4][4];
             if (sheetDataModel.getReportType() == TypeReportSheet.forestFireDataModel) {
-                if (sheetDataModel.getThresholdMonthlyJson().get("stage").getAsDouble() == 1) {
-                    parameters = new int[][]{
-                            {70, 75, 1, 1},
-                            {70, 75, 2, 2},
-                            {70, 75, 4, 4},
-                            {70, 75, 5, 5}
-                    };
-                }
-                else {
-                    parameters = new int[][]{
-                            {76, 81, 1, 1},
-                            {76, 81, 2, 2},
-                            {76, 81, 4, 4},
-                            {76, 81, 5, 5}
-                    };
-                }
-
-            } else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
+                parameters = new int[][]{
+                        {70, 81, 1, 1},
+                        {70, 81, 2, 2},
+                        {70, 81, 4, 4},
+                        {70, 81, 5, 5}
+                };
+            }
+            else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
                 parameters = new int[][]{
                         {70, 75, 1, 1},
                         {70, 75, 3, 3},
