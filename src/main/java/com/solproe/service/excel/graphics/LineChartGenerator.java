@@ -232,10 +232,10 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
             }
             else if (sheetDataModel.getReportType() == TypeReportSheet.massMovementDataModel) {
                 parameters = new int[][]{
-                        {70, 75, 1, 1},
-                        {70, 75, 3, 3},
-                        {70, 75, 6, 6},
-                        {70, 75, 7, 7}
+                        {70, 81, 1, 1},
+                        {70, 81, 3, 3},
+                        {70, 81, 6, 6},
+                        {70, 81, 7, 7}
                 };
             }
             createGraphic(parameters, anchorTemp);
