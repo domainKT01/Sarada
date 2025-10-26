@@ -15,27 +15,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        ValidateLoad validateLoad = new ValidateLoad("config.properties", ".Sarada");
 
-        if (!validateLoad.validateFirstRun()) {
-            if (!System.getProperty("os.name").contains("ux")) {
-                TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
-                String taskName = "autoGenerateExcelReport";
-                System.out.println("generating task...");
-                String[] commands = {
-                        "Sarada",
-                        "--auto"
-                };
-
-                String scheduleTime = "11:20"; // HH:MM
-                try {
-                    taskScheduler.scheduleTask(taskName, "Sarada", "DAILY", scheduleTime, commands);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                    throw new RuntimeException(e);
-                }
-            }
-        }
 
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/main-view.fxml"))); // No leading /
         Scene scene = new Scene(root);
