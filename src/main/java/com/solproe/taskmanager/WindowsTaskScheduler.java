@@ -16,15 +16,15 @@ public class WindowsTaskScheduler implements TaskScheduler {
     public void scheduleTask(String taskName, String folder, String schedule, String time, String... commands) throws Exception {
         System.out.println("DEBUG: Scheduling task '" + taskName + "' on Windows...");
         this.folder = folder;
-        // Ejemplo simplificado: "javaw.exe -jar \"C:\\path\\to\\app.jar\""
         // Asegúrate de que el 'command' incluya la ruta completa y argumentos
-        StringBuilder commandToExecute = new StringBuilder(this.path + this.folder + "\\");
-        commands[0] += ".exe";
-        for (String command : commands) {
-            commandToExecute.append(command);
-            commandToExecute.append(" ");
-        }
-        String fullCommand = "\"" + commandToExecute + "\""; // Envuelve el comando en comillas
+//        StringBuilder commandToExecute = new StringBuilder(this.path + this.folder + "\\");
+//        commands[0] += ".exe";
+//        for (String command : commands) {
+//            commandToExecute.append(command);
+//            commandToExecute.append(" ");
+//        }
+
+        String fullCommand = "\\\"C:\\Program Files\\Sarada\\Sarada.exe\\\" --auto";
 
         String[] schtasksCommand = {
                 "schtasks", "/create",

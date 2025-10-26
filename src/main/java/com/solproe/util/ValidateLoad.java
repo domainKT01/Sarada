@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 public class ValidateLoad {
     private final String appConfigDirName;
-    private final String fileName;
+    private String fileName;
 
 
     public ValidateLoad(String fileName, String appConfigDirName) {
@@ -19,6 +19,7 @@ public class ValidateLoad {
     public boolean validateFirstRun() {
         Path configDir;
         String osName = new OsInfo().getOsName();
+        String appData = "";
         if (osName.toLowerCase().contains("win")) {
             // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
             configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName);
@@ -33,8 +34,6 @@ public class ValidateLoad {
         }
 
         System.out.println(Files.exists(configDir) + " dirPath: " + configDir);
-
-        configDir = configDir.resolve(this.fileName);
 
         return Files.exists(configDir);
     }
