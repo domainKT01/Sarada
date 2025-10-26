@@ -1,13 +1,7 @@
 package com.solproe;
 
-import com.solproe.business.repository.ConfigPropertiesGeneratorInterface;
-import com.solproe.business.usecase.CreateConfigFileUseCase;
-import com.solproe.service.config.ConfigPropertiesGenerator;
-import com.solproe.taskmanager.ConfigTask;
-import com.solproe.taskmanager.TaskManager;
 import com.solproe.taskmanager.TaskScheduler;
 import com.solproe.taskmanager.TaskSchedulerFactory;
-import com.solproe.util.OsInfo;
 import com.solproe.util.ValidateLoad;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

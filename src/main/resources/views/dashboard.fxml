@@ -9,10 +9,18 @@
 
     <!-- Parte superior: datos ya guardados -->
     <top>
-        <HBox spacing="10" alignment="CENTER_LEFT" styleClass="tokenSect">
-            <Label text="Nombre:"/>
-            <TextField styleClass="tokenInput" fx:id="tokenWhatsapp" promptText="Escribe tu nombre aquí..."/>
-            <Button styleClass="button" fx:id="buttonSave">save</Button>
-        </HBox>
+        <VBox>
+            <HBox spacing="10" styleClass="tokenSect">
+                <Label text="Token Whatsapp:" styleClass="labelToken"/>
+                <TextField styleClass="tokenInput" fx:id="tokenWhatsapp" promptText="Escribe tu nombre aquí..."/>
+                <Button styleClass="button" fx:id="buttonSave">save</Button>
+            </HBox>
+            <HBox spacing="10" styleClass="timeSec">
+                <Label text="Hora Ejecución:" styleClass="labelTime" />
+                <Spinner fx:id="hourSpinner" prefWidth="80" />
+                <Label text=":" />
+                <Spinner fx:id="minuteSpinner" prefWidth="80" />
+            </HBox>
+        </VBox>
     </top>
 </BorderPane>

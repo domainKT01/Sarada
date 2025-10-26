@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@SuppressWarnings("LanguageDetectionInspection")
 public class LogInitializer {
 
     public static void init() {

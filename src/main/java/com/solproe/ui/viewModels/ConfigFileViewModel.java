@@ -121,6 +121,7 @@ public class ConfigFileViewModel {
             config.setDirName(dirName);
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("tokenWhatsapp", dto.token());
+            jsonObject.addProperty("timeAutomatizedTask", dto.hour() + ":" + dto.minute());
             return useCase.createConfigDash(jsonObject, config);
         } catch (Exception e) {
             throw new RuntimeException(e);

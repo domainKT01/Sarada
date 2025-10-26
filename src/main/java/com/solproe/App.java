@@ -27,7 +27,6 @@ public class App {
             GenerateReportUseCase useCase = getGenerateReportUseCase();
 
             ThreadUtil threadUtil = new ThreadUtil();
-            // --- Fin: Bloque candidato para Factory o Inyección de Dependencias ---
 
             GenerateReportViewModel viewModel = new GenerateReportViewModel(useCase, threadUtil);
             viewModel.generateReportAsync(
@@ -39,7 +38,7 @@ public class App {
                         // Error → mostrar alerta
                         System.out.println("view model callback failed");
                     }
-            ); // Asumo que esto puede ser una tarea larga, considera ejecutar en background
+            );
 
         }
         else {
