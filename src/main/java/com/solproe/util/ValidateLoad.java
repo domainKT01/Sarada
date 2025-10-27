@@ -19,7 +19,6 @@ public class ValidateLoad {
     public boolean validateFirstRun() {
         Path configDir;
         String osName = new OsInfo().getOsName();
-        String appData = "";
         if (osName.toLowerCase().contains("win")) {
             // Para Windows: C:\Users\<Username>\AppData\Roaming\<YourApp>
             configDir = Paths.get(System.getProperty("user.home"), "AppData", "Roaming", this.appConfigDirName);

@@ -5,12 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class WindowsTaskScheduler implements TaskScheduler {
-    private final String path;
     public String folder;
 
-    public WindowsTaskScheduler() {
-        this.path = "C:\\Program Files\\";
-    }
 
     @Override
     public void scheduleTask(String taskName, String folder, String schedule, String time, String... commands) throws Exception {
@@ -33,7 +29,7 @@ public class WindowsTaskScheduler implements TaskScheduler {
                 "/tr", fullCommand,
                 "/sc", schedule, // Ej: DAILY, HOURLY
                 "/st", time,     // Ej: 09:00
-                "/sd", "01/01/2025", // Fecha de inicio fija, podrías hacer la dinámica
+                "/sd", "28/10/2025", // Fecha de inicio fija, podrías hacer la dinámica
                 "/f", // Forzar la creación (sobrescribe si existe)
                 "/rl", "HIGHEST" // Ejecutar con los privilegios más altos
                 // Para ejecutar sin usuario logueado, se necesita: "/ru", "SYSTEM" o "/ru", "user", "/rp", "pass"
