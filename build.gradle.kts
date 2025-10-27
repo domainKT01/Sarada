@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.solproe"
-version = "2.7.6"
+version = "2.7.7"
 ""
 javafx {
     version = "21"

@@ -21,7 +21,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        ValidateLoad validateLoad = new ValidateLoad("config.properties", ".Sarada");
+        ValidateLoad validateLoad = new ValidateLoad("app.log", ".Sarada");
 
         if (!validateLoad.validateFirstRun()) {
             if (!System.getProperty("os.name").contains("ux")) {

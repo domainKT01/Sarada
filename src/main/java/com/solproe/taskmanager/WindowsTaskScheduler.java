@@ -16,6 +16,7 @@ public class WindowsTaskScheduler implements TaskScheduler {
     public void scheduleTask(String taskName, String folder, String schedule, String time, String... commands) throws Exception {
         System.out.println("DEBUG: Scheduling task '" + taskName + "' on Windows...");
         this.folder = folder;
+        System.out.println("///////tarea creando win/////");
         // Asegúrate de que el 'command' incluya la ruta completa y argumentos
 //        StringBuilder commandToExecute = new StringBuilder(this.path + this.folder + "\\");
 //        commands[0] += ".exe";
