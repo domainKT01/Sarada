@@ -167,6 +167,7 @@ public class CreateConfigFileUseCase implements RequestInterface {
     }
 
     public boolean createConfigDash(JsonObject object, ConfigPropertiesGeneratorInterface config) {
+        System.out.println("UC create dash: " + object);
         return generateFile(object, config.getAppConfigPath());
     }
 }

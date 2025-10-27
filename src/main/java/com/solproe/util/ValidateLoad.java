@@ -35,6 +35,8 @@ public class ValidateLoad {
 
         System.out.println(Files.exists(configDir) + " dirPath: " + configDir);
 
+
+
         return Files.exists(configDir.resolve(this.fileName));
     }
 }

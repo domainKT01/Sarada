@@ -28,8 +28,6 @@ public class JsonConfigFileGenerator implements ConfigFileGenerator {
             finalJson = data;
         }
 
-        System.out.println("file config json: " + finalJson);
-
         try (Writer writer = new FileWriter(file)) {
             gson.toJson(finalJson, writer);
             System.out.println("generated...");

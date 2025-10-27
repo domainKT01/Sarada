@@ -17,6 +17,8 @@ import com.solproe.service.APIs.ApiService;
 import com.solproe.service.APIs.GetRequestApi;
 import com.solproe.service.config.ConfigFileGeneratorFactory;
 import com.solproe.service.config.ConfigPropertiesGenerator;
+import com.solproe.taskmanager.TaskScheduler;
+import com.solproe.taskmanager.TaskSchedulerFactory;
 import com.solproe.util.ValidateLoad;
 import org.jetbrains.annotations.NotNull;
 import java.io.FileNotFoundException;
@@ -120,7 +122,26 @@ public class ConfigFileViewModel {
             ConfigPropertiesGeneratorInterface config = new ConfigPropertiesGenerator("dashboard.json");
             config.setDirName(dirName);
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("tokenWhatsapp", dto.token());
+
+            jsonObject.addProperty("timeAutomatizedTask", dto.hour() + ":" + dto.minute());
+
+            if (!System.getProperty("os.name").contains("ux")) {
+                TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
+                String taskName = "autoGenerateExcelReport";
+                System.out.println("generating task...");
+                String[] commands = {
+                        "Sarada",
+                        "--auto"
+                };
+
+                String scheduleTime = dto.hour() + ":" + dto.minute(); // HH:MM
+                try {
+                    taskScheduler.scheduleTask(taskName, "Sarada", "DAILY", scheduleTime, commands);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }
             return useCase.createConfigDash(jsonObject, config);
         } catch (Exception e) {
             throw new RuntimeException(e);
