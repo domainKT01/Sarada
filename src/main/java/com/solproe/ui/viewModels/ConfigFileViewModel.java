@@ -44,7 +44,7 @@ public class ConfigFileViewModel {
                 ".Sarada"
         };
         ConfigPropertiesGeneratorInterface configProperties = new ConfigPropertiesGenerator("threshold.json", dirName);
-        ValidateLoad validateLoad = new ValidateLoad("threshold.json", ".Sarada");
+        ValidateLoad validateLoad = new ValidateLoad("app.log", ".Sarada");
         if (validateLoad.validateFirstRun()) {
             //new execution thread
             this.executor.submit(() -> {
