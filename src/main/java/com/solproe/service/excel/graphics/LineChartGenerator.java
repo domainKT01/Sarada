@@ -135,9 +135,9 @@ public class LineChartGenerator implements ExcelGenerateGraphics {
                 XSSFClientAnchor anchorCeraunic = this.drawing.createAnchor(0, 0, 0, 0, 0,
                         sheetDataModel.getStartRow() + space, 9, sheetDataModel.getStartRow() + height);
                 int[][] parameterSource = {
-                        {79, 92, 1, 1},
-                        {79, 92, 2, 2},
-                        {79, 92, 3, 3}
+                        {85, 98, 1, 1},
+                        {85, 98, 2, 2},
+                        {85, 98, 3, 3}
                 };
                 createGraphic(parameterSource, anchorCeraunic);
                 rowFinal = sheetDataModel.getStartRow() + height + 3;
