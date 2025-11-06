@@ -21,6 +21,7 @@ public class SheetDataModel {
     private TypeReportSheet reportType;
     private int startRow;
     private int[] parameterCol;
+    private String maxThreshold;
 
     public SheetDataModel(String sheetName, String title, String parameter) {
         this.sheetName = sheetName;
@@ -138,5 +139,13 @@ public class SheetDataModel {
 
     public JsonObject getThresholdCodeList() {
         return this.configFileThreshold[2];
+    }
+
+    public void setMaxThreshold(String maxThreshold) {
+        this.maxThreshold = maxThreshold;
+    }
+
+    public String getMaxThreshold() {
+        return this.maxThreshold;
     }
 }

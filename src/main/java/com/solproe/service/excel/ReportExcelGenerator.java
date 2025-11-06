@@ -50,6 +50,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                     "TEMPERATURA PROMEDIO DIARIA EN °C"
             );
             forestFireDataModel.setReportType(TypeReportSheet.forestFireDataModel);
+            forestFireDataModel.setMaxThreshold("TEMPERATURA MAXIMA MENSUAL PROMEDIO  (°C):");
 
             SheetDataModel massMovementDataModel = new SheetDataModel(
                     "MOVIMIENTOS EN MASA",
@@ -57,6 +58,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                     "PRECIPITACIÓN PROMEDIO DIARIA EN mm y PROBABILIDAD DE PRECIPITACIÓN EN %"
             );
             massMovementDataModel.setReportType(TypeReportSheet.massMovementDataModel);
+            massMovementDataModel.setMaxThreshold("PRECIPITACIÓN MAXIMA MENSUAL PROMEDIO  (mm):");
 
             SheetDataModel rainShowerDataModel = new SheetDataModel(
                     "VENDAVALES",
@@ -64,6 +66,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                     "VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h"
             );
             rainShowerDataModel.setReportType(TypeReportSheet.rainShowerDataModel);
+            rainShowerDataModel.setMaxThreshold("VELOCIDAD DEL VIENTO MAXIMA MENSUAL PROMEDIO  (Km/h):");
 
             SheetDataModel ceraunicDataModel = new SheetDataModel(
                     "CERAUNICO",
@@ -71,6 +74,7 @@ public class ReportExcelGenerator implements ExcelFileGenerator {
                     "ESTADO DEL CLIMA ESPERADO"
             );
             ceraunicDataModel.setReportType(TypeReportSheet.ceraunic);
+            ceraunicDataModel.setMaxThreshold("DENSIDAD DE DESCARGAS A TIERRA (DDT)");
 
             forestFireDataModel.setConfigFileThreshold(this.configFileThreshold);
             massMovementDataModel.setConfigFileThreshold(this.configFileThreshold);

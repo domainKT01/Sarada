@@ -292,4 +292,14 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
             ErrorLogger.log(e);
         }
     }
+
+    @Override
+    public Workbook getWorkbook() {
+        return this.workbook;
+    }
+
+    @Override
+    public Sheet getSheet() {
+        return this.sheet;
+    }
 }

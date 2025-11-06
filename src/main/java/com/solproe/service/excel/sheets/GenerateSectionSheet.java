@@ -3,6 +3,7 @@ package com.solproe.service.excel.sheets;
 import com.google.gson.JsonObject;
 import com.solproe.business.domain.SheetDataModel;
 import com.solproe.business.usecase.CreateConfigFileUseCase;
+import com.solproe.service.excel.ExcelSheetTemplate;
 import com.solproe.service.excel.TypeReportSheet;
 import com.solproe.service.record.GenerateRecordThreshold;
 import com.solproe.util.DateUtil;
@@ -16,13 +17,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class GenerateSectionSheet {
-    private final GenericSheetTemplate template;
-    private final ExcelStyleFactory styleFactory;
+    private ExcelSheetTemplate template;
+    private ExcelStyleFactory styleFactory;
 
-    public GenerateSectionSheet(GenericSheetTemplate template, Workbook workbook) {
+    public GenerateSectionSheet(ExcelSheetTemplate template, Workbook workbook) {
         this.template = template;
         this.styleFactory = new ExcelStyleFactory(template.getWorkbook(), template.getSheet());
     }
+
+    public GenerateSectionSheet() {}
 
     public int createHeader(Sheet sheet, int rowIndex, SheetDataModel model) {
         Workbook workbook = template.getWorkbook();
@@ -62,21 +65,8 @@ public class GenerateSectionSheet {
         this.styleFactory.applyStyleBorder(true, true, 6, typeRow.getCell(3), false, true);
 
         try {
-            if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
-                typeRow.getCell(3).setCellValue("TEMPERATURA PROMEDIO DIARIA EN °C");
-                maxThreshold = "TEMPERATURA MAXIMA MENSUAL PROMEDIO  (°C):";
-            } else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
-                typeRow.getCell(3).setCellValue("PRECIPITACIÓN PROMEDIO DIARIA EN mm y PROBABILIDAD DE PRECIPITACIÓN EN %");
-                maxThreshold = "PRECIPITACIÓN MAXIMA MENSUAL PROMEDIO  (mm):";
-            }
-            else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
-                typeRow.getCell(3).setCellValue("VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h");
-                maxThreshold = "VELOCIDAD DEL VIENTO MAXIMA MENSUAL PROMEDIO  (Km/h):";
-            }
-            else if (model.getReportType() == TypeReportSheet.ceraunic) {
-                typeRow.getCell(3).setCellValue("ESTADO DEL CLIMA ESPERADO");
-                maxThreshold = "DENSIDAD DE DESCARGAS A TIERRA (DDT)";
-            }
+            typeRow.getCell(3).setCellValue(model.getTitle());
+            maxThreshold = model.getMaxThreshold();
 
             // Fila 3: Proyecto / ID del proyecto
             rowIndex++;
@@ -557,8 +547,7 @@ public class GenerateSectionSheet {
             }
         }
         catch (Exception e) {
-            System.out.println("create cells row");
-            System.out.println(e.getMessage());
+            System.out.println("create cells row exception");
             throw new RuntimeException(e);
         }
     }
