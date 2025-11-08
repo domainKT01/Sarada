@@ -25,10 +25,11 @@ public class ExcelSheetGenerator {
             System.out.println("sleep exception...");
             ErrorLogger.log(e);
         }
-//        for (SheetDataModel data : datasets) {
-//            this.sheetTemplate.generate(workbook, data);
-//        }
-
+        for (SheetDataModel data : datasets) {
+            this.sheetTemplate.generate(workbook, data);
+        }
+        
+        /*
         try {
             ExcelSheetTemplate forestFire = new ForestFireSheet();
             forestFire.generate(workbook, datasets.getFirst());
@@ -37,5 +38,6 @@ public class ExcelSheetGenerator {
         catch (Exception e) {
             ErrorLogger.log(e);
         }
+        */
     }
 }

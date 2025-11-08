@@ -19,9 +19,11 @@ import java.util.stream.IntStream;
 public class GenerateSectionSheet {
     private ExcelSheetTemplate template;
     private ExcelStyleFactory styleFactory;
+    private Workbook workbook;
 
     public GenerateSectionSheet(ExcelSheetTemplate template, Workbook workbook) {
         this.template = template;
+        this.workbook = workbook;
         this.styleFactory = new ExcelStyleFactory(template.getWorkbook(), template.getSheet());
     }
 
@@ -65,6 +67,22 @@ public class GenerateSectionSheet {
         this.styleFactory.applyStyleBorder(true, true, 6, typeRow.getCell(3), false, true);
 
         try {
+            if (model.getReportType() == TypeReportSheet.forestFireDataModel) {
+                typeRow.getCell(3).setCellValue("TEMPERATURA PROMEDIO DIARIA EN °C");
+                maxThreshold = "TEMPERATURA MAXIMA MENSUAL PROMEDIO  (°C):";
+            } else if (model.getReportType() == TypeReportSheet.massMovementDataModel) {
+                typeRow.getCell(3).setCellValue("PRECIPITACIÓN PROMEDIO DIARIA EN mm y PROBABILIDAD DE PRECIPITACIÓN EN %");
+                maxThreshold = "PRECIPITACIÓN MAXIMA MENSUAL PROMEDIO  (mm):";
+            }
+            else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+                typeRow.getCell(3).setCellValue("VELOCIDAD DEL VIENTO PROMEDIO DIARIA EN Km/h");
+                maxThreshold = "VELOCIDAD DEL VIENTO MAXIMA MENSUAL PROMEDIO  (Km/h):";
+            }
+            else if (model.getReportType() == TypeReportSheet.ceraunic) {
+                typeRow.getCell(3).setCellValue("ESTADO DEL CLIMA ESPERADO");
+                maxThreshold = "DENSIDAD DE DESCARGAS A TIERRA (DDT)";
+            }
+            
             typeRow.getCell(3).setCellValue(model.getTitle());
             maxThreshold = model.getMaxThreshold();
 
@@ -552,6 +570,7 @@ public class GenerateSectionSheet {
         }
     }
 
+    //chart anomalus days
     public int createFooterThresholdDaily(Sheet sheet, int startRow, SheetDataModel model, String... args) {
         AtomicInteger count = new AtomicInteger();
         count.set(0);
@@ -650,6 +669,10 @@ public class GenerateSectionSheet {
             sheet.addMergedRegion(new CellRangeAddress(startRow, startRow + count.get() - 1, 0, 1));
             sheet.getRow(startRow).getCell(0).setCellValue("FECHA DE LECTURA ANÓMALA:");
             this.styleFactory.applyStyleBorder(true, true, 2, sheet.getRow(startRow).getCell(0), true, true);
+            CellStyle styleC = this.workbook.createCellStyle();
+            styleC.setBorderBottom(BorderStyle.MEDIUM);
+            styleC.setBorderTop(BorderStyle.MEDIUM);
+            sheet.getRow(startRow).getCell(0).setCellStyle(styleC);
         }
         return startRow + count.get();
     }
@@ -772,6 +795,7 @@ public class GenerateSectionSheet {
         return  row + 3;
     }
 
+    //last chart notification alerts and more info
     public int generateChartNotification(Sheet sheet, int row, SheetDataModel model, String[] notification, String[] message, String[] alert) {
         int rowsNum = 3;
         for (int r = 0; r < 16; r++) {
@@ -918,6 +942,16 @@ public class GenerateSectionSheet {
                         break;
                 }
             }
+            else if (model.getReportType() == TypeReportSheet.ceraunic) {
+                valuesDaily = model.getArrCode();
+                ;;
+                setFieldThresholdChart(95.0, 96.0, valuesDaily, row1, model.getArrDate(), "days");
+                
+                setFieldThresholdChart(95.0, 96.0, valuesDaily, row1, model.getArrDate(), "days");
+                
+                setFieldThresholdChart(95.0, 96.0, valuesDaily, row1, model.getArrDate(), "days");
+                
+            }
             row += rowsNum + 1;
         }
         return row;
@@ -952,6 +986,9 @@ public class GenerateSectionSheet {
         this.styleFactory.applyStyleBorder(true, true, 1, row1.getCell(3), false, true);
         this.styleFactory.applyStyleBorder(true, true, 1, row2.getCell(3), false, true);
         this.styleFactory.applyStyleBorder(true, true, 1, row3.getCell(3), false, true);
+        CellStyle styleC = this.workbook.createCellStyle();
+        styleC.setBorderBottom(BorderStyle.MEDIUM);
+        row3.getCell(0).setCellStyle(styleC);
         this.template.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row3.getRowNum(), 3, 3));
     }
 }
