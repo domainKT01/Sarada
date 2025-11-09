@@ -9,9 +9,9 @@ import com.solproe.service.record.GenerateRecordThreshold;
 import com.solproe.util.DateUtil;
 import com.solproe.util.JsonObjectToMap;
 import com.solproe.util.logging.ErrorLogger;
+import org.apache.logging.log4j.core.util.JsonUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -20,6 +20,7 @@ public class GenerateSectionSheet {
     private ExcelSheetTemplate template;
     private ExcelStyleFactory styleFactory;
     private Workbook workbook;
+    private SheetDataModel modelData;
 
     public GenerateSectionSheet(ExcelSheetTemplate template, Workbook workbook) {
         this.template = template;
@@ -31,6 +32,7 @@ public class GenerateSectionSheet {
 
     public int createHeader(Sheet sheet, int rowIndex, SheetDataModel model) {
         Workbook workbook = template.getWorkbook();
+        this.modelData = model;
 
         sheet.setColumnWidth(1, 5000);
         sheet.setColumnWidth(3, 5000);
@@ -901,6 +903,16 @@ public class GenerateSectionSheet {
                     }
                     if (key.contains("DataPercent")) {
                         valuesMonthly.add(Double.parseDouble(String.valueOf(map.get(key))));
+                    }
+                }
+
+                int newCount = 0;
+                for (String key : map.keySet()) {
+                    if (newCount < 5) {
+                        newCount += 1;
+                        continue;
+                    }
+                    if (key.contains("DataPercent")) {
                         int index = key.indexOf("DataPercent");
                         String month = key.substring(0, index).trim();
                         months.add(month);
@@ -918,9 +930,9 @@ public class GenerateSectionSheet {
                         setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
                         break;
                     case 2 :
-                        Double thresholdOrange2 = model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble();
+                        Double thresholdOrange3 = model.getThresholdMonthlyJson().get("orangeThresholdPrecipitation").getAsDouble();
                         Double thresholdRed2 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
-                        setFieldThresholdChart(thresholdOrange2, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
+                        setFieldThresholdChart(thresholdOrange3, thresholdRed2, valuesMonthly, row1, months, "months", "orange");
                         break;
                     case 3 :
                         Double threshold4 = model.getThresholdMonthlyJson().get("redThresholdPrecipitation").getAsDouble();
@@ -942,16 +954,6 @@ public class GenerateSectionSheet {
                         break;
                 }
             }
-            else if (model.getReportType() == TypeReportSheet.ceraunic) {
-                valuesDaily = model.getArrCode();
-                ;;
-                setFieldThresholdChart(95.0, 96.0, valuesDaily, row1, model.getArrDate(), "days");
-                
-                setFieldThresholdChart(95.0, 96.0, valuesDaily, row1, model.getArrDate(), "days");
-                
-                setFieldThresholdChart(95.0, 96.0, valuesDaily, row1, model.getArrDate(), "days");
-                
-            }
             row += rowsNum + 1;
         }
         return row;
@@ -959,36 +961,42 @@ public class GenerateSectionSheet {
 
     public void setFieldThresholdChart(Double thresholdOrange, Double thresholdRed, List<Double> values, Row row, List<String> dates, String... type) {
         StringBuilder date = new StringBuilder();
-        for (int i = 0; i < values.size(); i++) {
-            if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("days")) {
-                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
-                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
-                }
-            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("days")) {
-                if (values.get(i) >= thresholdRed) {
-                    date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
-                }
-            } else if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("months")) {
-                if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
-                    date.append("(").append(dates.get(i)).append(")");
-                }
-            } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("months")) {
-                if (values.get(i) >= thresholdRed) {
-                    date.append("(").append(dates.get(i)).append(")");
+        try {
+            for (int i = 0; i < values.size(); i++) {
+                if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("days")) {
+                    if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
+                        date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
+                    }
+                } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("days")) {
+                    if (values.get(i) >= thresholdRed) {
+                        date.append("(").append(DateUtil.subtractDays(dates.get(i), 1)).append(")");
+                    }
+                } else if (type[1].equalsIgnoreCase("orange") && type[0].equalsIgnoreCase("months")) {
+                    if (values.get(i) >= thresholdOrange && values.get(i) < thresholdRed) {
+                        date.append("(").append(dates.get(i)).append(")");
+                    }
+                } else if (type[1].equalsIgnoreCase("red") && type[0].equalsIgnoreCase("months")) {
+                    if (values.get(i) >= thresholdRed) {
+                        date.append("(").append(dates.get(i)).append(")");
+                    }
                 }
             }
+            row.getCell(3).setCellValue(date.toString());
+            Row row1 = this.template.getSheet().getRow(row.getRowNum() + 1);
+            Row row2 = this.template.getSheet().getRow(row.getRowNum() + 2);
+            Row row3 = this.template.getSheet().getRow(row.getRowNum() + 3);
+            this.styleFactory.applyStyleBorder(true, true, 1, row.getCell(3), false, true);
+            this.styleFactory.applyStyleBorder(true, true, 1, row1.getCell(3), false, true);
+            this.styleFactory.applyStyleBorder(true, true, 1, row2.getCell(3), false, true);
+            this.styleFactory.applyStyleBorder(true, true, 1, row3.getCell(3), false, true);
+            CellStyle styleC = this.workbook.createCellStyle();
+            styleC.setBorderBottom(BorderStyle.MEDIUM);
+            row3.getCell(0).setCellStyle(styleC);
+            this.template.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row3.getRowNum(), 3, 3));
         }
-        row.getCell(3).setCellValue(date.toString());
-        Row row1 = this.template.getSheet().getRow(row.getRowNum() + 1);
-        Row row2 = this.template.getSheet().getRow(row.getRowNum() + 2);
-        Row row3 = this.template.getSheet().getRow(row.getRowNum() + 3);
-        this.styleFactory.applyStyleBorder(true, true, 1, row.getCell(3), false, true);
-        this.styleFactory.applyStyleBorder(true, true, 1, row1.getCell(3), false, true);
-        this.styleFactory.applyStyleBorder(true, true, 1, row2.getCell(3), false, true);
-        this.styleFactory.applyStyleBorder(true, true, 1, row3.getCell(3), false, true);
-        CellStyle styleC = this.workbook.createCellStyle();
-        styleC.setBorderBottom(BorderStyle.MEDIUM);
-        row3.getCell(0).setCellStyle(styleC);
-        this.template.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row3.getRowNum(), 3, 3));
+        catch (Exception e) {
+            System.out.println("data: " + values.toString() + "\n" + dates.toString());
+            System.out.println("exception set field: " + e.getMessage());
+        }
     }
 }

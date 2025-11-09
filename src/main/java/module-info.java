@@ -22,6 +22,7 @@ module com.solproe {
     requires retrofit2;
     requires retrofit2.converter.gson;
     requires java.net.http;
+    requires org.apache.logging.log4j.core;
 
     exports com.solproe;
     exports com.solproe.ui.controllers;
