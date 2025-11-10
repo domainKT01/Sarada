@@ -12,6 +12,8 @@ import com.solproe.util.logging.ErrorLogger;
 import org.apache.logging.log4j.core.util.JsonUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
+
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -150,7 +152,7 @@ public class GenerateSectionSheet {
         Workbook workbook = this.template.getWorkbook();
 
         // Título principal
-        Row titleRow = sheet.createRow(startRow);
+        Row titleRow = sheet.createRow(startRow + 2);
         createCellsRow(sheet, 0, 8, titleRow);
         titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
         titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 16));
@@ -953,6 +955,10 @@ public class GenerateSectionSheet {
                         setFieldThresholdChart(0.0, threshold2, valuesDaily, row1, model.getArrDate(), "days", "red");
                         break;
                 }
+            } else if (model.getReportType() == TypeReportSheet.ceraunic) {
+                Double thresholdRed = model.getThresholdDailyJson().get("ceraunicosThresholdRed").getAsDouble();
+                valuesDaily = model.getArrCode();
+                setFieldThresholdChart(0.0, thresholdRed, valuesDaily, row1, model.getArrDate(), "months", "red");
             }
             row += rowsNum + 1;
         }

@@ -272,11 +272,11 @@ public class SupportDatasheetTemplate implements ExcelSheetTemplate {
                 Row row = sheet.createRow(rowTable + i);
                 Cell cellDate = row.createCell(columnTable);
                 Cell cellValue = row.createCell(columnTable + 1);
-                Cell cellThresholdOrange = row.createCell(columnTable + 2);
+                Cell cellThresholdRed = row.createCell(columnTable + 2);
                 cellDate.setCellValue(sheetDataModel.getArrDate().get(i));
                 cellDate.setCellStyle(setStyle("date"));
-                cellThresholdOrange.setCellValue(sheetDataModel.getThresholdCodeList().get("thunderstorm").getAsDouble());
-                cellThresholdOrange.setCellStyle(setStyle("end"));
+                cellThresholdRed.setCellValue(sheetDataModel.getThresholdCodeList().get("thunderstorm").getAsDouble());
+                cellThresholdRed.setCellStyle(setStyle("end"));
                 if (parameters[1].equalsIgnoreCase("ceraunic")) {
                     cellValue.setCellValue(sheetDataModel.getArrCode().get(i));
                     if (sheetDataModel.getArrTemperature().get(i) >= sheetDataModel.getConfigFileThreshold()[0]
