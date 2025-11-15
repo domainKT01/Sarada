@@ -149,10 +149,10 @@ public class GenerateSectionSheet {
     }
 
     public int createAlertSystem(Sheet sheet, int startRow, SheetDataModel model) {
-        Workbook workbook = this.template.getWorkbook();
 
         // Título principal
-        Row titleRow = sheet.createRow(startRow + 2);
+        startRow += 4;
+        Row titleRow = sheet.createRow(startRow);
         createCellsRow(sheet, 0, 8, titleRow);
         titleRow.getCell(0).setCellValue("SISTEMA DE ALERTAS");
         titleRow.getCell(0).setCellStyle(this.styleFactory.createHeaderTitleStyle((short) 16));
@@ -176,6 +176,7 @@ public class GenerateSectionSheet {
             startRow = createAlertChart(sheet, startRow, model, alerts);
         }
         else if (model.getReportType() == TypeReportSheet.rainShowerDataModel) {
+            sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(), titleRow.getRowNum(), 0, 8));
             String[] alerts = {
                     "ACTIVAR EN PREVENTIVO EL PMU Y ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS (EQUIPOS LISTOS PARA REACCIÓN INMEDIATA)",
                     "ALISTAMIENTO DE BRIGADAS DE EMERGENCIAS",
@@ -279,9 +280,8 @@ public class GenerateSectionSheet {
                 };
                 row = createThresholdComments(sheet, row, titles, alertsLevel);
                 row = createChartThreshold(sheet, row, params);
-                row += 2;
+                row += 4;
                 row = createChartDateAlerts(sheet, row, model, alertsLevel, threshold, titles);
-                row = createChartMonthlyAlerts(sheet, row, model, titles);
             } else if (model.getReportType() == TypeReportSheet.ceraunic) {
                 titles = new String[] {
                         "ROJA",
@@ -958,7 +958,7 @@ public class GenerateSectionSheet {
             } else if (model.getReportType() == TypeReportSheet.ceraunic) {
                 Double thresholdRed = model.getThresholdDailyJson().get("ceraunicosThresholdRed").getAsDouble();
                 valuesDaily = model.getArrCode();
-                setFieldThresholdChart(0.0, thresholdRed, valuesDaily, row1, model.getArrDate(), "months", "red");
+                setFieldThresholdChart(0.0, thresholdRed, valuesDaily, row1, model.getArrDate(), "days", "red");
             }
             row += rowsNum + 1;
         }
