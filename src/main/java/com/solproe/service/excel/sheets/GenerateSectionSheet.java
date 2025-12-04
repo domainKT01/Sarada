@@ -2,18 +2,14 @@ package com.solproe.service.excel.sheets;
 
 import com.google.gson.JsonObject;
 import com.solproe.business.domain.SheetDataModel;
-import com.solproe.business.usecase.CreateConfigFileUseCase;
 import com.solproe.service.excel.ExcelSheetTemplate;
 import com.solproe.service.excel.TypeReportSheet;
 import com.solproe.service.record.GenerateRecordThreshold;
 import com.solproe.util.DateUtil;
 import com.solproe.util.JsonObjectToMap;
 import com.solproe.util.logging.ErrorLogger;
-import org.apache.logging.log4j.core.util.JsonUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
-
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
@@ -674,6 +670,7 @@ public class GenerateSectionSheet {
             sheet.getRow(startRow).getCell(0).setCellValue("FECHA DE LECTURA ANÓMALA:");
             this.styleFactory.applyStyleBorder(true, true, 2, sheet.getRow(startRow).getCell(0), true, true);
             CellStyle styleC = this.workbook.createCellStyle();
+            styleC.setVerticalAlignment(VerticalAlignment.CENTER);
             styleC.setBorderBottom(BorderStyle.MEDIUM);
             styleC.setBorderTop(BorderStyle.MEDIUM);
             sheet.getRow(startRow).getCell(0).setCellStyle(styleC);
@@ -998,6 +995,8 @@ public class GenerateSectionSheet {
             CellStyle styleC = this.workbook.createCellStyle();
             styleC.setBorderBottom(BorderStyle.MEDIUM);
             row3.getCell(0).setCellStyle(styleC);
+            row3.getCell(1).setCellStyle(styleC);
+            row3.getCell(2).setCellStyle(styleC);
             this.template.getSheet().addMergedRegion(new CellRangeAddress(row.getRowNum(), row3.getRowNum(), 3, 3));
         }
         catch (Exception e) {

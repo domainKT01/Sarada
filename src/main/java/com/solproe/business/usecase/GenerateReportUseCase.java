@@ -25,6 +25,7 @@ public class GenerateReportUseCase implements RequestInterface {
     private JsonObject monthlyConfigFile;
     private JsonObject codeListFile;
     private JsonObject record;
+    private JsonObject dashboard;
 
 
     public void setRequestInterface(RequestInterface requestInterface) {
@@ -78,8 +79,8 @@ public class GenerateReportUseCase implements RequestInterface {
 
             //dashboard
             configPropertiesGenerator.setFilename("dashboard.json");
-            JsonObject dashboard = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
-            this.whatsappService.setToken(dashboard.get("tokenWhatsapp").getAsString());
+            this.dashboard = readConfigFileUseCase.readConfigFile(configPropertiesGenerator.getAppConfigPath());
+            this.whatsappService.setToken(this.dashboard.get("token").getAsString());
 
             this.requestInterface.doRequest("https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&daily=temperature_2m_max,weather_code,wind_speed_10m_max,precipitation_probability_max,relative_humidity_2m_mean,precipitation_sum&forecast_days=14");
             return true;
@@ -107,7 +108,7 @@ public class GenerateReportUseCase implements RequestInterface {
             int year = localDate.getYear();
             int month = localDate.getMonthValue();
             int day = localDate.getDayOfMonth();
-            path = Paths.get(this.confProject.get("path").getAsString());
+            path = Paths.get(this.dashboard.get("directory").getAsString());
             System.out.println("point before resolve path, actual path: " + path);
             path = path.resolve("report" + "-" + year + "-" + month + "-" + day + ".xlsx");
             System.out.println("######" + " new path: " + path);

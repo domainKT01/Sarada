@@ -125,6 +125,14 @@ public class ConfigFileViewModel {
 
             jsonObject.addProperty("timeAutomatizedTask", dto.hour() + ":" + dto.minute());
 
+            if (dto.token() != null && !dto.token().isEmpty()) {
+                jsonObject.addProperty("token", dto.token());
+            }
+
+            if (dto.directory() != null && !dto.directory().isEmpty()) {
+                jsonObject.addProperty("directory", dto.directory());
+            }
+
             if (!System.getProperty("os.name").contains("ux")) {
                 TaskScheduler taskScheduler = TaskSchedulerFactory.getScheduler();
                 String taskName = "autoGenerateExcelReport";

@@ -1,8 +1,6 @@
 package com.solproe;
 
-import com.solproe.taskmanager.TaskScheduler;
-import com.solproe.taskmanager.TaskSchedulerFactory;
-import com.solproe.util.ValidateLoad;
+import com.solproe.ui.components.StoreValues;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,12 +14,12 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/views/main-view.fxml"))); // No leading /
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.setTitle("Sarada App");
+        StoreValues.setStage(stage);
         stage.show();
     }
 

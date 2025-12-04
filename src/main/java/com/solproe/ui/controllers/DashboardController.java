@@ -1,12 +1,14 @@
 package com.solproe.ui.controllers;
 
 import com.solproe.business.dto.DashboardDto;
+import com.solproe.ui.components.StoreValues;
 import com.solproe.ui.viewModels.ConfigFileViewModel;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
-
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -15,6 +17,8 @@ public class DashboardController implements Initializable {
     @FXML public Button buttonSave;
     @FXML public Spinner hourSpinner;
     @FXML public Spinner minuteSpinner;
+    @FXML public Button buttonDirectory;
+    @FXML public String pathDirectory;
 
 
     @Override
@@ -86,12 +90,29 @@ public class DashboardController implements Initializable {
         minuteSpinner.setEditable(true);
         minuteSpinner.getEditor().setPromptText("mm");
 
+        this.buttonDirectory.setOnAction(_ -> {
+            DirectoryChooser directoryChooser = new DirectoryChooser();
+            File initialDirectory = new File(System.getProperty("user.home")); // Example: User's home directory
+            directoryChooser.setInitialDirectory(initialDirectory);
+            directoryChooser.setTitle("Select a Directory");
+            File selectedDirectory = directoryChooser.showDialog(StoreValues.getStage());
+            try {
+                pathDirectory = selectedDirectory.getAbsolutePath();
+            }
+            catch (NullPointerException e) {
+                pathDirectory = null;
+            }
+            System.out.println("path directory: " + pathDirectory);
+        });
+
         this.buttonSave.setOnAction(_ -> {
                     if (((int) hourSpinner.getValue() > 0 && (int) hourSpinner.getValue() <= 23) &&
                             ((int) minuteSpinner.getValue() > 0 && (int) hourSpinner.getValue() <= 59)) {
                         viewModel.createConfigDash(new DashboardDto(tokenWhatsapp.getText(),
                                 hourSpinner.getValue().toString(),
-                                minuteSpinner.getValue().toString())
+                                minuteSpinner.getValue().toString(),
+                                pathDirectory
+                                )
                         );
                         showAlert(Alert.AlertType.CONFIRMATION, "Confirmado", "Se guardó la configuración exitosamente");
                     }
